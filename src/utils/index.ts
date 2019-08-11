@@ -72,7 +72,6 @@ export function initState(options, plugins): IPlayerStore {
       currentQualityIndex: 0,
       currentTime: 0,
       duration: 0,
-      videoInited: false,
       buffered: null,
     },
     emitter: new Emitter(),
@@ -85,45 +84,4 @@ export function parsePercent(percent: number): number {
   if (percent < 0) percent = 0;
 
   return percent;
-}
-
-export function parseRate(rate: number): number {
-  if (rate > 1) rate = 1;
-  if (rate < 0) rate = 0;
-
-  return parseFloat(rate.toFixed(2));
-}
-
-export function getTouchTarget(e: TouchEvent): Touch {
-  if (!e || !(e.touches && e.targetTouches && e.changedTouches)) return null;
-
-  if (e.touches && e.touches.length) {
-    return e.touches.item(0);
-  }
-
-  if (e.targetTouches && e.targetTouches.length) {
-    return e.targetTouches.item(0);
-  }
-
-  if (e.changedTouches && e.changedTouches.length) {
-    return e.changedTouches.item(0);
-  }
-
-  return null;
-}
-
-export function getMouseX(e: MouseEvent | TouchEvent) {
-  let mouseX = 0;
-
-  if (e instanceof MouseEvent) {
-    mouseX = e.x;
-  } else {
-    const target = getTouchTarget(e);
-
-    if (target) {
-      mouseX = target.pageX;
-    }
-  }
-
-  return mouseX;
 }

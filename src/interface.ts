@@ -6,7 +6,6 @@ export interface IVideoState {
   currentQualityIndex: number;
   duration: number;
   currentTime: number;
-  videoInited: boolean;
   buffered: TimeRanges;
 }
 

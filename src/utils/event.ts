@@ -39,13 +39,13 @@ export enum InnerEventType {
   InnerVideoSetCurrentTime = "inner.videoSetCurrentTime",
   InnerProgressBarHide = "inner.progressBarHide",
   InnerProgressBarShow = "inner.progressBarShow",
-  InnerProgressBarSeeking = "inner.progressBarSeeking",
-  InnerProgressBarSeeked = "inner.progressBarSeeked",
   InnerToolBarHide = "inner.toolBarHide",
   InnerToolBarShow = "inner.toolBarShow",
   InnerToolBarToggle = "inner.toolBarToggle",
   InnerToolBarHidden = "inner.toolBarHidden",
   InnerToolBarShown = "inner.toolBarShown",
+  InnerSeeking = "inner.seeking",
+  InnerSeeked = "inner.seeked",
 }
 
 export type PlayerEventType = InnerEventType | CustomEventType | NativeEvent;

@@ -7,8 +7,6 @@ import {
   setCurrentTime,
   ISetDuration,
   ISetCurrentTime,
-  setVideoInited,
-  ISetVideoInited,
   ISetBuffered,
   ISetPlayState,
   setBuffered,
@@ -16,7 +14,6 @@ import {
 import { css } from "emotion";
 import { Emitter } from "../utils/emitter";
 import { InnerEventType, NativeEvent, PlayerEvent } from "../utils/event";
-import throttle from "lodash/throttle";
 
 interface IProps {
   options?: IOptions;
@@ -24,7 +21,6 @@ interface IProps {
   setPlayState?: ISetPlayState;
   setDuration?: ISetDuration;
   setCurrentTime?: ISetCurrentTime;
-  setVideoInited?: ISetVideoInited;
   setBuffered?: ISetBuffered;
   emitter: Emitter;
 }
@@ -35,7 +31,6 @@ const actions = {
   setPlayState,
   setDuration,
   setCurrentTime,
-  setVideoInited,
   setBuffered,
 };
 
@@ -52,15 +47,17 @@ function mapStateToProps(state: IPlayerStore, props): IProps {
 class Player extends Component<IProps, IState> {
   pluginName = "HTMLPlayer";
   private el: HTMLVideoElement;
+  seeking: boolean;
 
   componentDidMount() {
     const { emitter } = this.props;
-    emitter.on(InnerEventType.InnerVideoPlay, () => this.play());
-    emitter.on(InnerEventType.InnerVideoPause, () => this.pause());
-    emitter.on(InnerEventType.InnerVideoToggle, () => this.toggle());
-    emitter.on<number>(InnerEventType.InnerVideoSetCurrentTime, (e) => this.setNativeElementTime(e));
+    emitter.on(InnerEventType.InnerVideoPlay, this.play);
+    emitter.on(InnerEventType.InnerVideoPause, this.pause);
+    emitter.on(InnerEventType.InnerVideoToggle, this.toggle);
+    emitter.on<number>(InnerEventType.InnerVideoSetCurrentTime, this.setNativeElementTime);
+    emitter.on(InnerEventType.InnerSeeking, this.handleSeeking);
+    emitter.on(InnerEventType.InnerSeeked, this.handleSeeked);
 
-    this.setCurrentTime = throttle(this.setCurrentTime, 1000);
     emitter.emit(InnerEventType.InnerProgressBarShow);
   }
 
@@ -68,6 +65,15 @@ class Player extends Component<IProps, IState> {
     if (this.el) {
       this.unbindEvents(this.el);
     }
+
+    const { emitter } = this.props;
+
+    emitter.off(InnerEventType.InnerVideoPlay, this.play);
+    emitter.off(InnerEventType.InnerVideoPause, this.pause);
+    emitter.off(InnerEventType.InnerVideoToggle, this.toggle);
+    emitter.off(InnerEventType.InnerVideoSetCurrentTime, this.setNativeElementTime);
+    emitter.off(InnerEventType.InnerSeeking, this.handleSeeking);
+    emitter.off(InnerEventType.InnerSeeked, this.handleSeeked);
   }
 
   render() {
@@ -90,8 +96,6 @@ class Player extends Component<IProps, IState> {
 
   createRef = (el: HTMLVideoElement) => {
     this.el = el;
-
-    this.props.setVideoInited();
 
     this.bindEvents(el);
   };
@@ -116,11 +120,20 @@ class Player extends Component<IProps, IState> {
         this.props.setDuration(this.el.duration);
         break;
       case NativeEvent.Timeupdate:
-        this.setCurrentTime();
+        if (!this.seeking) {
+          this.setCurrentTime();
+        }
         break;
       case NativeEvent.Canplay:
       case NativeEvent.Progress:
         this.props.setBuffered(this.el.buffered);
+        break;
+      case NativeEvent.Pause:
+      case NativeEvent.Ended:
+        this.props.setPlayState(false);
+        break;
+      case NativeEvent.Playing:
+        this.props.setPlayState(true);
         break;
     }
   };
@@ -144,41 +157,48 @@ class Player extends Component<IProps, IState> {
     return "src" in currentQuality ? currentQuality.src : URL.createObjectURL(currentQuality);
   }
 
-  play() {
+  play = () => {
     if (this.el) {
       this.props.setPlayState(true);
 
       this.el.play();
     }
-  }
+  };
 
-  pause() {
+  pause = () => {
     if (this.el) {
       this.props.setPlayState(false);
 
       this.el.pause();
     }
-  }
+  };
 
-  toggle() {
+  toggle = () => {
     if (this.props.videoState.playing) {
       this.pause();
     } else {
       this.play();
     }
-  }
+  };
 
-  setNativeElementTime(e: PlayerEvent<number>) {
+  setNativeElementTime = (e: PlayerEvent<number>) => {
     if (this.el) {
-      console.log("video current time set", e.detail);
       this.el.currentTime = e.detail;
 
       this.props.setCurrentTime(e.detail);
     }
+  };
+
+  setCurrentTime() {
+    this.props.setCurrentTime(this.el.currentTime);
   }
 
-  setCurrentTime = () => {
-    this.props.setCurrentTime(this.el.currentTime);
+  handleSeeking = () => {
+    this.seeking = true;
+  };
+
+  handleSeeked = () => {
+    this.seeking = false;
   };
 }
 

@@ -74,13 +74,13 @@ const styleProgressBar = css`
   height: 8%;
   max-height: 10px;
   background-color: rgba(200, 200, 200, 0.5);
-  transform: translateY(-100%) scaleY(0);
+  transform: translateY(-100%);
+  opacity: 0;
   transition: none;
-  transform-origin: left bottom;
 
   &.shown {
-    transition: transform 0.4s 0.3s;
-    transform: translateY(-100%) scaleY(1);
+    transition: opacity 0.2s 0.35s;
+    opacity: 1;
   }
 `;
 

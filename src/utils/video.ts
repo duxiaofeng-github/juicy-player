@@ -25,14 +25,6 @@ export function setDuration(state: IPlayerStore, duration: number): IPlayerStore
   });
 }
 
-export type ISetVideoInited = (inited?: boolean) => IPlayerStore;
-
-export function setVideoInited(state: IPlayerStore, inited?: boolean): IPlayerStore {
-  return produce(state, (draft) => {
-    draft.videoState.videoInited = inited != null ? inited : true;
-  });
-}
-
 export type ISetBuffered = (buffered: TimeRanges) => IPlayerStore;
 
 export function setBuffered(state: IPlayerStore, buffered?: TimeRanges): IPlayerStore {

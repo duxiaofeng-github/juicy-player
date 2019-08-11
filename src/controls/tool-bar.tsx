@@ -38,8 +38,8 @@ export class ToolBar extends Component<IProps, IState> {
     emitter.on(InnerEventType.InnerToolBarShow, this.show);
     emitter.on(InnerEventType.InnerToolBarHide, this.hide);
     emitter.on(InnerEventType.InnerToolBarToggle, this.toggle);
-    emitter.on(InnerEventType.InnerProgressBarSeeking, this.clearTimer);
-    emitter.on(InnerEventType.InnerProgressBarSeeked, this.setTimer);
+    emitter.on(InnerEventType.InnerSeeking, this.clearTimer);
+    emitter.on(InnerEventType.InnerSeeked, this.setTimer);
 
     this.hide();
   }
@@ -50,8 +50,8 @@ export class ToolBar extends Component<IProps, IState> {
     emitter.off(InnerEventType.InnerToolBarShow, this.show);
     emitter.off(InnerEventType.InnerToolBarHide, this.hide);
     emitter.off(InnerEventType.InnerToolBarToggle, this.toggle);
-    emitter.off(InnerEventType.InnerProgressBarSeeking, this.clearTimer);
-    emitter.off(InnerEventType.InnerProgressBarSeeked, this.setTimer);
+    emitter.off(InnerEventType.InnerSeeking, this.clearTimer);
+    emitter.off(InnerEventType.InnerSeeked, this.setTimer);
   }
 
   render() {

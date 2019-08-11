@@ -33,33 +33,24 @@ export class Controls extends Component<IProps, IState> {
 
   render() {
     return (
-      <div
-        className={styleControls}
-        onClick={this.onClick}
-        onDblClick={this.onDblClick}
-        onMouseMove={!IS_TOUCHABLE_DEVICE && this.onMouseMove}
-      >
+      <div className={styleControls} onClick={this.onClick} onMouseMove={!IS_TOUCHABLE_DEVICE && this.onMouseMove}>
         {renderPlugins(this.pluginName, this.props.plugins)}
       </div>
     );
   }
 
   onClick = () => {
-    clearTimeout(this.timer);
-
-    this.timer = setTimeout(() => {
-      const { emitter } = this.props;
-
-      if (IS_TOUCHABLE_DEVICE) {
-        emitter.emit(InnerEventType.InnerToolBarToggle);
-      } else {
-        emitter.emit(InnerEventType.InnerVideoToggle);
-      }
-    }, 200);
+    if (this.timer) {
+      this.handleDoubleClick();
+    } else {
+      this.handleSingleClick();
+    }
   };
 
-  onDblClick = () => {
+  handleDoubleClick() {
     clearTimeout(this.timer);
+
+    this.timer = null;
 
     const { emitter } = this.props;
 
@@ -68,7 +59,21 @@ export class Controls extends Component<IProps, IState> {
     } else {
       // TODO: fullscreen
     }
-  };
+  }
+
+  handleSingleClick() {
+    this.timer = setTimeout(() => {
+      const { emitter } = this.props;
+
+      if (IS_TOUCHABLE_DEVICE) {
+        emitter.emit(InnerEventType.InnerToolBarToggle);
+      } else {
+        emitter.emit(InnerEventType.InnerVideoToggle);
+      }
+
+      this.timer = null;
+    }, 200);
+  }
 
   onMouseMove = () => {
     const { emitter } = this.props;
