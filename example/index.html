@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Juicy player demo</title>
+  </head>
+  <body>
+    <div id="player" style="width: 100%; height: 400px;"></div>
+    <script src="../dist/index.js"></script>
+    <script>
+      const srcHD = {
+        src: "http://7qnbk6.com1.z0.glb.clouddn.com/The-Battle-of-Evony-HD.mp4",
+        quality: "超清",
+        mimetype: "video/mp4",
+      };
+      // const srcSD = {
+      //   src:
+      //     "rtmp://ali-live.zaojiu.com/zaojiu/59313bd2647259000183041d_sd?auth_key=1512472740-0-0-845571a71200e6c83807d4e399f3ad00",
+      //   // src: 'http://7qnbk6.com1.z0.glb.clouddn.com/The-Battle-of-Evony-MD.mp4',
+      //   quality: "高清",
+      //   mimetype: "rtmp/mp4",
+      // };
+      const srcMD = {
+        src: "http://7qnbk6.com1.z0.glb.clouddn.com/The-Battle-of-Evony-MD.mp4",
+        quality: "高清",
+        mimetype: "video/mp4",
+      };
+      // const srcMD = {
+      //   src: '//edge.flowplayer.org/flowplayer-700.flv',
+      //   // src: 'http://7qnbk6.com1.z0.glb.clouddn.com/The-Battle-of-Evony-MD.mp4',
+      //   quality: '高清',
+      //   mimetype: 'video/mp4'
+      // };
+      const srcSD = {
+        src: "http://7qnbk6.com1.z0.glb.clouddn.com/The-Battle-of-Evony-SD.mp4",
+        quality: "标清",
+        mimetype: "video/mp4",
+      };
+      const player = new JuicyPlayer({
+        element: "player",
+        playList: [[srcSD, srcMD, srcHD]],
+        autoplay: true,
+        // muted: true,
+      });
+    </script>
+  </body>
+</html>

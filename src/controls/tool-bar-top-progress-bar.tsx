@@ -1,0 +1,94 @@
+import { h, Component } from "preact";
+import { css, cx } from "emotion";
+
+import { IPlayerStore, IVideoState } from "../interface";
+import { connect } from "unistore/preact";
+import { parsePercent } from "../utils";
+import { colorPrimary } from "../utils/style";
+import { Emitter } from "../utils/emitter";
+import { InnerEventType } from "../utils/event";
+
+interface IProps {
+  videoState?: IVideoState;
+  emitter?: Emitter;
+}
+
+interface IState {
+  isShown: boolean;
+}
+
+function mapStateToProps(state: IPlayerStore, props): IProps {
+  const { videoState, emitter } = state;
+
+  return {
+    videoState,
+    emitter,
+  };
+}
+
+@connect(mapStateToProps)
+export class ToolBarTopProgressBar extends Component<IProps, IState> {
+  pluginName = "ToolBarTopProgressBar";
+
+  componentDidMount() {
+    const emitter = this.props.emitter;
+    emitter.on(InnerEventType.InnerToolBarShown, this.hide);
+    emitter.on(InnerEventType.InnerToolBarHidden, this.show);
+  }
+
+  componentWillUnmount() {
+    const emitter = this.props.emitter;
+    emitter.off(InnerEventType.InnerToolBarShown, this.hide);
+    emitter.off(InnerEventType.InnerToolBarHidden, this.show);
+  }
+
+  render() {
+    const { currentTime, duration } = this.props.videoState;
+    const percent = parsePercent((currentTime / duration) * 100);
+
+    return (
+      <div className={cx(styleProgressBar, this.state.isShown && "shown")}>
+        <div className={styleProgressBarFill} style={{ width: `${percent}%` }} />
+      </div>
+    );
+  }
+
+  hide = () => {
+    this.setState({
+      isShown: false,
+    });
+  };
+
+  show = () => {
+    this.setState({
+      isShown: true,
+    });
+  };
+}
+
+const styleProgressBar = css`
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 8%;
+  max-height: 10px;
+  background-color: rgba(200, 200, 200, 0.5);
+  transform: translateY(-100%) scaleY(0);
+  transition: none;
+  transform-origin: left bottom;
+
+  &.shown {
+    transition: transform 0.4s 0.3s;
+    transform: translateY(-100%) scaleY(1);
+  }
+`;
+
+const styleProgressBarFill = css`
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 0;
+  background-color: ${colorPrimary};
+`;
