@@ -7,16 +7,16 @@ import { secondToMMSS } from "../utils";
 import { css } from "emotion";
 
 interface IProps {
-  videoState?: IProperties;
+  properties?: IProperties;
 }
 
 interface IState {}
 
 function mapStateToProps(state: IPlayerStore, props): IProps {
-  const { properties: videoState } = state;
+  const { properties } = state;
 
   return {
-    videoState,
+    properties,
   };
 }
 
@@ -25,7 +25,7 @@ export class ToolBarCurrentTime extends Component<IProps, IState> {
   pluginName = "ToolBarCurrentTime";
 
   render() {
-    return getToolBarTextTemplate(secondToMMSS(this.props.videoState.currentTime), styleCurrentTime);
+    return getToolBarTextTemplate(secondToMMSS(this.props.properties.currentTime), styleCurrentTime);
   }
 }
 

@@ -9,7 +9,7 @@ import { Emitter } from "../utils/emitter";
 import { InnerEventType } from "../utils/event";
 
 interface IProps {
-  videoState?: IProperties;
+  properties?: IProperties;
   emitter?: Emitter;
 }
 
@@ -18,10 +18,10 @@ interface IState {
 }
 
 function mapStateToProps(state: IPlayerStore, props): IProps {
-  const { properties: videoState, emitter } = state;
+  const { properties, emitter } = state;
 
   return {
-    videoState,
+    properties,
     emitter,
   };
 }
@@ -43,7 +43,7 @@ export class ToolBarTopProgressBar extends Component<IProps, IState> {
   }
 
   render() {
-    const { currentTime, duration } = this.props.videoState;
+    const { currentTime, duration } = this.props.properties;
     const percent = parsePercent((currentTime / duration) * 100);
 
     return (

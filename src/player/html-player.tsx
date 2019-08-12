@@ -10,6 +10,8 @@ import {
   ISetBuffered,
   ISetPlayState,
   setBuffered,
+  ISetVolume,
+  setVolume,
 } from "../utils/video";
 import { css } from "emotion";
 import { Emitter } from "../utils/emitter";
@@ -17,10 +19,11 @@ import { InnerEventType, NativeEvent, PlayerEvent } from "../utils/event";
 
 interface IProps {
   options?: IOptions;
-  videoState?: IProperties;
+  properties?: IProperties;
   setPlayState?: ISetPlayState;
   setDuration?: ISetDuration;
   setCurrentTime?: ISetCurrentTime;
+  setVolume?: ISetVolume;
   setBuffered?: ISetBuffered;
   emitter: Emitter;
 }
@@ -31,15 +34,16 @@ const actions = {
   setPlayState,
   setDuration,
   setCurrentTime,
+  setVolume,
   setBuffered,
 };
 
 function mapStateToProps(state: IPlayerStore, props): IProps {
-  const { options, properties: videoState, emitter } = state;
+  const { options, properties, emitter } = state;
 
   return {
     options,
-    videoState,
+    properties,
     emitter,
   };
 }
@@ -55,6 +59,7 @@ class Player extends Component<IProps, IState> {
     emitter.on(InnerEventType.InnerVideoPause, this.pause);
     emitter.on(InnerEventType.InnerVideoToggle, this.toggle);
     emitter.on<number>(InnerEventType.InnerVideoSetCurrentTime, this.setNativeElementTime);
+    emitter.on<number>(InnerEventType.InnerVideoSetVolume, this.setNativeElementVolume);
     emitter.on(InnerEventType.InnerSeeking, this.handleSeeking);
     emitter.on(InnerEventType.InnerSeeked, this.handleSeeked);
   }
@@ -77,6 +82,7 @@ class Player extends Component<IProps, IState> {
     emitter.off(InnerEventType.InnerVideoPause, this.pause);
     emitter.off(InnerEventType.InnerVideoToggle, this.toggle);
     emitter.off(InnerEventType.InnerVideoSetCurrentTime, this.setNativeElementTime);
+    emitter.off(InnerEventType.InnerVideoSetVolume, this.setNativeElementVolume);
     emitter.off(InnerEventType.InnerSeeking, this.handleSeeking);
     emitter.off(InnerEventType.InnerSeeked, this.handleSeeked);
 
@@ -103,6 +109,8 @@ class Player extends Component<IProps, IState> {
 
   createRef = (el: HTMLVideoElement) => {
     this.el = el;
+
+    this.setVolume();
 
     this.bindEvents(el);
   };
@@ -131,6 +139,9 @@ class Player extends Component<IProps, IState> {
           this.setCurrentTime();
         }
         break;
+      case NativeEvent.Volumechange:
+        this.setVolume();
+        break;
       case NativeEvent.Canplay:
       case NativeEvent.Progress:
         this.props.setBuffered(this.el.buffered);
@@ -158,8 +169,8 @@ class Player extends Component<IProps, IState> {
   }
 
   getSrc() {
-    const { options, videoState } = this.props;
-    const currentQuality = options.playList[videoState.currentListIndex][videoState.currentQualityIndex];
+    const { options, properties } = this.props;
+    const currentQuality = options.playList[properties.currentListIndex][properties.currentQualityIndex];
 
     return "src" in currentQuality ? currentQuality.src : URL.createObjectURL(currentQuality);
   }
@@ -181,7 +192,7 @@ class Player extends Component<IProps, IState> {
   };
 
   toggle = () => {
-    if (this.props.videoState.playing) {
+    if (this.props.properties.playing) {
       this.pause();
     } else {
       this.play();
@@ -196,8 +207,20 @@ class Player extends Component<IProps, IState> {
     }
   };
 
+  setNativeElementVolume = (e: PlayerEvent<number>) => {
+    if (this.el) {
+      this.el.volume = e.detail;
+
+      this.props.setVolume(e.detail);
+    }
+  };
+
   setCurrentTime() {
     this.props.setCurrentTime(this.el.currentTime);
+  }
+
+  setVolume() {
+    this.props.setVolume(this.el.volume);
   }
 
   handleSeeking = () => {

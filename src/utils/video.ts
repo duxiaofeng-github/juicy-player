@@ -17,6 +17,14 @@ export function setCurrentTime(state: IPlayerStore, time: number): IPlayerStore 
   });
 }
 
+export type ISetVolume = (volume: number) => IPlayerStore;
+
+export function setVolume(state: IPlayerStore, volume: number): IPlayerStore {
+  return produce(state, (draft) => {
+    draft.properties.volume = volume;
+  });
+}
+
 export type ISetDuration = (duration: number) => IPlayerStore;
 
 export function setDuration(state: IPlayerStore, duration: number): IPlayerStore {

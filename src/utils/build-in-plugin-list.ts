@@ -10,6 +10,7 @@ import { ToolBarProgressBar } from "../controls/tool-bar-progress-bar";
 import { ToolBarDuration } from "../controls/tool-bar-duration";
 import { ToolBarCurrentTime } from "../controls/tool-bar-current-time";
 import { ToolBarFullScreenButton } from "../controls/tool-bar-full-screen-button";
+import { ToolBarVolumeButton } from "../controls/tool-bar-volume-button";
 
 export const buildInPluginList: IPlugin[] = [
   {
@@ -51,6 +52,10 @@ export const buildInPluginList: IPlugin[] = [
   {
     entry: "ToolBar",
     module: ToolBarDuration,
+  },
+  {
+    entry: "ToolBar",
+    module: ToolBarVolumeButton,
   },
   {
     entry: "ToolBar",

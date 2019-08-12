@@ -73,6 +73,7 @@ export function initState(options, plugins): IPlayerStore {
       currentTime: 0,
       duration: 0,
       buffered: null,
+      volume: 0,
     },
     emitter: new Emitter(),
     plugins,

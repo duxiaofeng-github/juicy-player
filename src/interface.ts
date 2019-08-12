@@ -7,6 +7,7 @@ export interface IProperties {
   duration: number;
   currentTime: number;
   buffered: TimeRanges;
+  volume: number;
 }
 
 export interface IPlugin {

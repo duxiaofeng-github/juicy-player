@@ -1,7 +1,7 @@
 import { h, Component } from "preact";
 
-import * as toolBarEnterFullScreenButton from "../assets/enter-full-screen-button.svg";
-import * as toolBarExitFullScreenButton from "../assets/exit-full-screen-button.svg";
+import * as enterFullScreenIcon from "../assets/enter-full-screen.svg";
+import * as exitFullScreenIcon from "../assets/exit-full-screen.svg";
 
 import { IPlayerStore } from "../interface";
 import { connect } from "unistore/preact";
@@ -116,13 +116,13 @@ export class ToolBarFullScreenButton extends Component<IProps, IState> {
     const svg = !this.state.isFullScreen ? (
       <div
         className={styleToolbarButtonIcon}
-        dangerouslySetInnerHTML={{ __html: (toolBarEnterFullScreenButton as any) as string }}
+        dangerouslySetInnerHTML={{ __html: (enterFullScreenIcon as any) as string }}
         onClick={this.enter}
       />
     ) : (
       <div
         className={styleToolbarButtonIcon}
-        dangerouslySetInnerHTML={{ __html: (toolBarExitFullScreenButton as any) as string }}
+        dangerouslySetInnerHTML={{ __html: (exitFullScreenIcon as any) as string }}
         onClick={this.exit}
       />
     );

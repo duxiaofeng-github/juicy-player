@@ -6,7 +6,7 @@ import { getPlugins } from "../utils/render";
 
 interface IProps {
   options?: IOptions;
-  videoState?: IProperties;
+  properties?: IProperties;
   emitter?: Emitter;
   plugins?: IPlugin[];
 }
@@ -14,11 +14,11 @@ interface IProps {
 interface IState {}
 
 function mapStateToProps(state: IPlayerStore, props): IProps {
-  const { options, properties: videoState, emitter, plugins } = state;
+  const { options, properties, emitter, plugins } = state;
 
   return {
     options,
-    videoState,
+    properties,
     emitter,
     plugins,
   };
@@ -37,19 +37,19 @@ export class Player extends Component<IProps, IState> {
   }
 
   getPlayer() {
-    const { options, videoState, emitter } = this.props;
+    const { options, properties } = this.props;
     const playList = options.playList;
 
     if (!playList) {
       return null;
     }
 
-    const currentList = playList[videoState.currentListIndex];
+    const currentList = playList[properties.currentListIndex];
     if (!currentList) {
       return null;
     }
 
-    const currentQuality = currentList[videoState.currentQualityIndex];
+    const currentQuality = currentList[properties.currentQualityIndex];
     if (!currentQuality) {
       return null;
     }

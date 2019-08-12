@@ -1,7 +1,7 @@
 import { h, Component } from "preact";
 
-import * as toolBarPlayButton from "../assets/play-button.svg";
-import * as toolBarPauseButton from "../assets/pause-button.svg";
+import * as playIcon from "../assets/play.svg";
+import * as pauseIcon from "../assets/pause.svg";
 
 import { IPlayerStore, IProperties } from "../interface";
 import { connect } from "unistore/preact";
@@ -12,17 +12,17 @@ import { InnerEventType } from "../utils/event";
 import { IS_TOUCHABLE_DEVICE } from "../utils";
 
 interface IProps {
-  videoState?: IProperties;
+  properties?: IProperties;
   emitter?: Emitter;
 }
 
 interface IState {}
 
 function mapStateToProps(state: IPlayerStore, props): IProps {
-  const { properties: videoState, emitter } = state;
+  const { properties, emitter } = state;
 
   return {
-    videoState,
+    properties,
     emitter,
   };
 }
@@ -32,16 +32,16 @@ export class ToolBarPlayButton extends Component<IProps, IState> {
   pluginName = "ToolBarPlayButton";
 
   render() {
-    const svg = this.props.videoState.playing ? (
+    const svg = this.props.properties.playing ? (
       <div
         className={styleToolbarButtonIcon}
-        dangerouslySetInnerHTML={{ __html: (toolBarPauseButton as any) as string }}
+        dangerouslySetInnerHTML={{ __html: (pauseIcon as any) as string }}
         onClick={this.pause}
       />
     ) : (
       <div
         className={styleToolbarButtonIcon}
-        dangerouslySetInnerHTML={{ __html: (toolBarPlayButton as any) as string }}
+        dangerouslySetInnerHTML={{ __html: (playIcon as any) as string }}
         onClick={this.play}
       />
     );

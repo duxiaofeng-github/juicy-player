@@ -1,7 +1,7 @@
 import { h, Component } from "preact";
 import { css } from "emotion";
 
-import * as bigPlayButton from "../assets/big-play-button.svg";
+import * as bigPlayIcon from "../assets/big-play.svg";
 import { IOptions, IPlayerStore, IProperties } from "../interface";
 import { connect } from "unistore/preact";
 import { Emitter } from "../utils/emitter";
@@ -10,19 +10,19 @@ import { imagePlaceHolder } from "../utils/render";
 
 interface IProps {
   options?: IOptions;
-  videoState?: IProperties;
+  properties?: IProperties;
   emitter?: Emitter;
 }
 
 interface IState {}
 
 function mapStateToProps(state: IPlayerStore, props): IProps {
-  const { options, emitter, properties: videoState } = state;
+  const { options, emitter, properties } = state;
 
   return {
     options,
     emitter,
-    videoState,
+    properties,
   };
 }
 
@@ -31,10 +31,10 @@ export class BigPlayButton extends Component<IProps, IState> {
   pluginName = "BigPlayButton";
 
   render() {
-    return !this.props.videoState.playing ? (
+    return !this.props.properties.playing ? (
       <div className={stylePlayButton} onClick={this.play}>
         {imagePlaceHolder}
-        <div className={stylePlayButtonIcon} dangerouslySetInnerHTML={{ __html: (bigPlayButton as any) as string }} />
+        <div className={stylePlayButtonIcon} dangerouslySetInnerHTML={{ __html: (bigPlayIcon as any) as string }} />
       </div>
     ) : null;
   }

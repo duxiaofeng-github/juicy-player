@@ -10,7 +10,7 @@ import { InnerEventType, PlayerEventType } from "../utils/event";
 import { ISetCurrentTime, setCurrentTime } from "../utils/video";
 
 interface IProps {
-  videoState?: IProperties;
+  properties?: IProperties;
   emitter?: Emitter;
   setCurrentTime?: ISetCurrentTime;
 }
@@ -24,10 +24,10 @@ const actions = {
 };
 
 function mapStateToProps(state: IPlayerStore, props): IProps {
-  const { properties: videoState, emitter } = state;
+  const { properties, emitter } = state;
 
   return {
-    videoState,
+    properties,
     emitter,
   };
 }
@@ -105,7 +105,7 @@ export class ToolBarProgressBar extends Component<IProps, IState> {
   }
 
   getBufferedComponent() {
-    const { buffered, duration } = this.props.videoState;
+    const { buffered, duration } = this.props.properties;
 
     if (buffered == null) {
       return null;
@@ -134,7 +134,7 @@ export class ToolBarProgressBar extends Component<IProps, IState> {
   }
 
   getCursorLeft() {
-    const { currentTime, duration } = this.props.videoState;
+    const { currentTime, duration } = this.props.properties;
     const percent = parsePercent((currentTime / duration) * 100);
 
     return percent;
@@ -178,8 +178,8 @@ export class ToolBarProgressBar extends Component<IProps, IState> {
   };
 
   setCurrentTimeBasedOnPoint(x: number) {
-    const { videoState, emitter, setCurrentTime } = this.props;
-    const { duration } = videoState;
+    const { properties, emitter, setCurrentTime } = this.props;
+    const { duration } = properties;
 
     if (!this.rectCache) {
       this.rectCache = this.sliderEl.getBoundingClientRect();
@@ -200,10 +200,10 @@ export class ToolBarProgressBar extends Component<IProps, IState> {
   }
 
   applyCurrentTimeToVideo() {
-    const { emitter, videoState } = this.props;
+    const { emitter, properties } = this.props;
     this.rectCache = null;
 
-    emitter.emit<number>(InnerEventType.InnerVideoSetCurrentTime, videoState.currentTime);
+    emitter.emit<number>(InnerEventType.InnerVideoSetCurrentTime, properties.currentTime);
     emitter.emit(InnerEventType.InnerSeeked);
   }
 }
