@@ -1,6 +1,6 @@
 import { Emitter } from "./utils/emitter";
 
-export interface IVideoState {
+export interface IProperties {
   playing: boolean;
   currentListIndex: number;
   currentQualityIndex: number;
@@ -16,7 +16,7 @@ export interface IPlugin {
 
 export interface IPlayerStore {
   options: IOptions;
-  videoState: IVideoState;
+  properties: IProperties;
   emitter: Emitter;
   plugins: IPlugin[];
 }

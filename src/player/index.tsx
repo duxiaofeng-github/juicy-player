@@ -1,12 +1,12 @@
 import { h, Component } from "preact";
 import { connect } from "unistore/preact";
-import { IOptions, IPlayerStore, IVideoState, IPlugin } from "../interface";
+import { IOptions, IPlayerStore, IProperties, IPlugin } from "../interface";
 import { Emitter } from "../utils/emitter";
 import { getPlugins } from "../utils/render";
 
 interface IProps {
   options?: IOptions;
-  videoState?: IVideoState;
+  videoState?: IProperties;
   emitter?: Emitter;
   plugins?: IPlugin[];
 }
@@ -14,7 +14,7 @@ interface IProps {
 interface IState {}
 
 function mapStateToProps(state: IPlayerStore, props): IProps {
-  const { options, videoState, emitter, plugins } = state;
+  const { options, properties: videoState, emitter, plugins } = state;
 
   return {
     options,

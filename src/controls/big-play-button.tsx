@@ -2,7 +2,7 @@ import { h, Component } from "preact";
 import { css } from "emotion";
 
 import * as bigPlayButton from "../assets/big-play-button.svg";
-import { IOptions, IPlayerStore, IVideoState } from "../interface";
+import { IOptions, IPlayerStore, IProperties } from "../interface";
 import { connect } from "unistore/preact";
 import { Emitter } from "../utils/emitter";
 import { InnerEventType } from "../utils/event";
@@ -10,14 +10,14 @@ import { imagePlaceHolder } from "../utils/render";
 
 interface IProps {
   options?: IOptions;
-  videoState?: IVideoState;
+  videoState?: IProperties;
   emitter?: Emitter;
 }
 
 interface IState {}
 
 function mapStateToProps(state: IPlayerStore, props): IProps {
-  const { options, emitter, videoState } = state;
+  const { options, emitter, properties: videoState } = state;
 
   return {
     options,

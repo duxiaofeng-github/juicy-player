@@ -1,19 +1,19 @@
 import { h, Component } from "preact";
 
-import { IPlayerStore, IVideoState } from "../interface";
+import { IPlayerStore, IProperties } from "../interface";
 import { connect } from "unistore/preact";
 import { getToolBarTextTemplate } from "../utils/render";
 import { secondToMMSS } from "../utils";
 import { css } from "emotion";
 
 interface IProps {
-  videoState?: IVideoState;
+  videoState?: IProperties;
 }
 
 interface IState {}
 
 function mapStateToProps(state: IPlayerStore, props): IProps {
-  const { videoState } = state;
+  const { properties: videoState } = state;
 
   return {
     videoState,

@@ -66,7 +66,7 @@ export function initOptions(opt) {
 export function initState(options, plugins): IPlayerStore {
   return {
     options,
-    videoState: {
+    properties: {
       playing: false,
       currentListIndex: 0,
       currentQualityIndex: 0,

@@ -4,7 +4,7 @@ import { css } from "emotion";
 import { IPlayerStore, IProperties } from "../interface";
 import { connect } from "unistore/preact";
 import { parsePercent, IS_TOUCHABLE_DEVICE } from "../utils";
-import { colorPrimary } from "../utils/style";
+import { colorPrimary, styleToolbarButtonIcon } from "../utils/style";
 import { Emitter } from "../utils/emitter";
 import { InnerEventType, PlayerEventType } from "../utils/event";
 import { ISetCurrentTime, setCurrentTime } from "../utils/video";
@@ -15,9 +15,7 @@ interface IProps {
   setCurrentTime?: ISetCurrentTime;
 }
 
-interface IState {
-  isProgressBarHidden: boolean;
-}
+interface IState {}
 
 const actions = {
   setCurrentTime,
@@ -36,44 +34,12 @@ function mapStateToProps(state: IPlayerStore, props): IProps {
   mapStateToProps,
   actions
 )
-export class ToolBarProgressBar extends Component<IProps, IState> {
-  pluginName = "ToolBarProgressBar";
+export class ToolBarVolumeButton extends Component<IProps, IState> {
+  pluginName = "ToolBarVolumeButton";
   sliderEl: HTMLDivElement;
   cursorEl: HTMLDivElement;
   mouseDown: boolean;
   rectCache: ClientRect | DOMRect;
-  eventsMap = {
-    [InnerEventType.InnerProgressBarShow]: () => {
-      this.setState({
-        isProgressBarHidden: false,
-      });
-    },
-    [InnerEventType.InnerProgressBarHide]: () => {
-      this.setState({
-        isProgressBarHidden: true,
-      });
-    },
-  };
-
-  constructor(props: IProps) {
-    super(props);
-
-    this.state = {
-      isProgressBarHidden: false,
-    };
-  }
-
-  componentWillMount() {
-    for (let event in this.eventsMap) {
-      this.props.emitter.on(event as PlayerEventType, this.eventsMap[event]);
-    }
-  }
-
-  componentWillUnmount() {
-    for (let event in this.eventsMap) {
-      this.props.emitter.off(event as PlayerEventType, this.eventsMap[event]);
-    }
-  }
 
   setSliderRef = (el: HTMLDivElement) => (this.sliderEl = el);
   setCursorRef = (el: HTMLDivElement) => (this.cursorEl = el);
@@ -81,56 +47,42 @@ export class ToolBarProgressBar extends Component<IProps, IState> {
   render() {
     return (
       <div className={styleProgressBar}>
-        {!this.state.isProgressBarHidden && (
-          <div
-            className={styleProgressBarContent}
-            onTouchStart={IS_TOUCHABLE_DEVICE && this.onTouchStart}
-            onTouchMove={IS_TOUCHABLE_DEVICE && this.onTouchMove}
-            onTouchEnd={IS_TOUCHABLE_DEVICE && this.onTouchEnd}
-            onMouseDown={!IS_TOUCHABLE_DEVICE && this.onMouseDown}
-          >
-            <div className={styleProgressBarBackground} ref={this.setSliderRef}>
-              {this.getBufferedComponent()}
-              <div className={styleProgressBarFill} style={{ width: `${this.getCursorLeft()}%` }} />
-              <div
-                className={styleProgressBarCursor}
-                style={{ left: `${this.getCursorLeft()}%` }}
-                ref={this.setCursorRef}
-              />
-            </div>
+        <div
+          className={styleProgressBarContent}
+          onTouchStart={IS_TOUCHABLE_DEVICE && this.onTouchStart}
+          onTouchMove={IS_TOUCHABLE_DEVICE && this.onTouchMove}
+          onTouchEnd={IS_TOUCHABLE_DEVICE && this.onTouchEnd}
+          onMouseDown={!IS_TOUCHABLE_DEVICE && this.onMouseDown}
+        >
+          <div className={styleProgressBarBackground} ref={this.setSliderRef}>
+            <div className={styleProgressBarFill} style={{ width: `${this.getCursorLeft()}%` }} />
+            <div
+              className={styleProgressBarCursor}
+              style={{ left: `${this.getCursorLeft()}%` }}
+              ref={this.setCursorRef}
+            />
           </div>
-        )}
+        </div>
       </div>
     );
   }
 
-  getBufferedComponent() {
-    const { buffered, duration } = this.props.videoState;
+  render() {
+    const svg = this.props.videoState.playing ? (
+      <div
+        className={styleToolbarButtonIcon}
+        dangerouslySetInnerHTML={{ __html: (toolBarPauseButton as any) as string }}
+        onClick={this.muted}
+      />
+    ) : (
+      <div
+        className={styleToolbarButtonIcon}
+        dangerouslySetInnerHTML={{ __html: (toolBarPlayButton as any) as string }}
+        onClick={this.unmuted}
+      />
+    );
 
-    if (buffered == null) {
-      return null;
-    }
-
-    let content = [];
-
-    for (let i = 0; i < buffered.length; i++) {
-      const start = buffered.start(i) / duration;
-      const end = (duration - buffered.end(i)) / duration;
-      const startPercent = parsePercent(start * 100);
-      const endPercent = parsePercent(end * 100);
-
-      content.push(
-        <div
-          className={styleProgressBarBuffered}
-          style={{
-            left: `${startPercent}%`,
-            right: `${endPercent}%`,
-          }}
-        />
-      );
-    }
-
-    return content;
+    return !IS_TOUCHABLE_DEVICE ? getToolBarButtonTemplate(svg) : null;
   }
 
   getCursorLeft() {
@@ -206,6 +158,10 @@ export class ToolBarProgressBar extends Component<IProps, IState> {
     emitter.emit<number>(InnerEventType.InnerVideoSetCurrentTime, videoState.currentTime);
     emitter.emit(InnerEventType.InnerSeeked);
   }
+
+  muted = () => {};
+
+  unmuted = () => {};
 }
 
 const styleProgressBar = css`
@@ -229,14 +185,6 @@ const styleProgressBarBackground = css`
   cursor: pointer;
   -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
   transform: translateY(-50%);
-`;
-
-const styleProgressBarBuffered = css`
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  background-color: rgba(255, 255, 255, 0.5);
-  pointer-events: none;
 `;
 
 const styleProgressBarFill = css`

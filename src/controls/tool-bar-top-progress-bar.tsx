@@ -1,7 +1,7 @@
 import { h, Component } from "preact";
 import { css, cx } from "emotion";
 
-import { IPlayerStore, IVideoState } from "../interface";
+import { IPlayerStore, IProperties } from "../interface";
 import { connect } from "unistore/preact";
 import { parsePercent } from "../utils";
 import { colorPrimary } from "../utils/style";
@@ -9,7 +9,7 @@ import { Emitter } from "../utils/emitter";
 import { InnerEventType } from "../utils/event";
 
 interface IProps {
-  videoState?: IVideoState;
+  videoState?: IProperties;
   emitter?: Emitter;
 }
 
@@ -18,7 +18,7 @@ interface IState {
 }
 
 function mapStateToProps(state: IPlayerStore, props): IProps {
-  const { videoState, emitter } = state;
+  const { properties: videoState, emitter } = state;
 
   return {
     videoState,

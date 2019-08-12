@@ -3719,10 +3719,10 @@ module.exports = "<svg viewBox=\"0 0 16 16\" xmlns=\"http://www.w3.org/2000/svg\
 
 /***/ }),
 
-/***/ "./src/assets/tool-bar-pause-button.svg":
-/*!**********************************************!*\
-  !*** ./src/assets/tool-bar-pause-button.svg ***!
-  \**********************************************/
+/***/ "./src/assets/pause-button.svg":
+/*!*************************************!*\
+  !*** ./src/assets/pause-button.svg ***!
+  \*************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -3730,10 +3730,10 @@ module.exports = "<svg viewBox=\"0 0 13 18\" xmlns=\"http://www.w3.org/2000/svg\
 
 /***/ }),
 
-/***/ "./src/assets/tool-bar-play-button.svg":
-/*!*********************************************!*\
-  !*** ./src/assets/tool-bar-play-button.svg ***!
-  \*********************************************/
+/***/ "./src/assets/play-button.svg":
+/*!************************************!*\
+  !*** ./src/assets/play-button.svg ***!
+  \************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -3873,7 +3873,7 @@ var __decorate = (undefined && undefined.__decorate) || function (decorators, ta
 
 
 function mapStateToProps(state, props) {
-    var options = state.options, emitter = state.emitter, videoState = state.videoState;
+    var options = state.options, emitter = state.emitter, videoState = state.properties;
     return {
         options: options,
         emitter: emitter,
@@ -4068,7 +4068,7 @@ var __decorate = (undefined && undefined.__decorate) || function (decorators, ta
 
 
 function mapStateToProps(state, props) {
-    var videoState = state.videoState;
+    var videoState = state.properties;
     return {
         videoState: videoState,
     };
@@ -4141,7 +4141,7 @@ var __decorate = (undefined && undefined.__decorate) || function (decorators, ta
 
 
 function mapStateToProps(state, props) {
-    var videoState = state.videoState;
+    var videoState = state.properties;
     return {
         videoState: videoState,
     };
@@ -4425,10 +4425,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ToolBarPlayButton", function() { return ToolBarPlayButton; });
 /* harmony import */ var preact__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! preact */ "./node_modules/preact/dist/preact.umd.js");
 /* harmony import */ var preact__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(preact__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _assets_tool_bar_play_button_svg__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../assets/tool-bar-play-button.svg */ "./src/assets/tool-bar-play-button.svg");
-/* harmony import */ var _assets_tool_bar_play_button_svg__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_assets_tool_bar_play_button_svg__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var _assets_tool_bar_pause_button_svg__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../assets/tool-bar-pause-button.svg */ "./src/assets/tool-bar-pause-button.svg");
-/* harmony import */ var _assets_tool_bar_pause_button_svg__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_assets_tool_bar_pause_button_svg__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var _assets_play_button_svg__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../assets/play-button.svg */ "./src/assets/play-button.svg");
+/* harmony import */ var _assets_play_button_svg__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_assets_play_button_svg__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _assets_pause_button_svg__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../assets/pause-button.svg */ "./src/assets/pause-button.svg");
+/* harmony import */ var _assets_pause_button_svg__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_assets_pause_button_svg__WEBPACK_IMPORTED_MODULE_2__);
 /* harmony import */ var unistore_preact__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! unistore/preact */ "./node_modules/unistore/preact.js");
 /* harmony import */ var unistore_preact__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(unistore_preact__WEBPACK_IMPORTED_MODULE_3__);
 /* harmony import */ var _utils_style__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../utils/style */ "./src/utils/style.ts");
@@ -4463,7 +4463,7 @@ var __decorate = (undefined && undefined.__decorate) || function (decorators, ta
 
 
 function mapStateToProps(state, props) {
-    var videoState = state.videoState, emitter = state.emitter;
+    var videoState = state.properties, emitter = state.emitter;
     return {
         videoState: videoState,
         emitter: emitter,
@@ -4483,7 +4483,7 @@ var ToolBarPlayButton = /** @class */ (function (_super) {
         return _this;
     }
     ToolBarPlayButton.prototype.render = function () {
-        var svg = this.props.videoState.playing ? (Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])("div", { className: _utils_style__WEBPACK_IMPORTED_MODULE_4__["styleToolbarButtonIcon"], dangerouslySetInnerHTML: { __html: _assets_tool_bar_pause_button_svg__WEBPACK_IMPORTED_MODULE_2__ }, onClick: this.pause })) : (Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])("div", { className: _utils_style__WEBPACK_IMPORTED_MODULE_4__["styleToolbarButtonIcon"], dangerouslySetInnerHTML: { __html: _assets_tool_bar_play_button_svg__WEBPACK_IMPORTED_MODULE_1__ }, onClick: this.play }));
+        var svg = this.props.videoState.playing ? (Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])("div", { className: _utils_style__WEBPACK_IMPORTED_MODULE_4__["styleToolbarButtonIcon"], dangerouslySetInnerHTML: { __html: _assets_pause_button_svg__WEBPACK_IMPORTED_MODULE_2__ }, onClick: this.pause })) : (Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])("div", { className: _utils_style__WEBPACK_IMPORTED_MODULE_4__["styleToolbarButtonIcon"], dangerouslySetInnerHTML: { __html: _assets_play_button_svg__WEBPACK_IMPORTED_MODULE_1__ }, onClick: this.play }));
         return !_utils__WEBPACK_IMPORTED_MODULE_7__["IS_TOUCHABLE_DEVICE"] ? Object(_utils_render__WEBPACK_IMPORTED_MODULE_5__["getToolBarButtonTemplate"])(svg) : null;
     };
     ToolBarPlayButton = __decorate([
@@ -4549,7 +4549,7 @@ var actions = {
     setCurrentTime: _utils_video__WEBPACK_IMPORTED_MODULE_6__["setCurrentTime"],
 };
 function mapStateToProps(state, props) {
-    var videoState = state.videoState, emitter = state.emitter;
+    var videoState = state.properties, emitter = state.emitter;
     return {
         videoState: videoState,
         emitter: emitter,
@@ -4739,7 +4739,7 @@ var __decorate = (undefined && undefined.__decorate) || function (decorators, ta
 
 
 function mapStateToProps(state, props) {
-    var videoState = state.videoState, emitter = state.emitter;
+    var videoState = state.properties, emitter = state.emitter;
     return {
         videoState: videoState,
         emitter: emitter,
@@ -5062,7 +5062,7 @@ var actions = {
     setBuffered: _utils_video__WEBPACK_IMPORTED_MODULE_2__["setBuffered"],
 };
 function mapStateToProps(state, props) {
-    var options = state.options, videoState = state.videoState, emitter = state.emitter;
+    var options = state.options, videoState = state.properties, emitter = state.emitter;
     return {
         options: options,
         videoState: videoState,
@@ -5254,7 +5254,7 @@ var __decorate = (undefined && undefined.__decorate) || function (decorators, ta
 
 
 function mapStateToProps(state, props) {
-    var options = state.options, videoState = state.videoState, emitter = state.emitter, plugins = state.plugins;
+    var options = state.options, videoState = state.properties, emitter = state.emitter, plugins = state.plugins;
     return {
         options: options,
         videoState: videoState,
@@ -5597,7 +5597,7 @@ function initOptions(opt) {
 function initState(options, plugins) {
     return {
         options: options,
-        videoState: {
+        properties: {
             playing: false,
             currentListIndex: 0,
             currentQualityIndex: 0,
@@ -5738,22 +5738,22 @@ __webpack_require__.r(__webpack_exports__);
 
 function setPlayState(state, playing) {
     return Object(immer__WEBPACK_IMPORTED_MODULE_0__["default"])(state, function (draft) {
-        draft.videoState.playing = playing;
+        draft.properties.playing = playing;
     });
 }
 function setCurrentTime(state, time) {
     return Object(immer__WEBPACK_IMPORTED_MODULE_0__["default"])(state, function (draft) {
-        draft.videoState.currentTime = time;
+        draft.properties.currentTime = time;
     });
 }
 function setDuration(state, duration) {
     return Object(immer__WEBPACK_IMPORTED_MODULE_0__["default"])(state, function (draft) {
-        draft.videoState.duration = duration;
+        draft.properties.duration = duration;
     });
 }
 function setBuffered(state, buffered) {
     return Object(immer__WEBPACK_IMPORTED_MODULE_0__["default"])(state, function (draft) {
-        draft.videoState.buffered = buffered;
+        draft.properties.buffered = buffered;
     });
 }
 

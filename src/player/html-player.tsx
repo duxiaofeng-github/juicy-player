@@ -1,6 +1,6 @@
 import { h, Component } from "preact";
 import { connect } from "unistore/preact";
-import { IOptions, IPlayerStore, IVideoState, ISource } from "../interface";
+import { IOptions, IPlayerStore, IProperties, ISource } from "../interface";
 import {
   setPlayState,
   setDuration,
@@ -17,7 +17,7 @@ import { InnerEventType, NativeEvent, PlayerEvent } from "../utils/event";
 
 interface IProps {
   options?: IOptions;
-  videoState?: IVideoState;
+  videoState?: IProperties;
   setPlayState?: ISetPlayState;
   setDuration?: ISetDuration;
   setCurrentTime?: ISetCurrentTime;
@@ -35,7 +35,7 @@ const actions = {
 };
 
 function mapStateToProps(state: IPlayerStore, props): IProps {
-  const { options, videoState, emitter } = state;
+  const { options, properties: videoState, emitter } = state;
 
   return {
     options,
