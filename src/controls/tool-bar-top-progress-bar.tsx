@@ -30,7 +30,7 @@ function mapStateToProps(state: IPlayerStore, props): IProps {
 export class ToolBarTopProgressBar extends Component<IProps, IState> {
   pluginName = "ToolBarTopProgressBar";
 
-  componentDidMount() {
+  componentWillMount() {
     const emitter = this.props.emitter;
     emitter.on(InnerEventType.InnerToolBarShown, this.hide);
     emitter.on(InnerEventType.InnerToolBarHidden, this.show);

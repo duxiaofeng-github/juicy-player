@@ -3697,6 +3697,28 @@ module.exports = "<svg viewBox=\"0 0 66 66\" xmlns=\"http://www.w3.org/2000/svg\
 
 /***/ }),
 
+/***/ "./src/assets/enter-full-screen-button.svg":
+/*!*************************************************!*\
+  !*** ./src/assets/enter-full-screen-button.svg ***!
+  \*************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = "<svg viewBox=\"0 0 16 16\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M7.462 9.828l-4.277 4.277h3.412v1.825H.07V9.403h1.825v3.412l4.277-4.277 1.29 1.29zm1.94-7.933h3.413L8.537 6.172l1.29 1.29 4.278-4.277v3.412h1.825V.07H9.403v1.825z\" fill-rule=\"nonzero\"></path></svg>"
+
+/***/ }),
+
+/***/ "./src/assets/exit-full-screen-button.svg":
+/*!************************************************!*\
+  !*** ./src/assets/exit-full-screen-button.svg ***!
+  \************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = "<svg viewBox=\"0 0 16 16\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M.07 14.64l4.278-4.278H.936V8.538h6.526v6.526H5.638v-3.412L1.36 15.93.07 14.64zm14.994-9.002h-3.412L15.93 1.36 14.64.07l-4.278 4.278V.936H8.537v6.527h6.527V5.638z\" fill-rule=\"nonzero\"></path></svg>"
+
+/***/ }),
+
 /***/ "./src/assets/tool-bar-pause-button.svg":
 /*!**********************************************!*\
   !*** ./src/assets/tool-bar-pause-button.svg ***!
@@ -3735,6 +3757,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _utils_render__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./utils/render */ "./src/utils/render.tsx");
 /* harmony import */ var unistore_preact__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! unistore/preact */ "./node_modules/unistore/preact.js");
 /* harmony import */ var unistore_preact__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(unistore_preact__WEBPACK_IMPORTED_MODULE_3__);
+/* harmony import */ var _utils_style__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./utils/style */ "./src/utils/style.ts");
+/* harmony import */ var _utils_event__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./utils/event */ "./src/utils/event.ts");
 var __extends = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -3762,23 +3786,39 @@ var __decorate = (undefined && undefined.__decorate) || function (decorators, ta
 
 
 
+
+
+function mapStateToProps(state, props) {
+    var plugins = state.plugins, emitter = state.emitter;
+    return {
+        plugins: plugins,
+        emitter: emitter,
+    };
+}
 var Container = /** @class */ (function (_super) {
     __extends(Container, _super);
     function Container() {
         var _this = _super !== null && _super.apply(this, arguments) || this;
         _this.pluginName = "Container";
+        _this.setRef = function (el) { return (_this.el = el); };
         return _this;
     }
+    Container.prototype.componentDidMount = function () {
+        this.props.emitter.emit(_utils_event__WEBPACK_IMPORTED_MODULE_5__["InnerEventType"].InnerContainerMountedOrUnmounted, this.el);
+    };
+    Container.prototype.componentWillUnmount = function () {
+        this.props.emitter.emit(_utils_event__WEBPACK_IMPORTED_MODULE_5__["InnerEventType"].InnerContainerMountedOrUnmounted, null);
+    };
     Container.prototype.render = function () {
-        return Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])("div", { className: styleContainer }, Object(_utils_render__WEBPACK_IMPORTED_MODULE_2__["renderPlugins"])(this.pluginName, this.props.plugins));
+        return (Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])("div", { className: styleContainer, ref: this.setRef }, Object(_utils_render__WEBPACK_IMPORTED_MODULE_2__["renderPlugins"])(this.pluginName, this.props.plugins)));
     };
     Container = __decorate([
-        Object(unistore_preact__WEBPACK_IMPORTED_MODULE_3__["connect"])(_utils_render__WEBPACK_IMPORTED_MODULE_2__["mapPluginsToProps"])
+        Object(unistore_preact__WEBPACK_IMPORTED_MODULE_3__["connect"])(mapStateToProps)
     ], Container);
     return Container;
 }(preact__WEBPACK_IMPORTED_MODULE_0__["Component"]));
 
-var styleContainer = Object(emotion__WEBPACK_IMPORTED_MODULE_1__["css"])(templateObject_1 || (templateObject_1 = __makeTemplateObject(["\n  position: absolute;\n  top: 0;\n  bottom: 0;\n  left: 0;\n  right: 0;\n  overflow: hidden;\n  background-color: #000;\n  font-family: \"PingFang SC\", Arial, \"Microsoft YaHei\", sans-serif;\n  -webkit-font-smoothing: antialiased;\n  -moz-osx-font-smoothing: grayscale;\n  -webkit-overflow-scrolling: touch;\n  user-select: none;\n\n  * {\n    box-sizing: content-box;\n    padding: 0;\n    margin: 0;\n  }\n"], ["\n  position: absolute;\n  top: 0;\n  bottom: 0;\n  left: 0;\n  right: 0;\n  overflow: hidden;\n  background-color: #000;\n  font-family: \"PingFang SC\", Arial, \"Microsoft YaHei\", sans-serif;\n  -webkit-font-smoothing: antialiased;\n  -moz-osx-font-smoothing: grayscale;\n  -webkit-overflow-scrolling: touch;\n  user-select: none;\n\n  * {\n    box-sizing: content-box;\n    padding: 0;\n    margin: 0;\n  }\n"])));
+var styleContainer = Object(emotion__WEBPACK_IMPORTED_MODULE_1__["css"])(templateObject_1 || (templateObject_1 = __makeTemplateObject(["\n  position: absolute;\n  top: 0;\n  bottom: 0;\n  left: 0;\n  right: 0;\n  overflow: hidden;\n  background-color: #000;\n  font-family: \"PingFang SC\", Arial, \"Microsoft YaHei\", sans-serif;\n  font-size: ", ";\n  -webkit-font-smoothing: antialiased;\n  -moz-osx-font-smoothing: grayscale;\n  -webkit-overflow-scrolling: touch;\n  user-select: none;\n\n  * {\n    box-sizing: content-box;\n    margin: 0;\n  }\n"], ["\n  position: absolute;\n  top: 0;\n  bottom: 0;\n  left: 0;\n  right: 0;\n  overflow: hidden;\n  background-color: #000;\n  font-family: \"PingFang SC\", Arial, \"Microsoft YaHei\", sans-serif;\n  font-size: ", ";\n  -webkit-font-smoothing: antialiased;\n  -moz-osx-font-smoothing: grayscale;\n  -webkit-overflow-scrolling: touch;\n  user-select: none;\n\n  * {\n    box-sizing: content-box;\n    margin: 0;\n  }\n"])), _utils_style__WEBPACK_IMPORTED_MODULE_4__["fontSizeDefault"]);
 var templateObject_1;
 
 
@@ -3982,22 +4022,168 @@ var templateObject_1;
 
 /***/ }),
 
-/***/ "./src/controls/tool-bar-play-button.tsx":
-/*!***********************************************!*\
-  !*** ./src/controls/tool-bar-play-button.tsx ***!
-  \***********************************************/
-/*! exports provided: ToolBarPlayButton */
+/***/ "./src/controls/tool-bar-current-time.tsx":
+/*!************************************************!*\
+  !*** ./src/controls/tool-bar-current-time.tsx ***!
+  \************************************************/
+/*! exports provided: ToolBarCurrentTime */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ToolBarPlayButton", function() { return ToolBarPlayButton; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ToolBarCurrentTime", function() { return ToolBarCurrentTime; });
 /* harmony import */ var preact__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! preact */ "./node_modules/preact/dist/preact.umd.js");
 /* harmony import */ var preact__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(preact__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _assets_tool_bar_play_button_svg__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../assets/tool-bar-play-button.svg */ "./src/assets/tool-bar-play-button.svg");
-/* harmony import */ var _assets_tool_bar_play_button_svg__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_assets_tool_bar_play_button_svg__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var _assets_tool_bar_pause_button_svg__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../assets/tool-bar-pause-button.svg */ "./src/assets/tool-bar-pause-button.svg");
-/* harmony import */ var _assets_tool_bar_pause_button_svg__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_assets_tool_bar_pause_button_svg__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var unistore_preact__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! unistore/preact */ "./node_modules/unistore/preact.js");
+/* harmony import */ var unistore_preact__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(unistore_preact__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _utils_render__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../utils/render */ "./src/utils/render.tsx");
+/* harmony import */ var _utils__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../utils */ "./src/utils/index.ts");
+/* harmony import */ var emotion__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! emotion */ "./node_modules/emotion/dist/index.esm.js");
+var __extends = (undefined && undefined.__extends) || (function () {
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+var __makeTemplateObject = (undefined && undefined.__makeTemplateObject) || function (cooked, raw) {
+    if (Object.defineProperty) { Object.defineProperty(cooked, "raw", { value: raw }); } else { cooked.raw = raw; }
+    return cooked;
+};
+var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+
+
+
+
+
+function mapStateToProps(state, props) {
+    var videoState = state.videoState;
+    return {
+        videoState: videoState,
+    };
+}
+var ToolBarCurrentTime = /** @class */ (function (_super) {
+    __extends(ToolBarCurrentTime, _super);
+    function ToolBarCurrentTime() {
+        var _this = _super !== null && _super.apply(this, arguments) || this;
+        _this.pluginName = "ToolBarCurrentTime";
+        return _this;
+    }
+    ToolBarCurrentTime.prototype.render = function () {
+        return Object(_utils_render__WEBPACK_IMPORTED_MODULE_2__["getToolBarTextTemplate"])(Object(_utils__WEBPACK_IMPORTED_MODULE_3__["secondToMMSS"])(this.props.videoState.currentTime), styleCurrentTime);
+    };
+    ToolBarCurrentTime = __decorate([
+        Object(unistore_preact__WEBPACK_IMPORTED_MODULE_1__["connect"])(mapStateToProps)
+    ], ToolBarCurrentTime);
+    return ToolBarCurrentTime;
+}(preact__WEBPACK_IMPORTED_MODULE_0__["Component"]));
+
+var styleCurrentTime = Object(emotion__WEBPACK_IMPORTED_MODULE_4__["css"])(templateObject_1 || (templateObject_1 = __makeTemplateObject(["\n  padding-right: 0;\n"], ["\n  padding-right: 0;\n"])));
+var templateObject_1;
+
+
+/***/ }),
+
+/***/ "./src/controls/tool-bar-duration.tsx":
+/*!********************************************!*\
+  !*** ./src/controls/tool-bar-duration.tsx ***!
+  \********************************************/
+/*! exports provided: ToolBarDuration */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ToolBarDuration", function() { return ToolBarDuration; });
+/* harmony import */ var preact__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! preact */ "./node_modules/preact/dist/preact.umd.js");
+/* harmony import */ var preact__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(preact__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var unistore_preact__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! unistore/preact */ "./node_modules/unistore/preact.js");
+/* harmony import */ var unistore_preact__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(unistore_preact__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _utils_render__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../utils/render */ "./src/utils/render.tsx");
+/* harmony import */ var _utils__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../utils */ "./src/utils/index.ts");
+/* harmony import */ var emotion__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! emotion */ "./node_modules/emotion/dist/index.esm.js");
+var __extends = (undefined && undefined.__extends) || (function () {
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+var __makeTemplateObject = (undefined && undefined.__makeTemplateObject) || function (cooked, raw) {
+    if (Object.defineProperty) { Object.defineProperty(cooked, "raw", { value: raw }); } else { cooked.raw = raw; }
+    return cooked;
+};
+var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+
+
+
+
+
+function mapStateToProps(state, props) {
+    var videoState = state.videoState;
+    return {
+        videoState: videoState,
+    };
+}
+var ToolBarDuration = /** @class */ (function (_super) {
+    __extends(ToolBarDuration, _super);
+    function ToolBarDuration() {
+        var _this = _super !== null && _super.apply(this, arguments) || this;
+        _this.pluginName = "ToolBarDuration";
+        return _this;
+    }
+    ToolBarDuration.prototype.render = function () {
+        return Object(_utils_render__WEBPACK_IMPORTED_MODULE_2__["getToolBarTextTemplate"])(Object(_utils__WEBPACK_IMPORTED_MODULE_3__["secondToMMSS"])(this.props.videoState.duration), styleDuration);
+    };
+    ToolBarDuration = __decorate([
+        Object(unistore_preact__WEBPACK_IMPORTED_MODULE_1__["connect"])(mapStateToProps)
+    ], ToolBarDuration);
+    return ToolBarDuration;
+}(preact__WEBPACK_IMPORTED_MODULE_0__["Component"]));
+
+var styleDuration = Object(emotion__WEBPACK_IMPORTED_MODULE_4__["css"])(templateObject_1 || (templateObject_1 = __makeTemplateObject(["\n  padding-left: 0;\n"], ["\n  padding-left: 0;\n"])));
+var templateObject_1;
+
+
+/***/ }),
+
+/***/ "./src/controls/tool-bar-full-screen-button.tsx":
+/*!******************************************************!*\
+  !*** ./src/controls/tool-bar-full-screen-button.tsx ***!
+  \******************************************************/
+/*! exports provided: ToolBarFullScreenButton */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ToolBarFullScreenButton", function() { return ToolBarFullScreenButton; });
+/* harmony import */ var preact__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! preact */ "./node_modules/preact/dist/preact.umd.js");
+/* harmony import */ var preact__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(preact__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _assets_enter_full_screen_button_svg__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../assets/enter-full-screen-button.svg */ "./src/assets/enter-full-screen-button.svg");
+/* harmony import */ var _assets_enter_full_screen_button_svg__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_assets_enter_full_screen_button_svg__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _assets_exit_full_screen_button_svg__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../assets/exit-full-screen-button.svg */ "./src/assets/exit-full-screen-button.svg");
+/* harmony import */ var _assets_exit_full_screen_button_svg__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_assets_exit_full_screen_button_svg__WEBPACK_IMPORTED_MODULE_2__);
 /* harmony import */ var unistore_preact__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! unistore/preact */ "./node_modules/unistore/preact.js");
 /* harmony import */ var unistore_preact__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(unistore_preact__WEBPACK_IMPORTED_MODULE_3__);
 /* harmony import */ var _utils_style__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../utils/style */ "./src/utils/style.ts");
@@ -4029,6 +4215,253 @@ var __decorate = (undefined && undefined.__decorate) || function (decorators, ta
 
 
 
+var fullScreenApiList = [
+    [
+        "requestFullscreen",
+        "exitFullscreen",
+        "fullscreenElement",
+        "fullscreenEnabled",
+        "fullscreenchange",
+        "fullscreenerror",
+    ],
+    [
+        "webkitRequestFullscreen",
+        "webkitExitFullscreen",
+        "webkitFullscreenElement",
+        "webkitFullscreenEnabled",
+        "webkitfullscreenchange",
+        "webkitfullscreenerror",
+    ],
+    [
+        "webkitRequestFullScreen",
+        "webkitCancelFullScreen",
+        "webkitFullScreenElement",
+        "webkitCancelFullScreen",
+        "webkitfullscreenchange",
+        "webkitfullscreenerror",
+    ],
+    [
+        "mozRequestFullScreen",
+        "mozCancelFullScreen",
+        "mozFullScreenElement",
+        "mozFullScreenEnabled",
+        "mozfullscreenchange",
+        "mozfullscreenerror",
+    ],
+    [
+        "msRequestFullscreen",
+        "msExitFullscreen",
+        "msFullscreenElement",
+        "msFullscreenEnabled",
+        "MSFullscreenChange",
+        "MSFullscreenError",
+    ],
+    [
+        "webkitEnterFullscreen",
+        "webkitExitFullscreen",
+        "webkitDisplayingFullscreen",
+        "webkitSupportsFullscreen",
+        "webkitbeginfullscreen",
+        "webkitfullscreenerror",
+    ],
+    [
+        "webkitEnterFullScreen",
+        "webkitExitFullScreen",
+        "webkitDisplayingFullscreen",
+        "webkitSupportsFullscreen",
+        "webkitbeginfullscreen",
+        "webkitfullscreenerror",
+    ],
+];
+function mapStateToProps(state, props) {
+    var emitter = state.emitter;
+    return {
+        emitter: emitter,
+    };
+}
+var ToolBarFullScreenButton = /** @class */ (function (_super) {
+    __extends(ToolBarFullScreenButton, _super);
+    function ToolBarFullScreenButton() {
+        var _this = _super !== null && _super.apply(this, arguments) || this;
+        _this.pluginName = "ToolBarFullScreenButton";
+        _this.prepareFullScreenApiByContainer = function (e) {
+            var el = e.detail;
+            var _loop_1 = function (item) {
+                var requestFullscreen = item[0];
+                var exitFullscreen = item[1];
+                var fullscreenElement = item[2];
+                var fullscreenchange = item[4];
+                if ("on" + fullscreenchange in document) {
+                    _this.enterFullScreen = function () {
+                        el[requestFullscreen]();
+                    };
+                    _this.exitFullScreen = function () {
+                        document[exitFullscreen]();
+                    };
+                    document.addEventListener(fullscreenchange, function (e) {
+                        var currentFullScreenElement = document[fullscreenElement];
+                        if (currentFullScreenElement === el) {
+                            _this.setState({
+                                isFullScreen: true,
+                            });
+                        }
+                        else {
+                            _this.setState({
+                                isFullScreen: false,
+                            });
+                        }
+                    });
+                    _this.setState({
+                        isFullScreenEnabled: true,
+                    });
+                    return "break";
+                }
+            };
+            for (var _i = 0, fullScreenApiList_1 = fullScreenApiList; _i < fullScreenApiList_1.length; _i++) {
+                var item = fullScreenApiList_1[_i];
+                var state_1 = _loop_1(item);
+                if (state_1 === "break")
+                    break;
+            }
+        };
+        _this.prepareFullScreenApiByPlayer = function (e) {
+            if (_this.checkIsContainerFullScreenEnabled()) {
+                return;
+            }
+            var el = e.detail;
+            var _loop_2 = function (item) {
+                var requestFullscreen = item[0];
+                var exitFullscreen = item[1];
+                var fullscreenElement = item[2];
+                if (requestFullscreen in el) {
+                    _this.enterFullScreen = function () {
+                        el[requestFullscreen]();
+                    };
+                    _this.exitFullScreen = function () {
+                        el[exitFullscreen]();
+                    };
+                    var fullScreenChanged = function (e) {
+                        var currentFullScreenElement = el[fullscreenElement];
+                        if (currentFullScreenElement === el) {
+                            _this.setState({
+                                isFullScreen: true,
+                            });
+                        }
+                        else {
+                            _this.setState({
+                                isFullScreen: false,
+                            });
+                        }
+                    };
+                    el.addEventListener("webkitbeginfullscreen", fullScreenChanged);
+                    el.addEventListener("webkitendfullscreen", fullScreenChanged);
+                    _this.setState({
+                        isFullScreenEnabled: true,
+                    });
+                    return "break";
+                }
+            };
+            for (var _i = 0, fullScreenApiList_2 = fullScreenApiList; _i < fullScreenApiList_2.length; _i++) {
+                var item = fullScreenApiList_2[_i];
+                var state_2 = _loop_2(item);
+                if (state_2 === "break")
+                    break;
+            }
+        };
+        _this.enter = function () {
+            _this.enterFullScreen();
+        };
+        _this.exit = function () {
+            _this.exitFullScreen();
+        };
+        return _this;
+    }
+    ToolBarFullScreenButton.prototype.componentWillMount = function () {
+        this.props.emitter.on(_utils_event__WEBPACK_IMPORTED_MODULE_6__["InnerEventType"].InnerContainerMountedOrUnmounted, this.prepareFullScreenApiByContainer);
+        this.props.emitter.on(_utils_event__WEBPACK_IMPORTED_MODULE_6__["InnerEventType"].InnerPlayerMountedOrUnmounted, this.prepareFullScreenApiByPlayer);
+    };
+    ToolBarFullScreenButton.prototype.componentWillUnmount = function () {
+        this.props.emitter.off(_utils_event__WEBPACK_IMPORTED_MODULE_6__["InnerEventType"].InnerContainerMountedOrUnmounted, this.prepareFullScreenApiByContainer);
+        this.props.emitter.off(_utils_event__WEBPACK_IMPORTED_MODULE_6__["InnerEventType"].InnerPlayerMountedOrUnmounted, this.prepareFullScreenApiByPlayer);
+    };
+    ToolBarFullScreenButton.prototype.render = function () {
+        if (!this.state.isFullScreenEnabled) {
+            return null;
+        }
+        var svg = !this.state.isFullScreen ? (Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])("div", { className: _utils_style__WEBPACK_IMPORTED_MODULE_4__["styleToolbarButtonIcon"], dangerouslySetInnerHTML: { __html: _assets_enter_full_screen_button_svg__WEBPACK_IMPORTED_MODULE_1__ }, onClick: this.enter })) : (Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])("div", { className: _utils_style__WEBPACK_IMPORTED_MODULE_4__["styleToolbarButtonIcon"], dangerouslySetInnerHTML: { __html: _assets_exit_full_screen_button_svg__WEBPACK_IMPORTED_MODULE_2__ }, onClick: this.exit }));
+        return Object(_utils_render__WEBPACK_IMPORTED_MODULE_5__["getToolBarButtonTemplate"])(svg);
+    };
+    ToolBarFullScreenButton.prototype.checkIsContainerFullScreenEnabled = function () {
+        var isEnabled = false;
+        for (var _i = 0, fullScreenApiList_3 = fullScreenApiList; _i < fullScreenApiList_3.length; _i++) {
+            var item = fullScreenApiList_3[_i];
+            var fullscreenchange = item[4];
+            if ("on" + fullscreenchange in document) {
+                isEnabled = true;
+                break;
+            }
+        }
+        return isEnabled;
+    };
+    ToolBarFullScreenButton = __decorate([
+        Object(unistore_preact__WEBPACK_IMPORTED_MODULE_3__["connect"])(mapStateToProps)
+    ], ToolBarFullScreenButton);
+    return ToolBarFullScreenButton;
+}(preact__WEBPACK_IMPORTED_MODULE_0__["Component"]));
+
+
+
+/***/ }),
+
+/***/ "./src/controls/tool-bar-play-button.tsx":
+/*!***********************************************!*\
+  !*** ./src/controls/tool-bar-play-button.tsx ***!
+  \***********************************************/
+/*! exports provided: ToolBarPlayButton */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ToolBarPlayButton", function() { return ToolBarPlayButton; });
+/* harmony import */ var preact__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! preact */ "./node_modules/preact/dist/preact.umd.js");
+/* harmony import */ var preact__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(preact__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _assets_tool_bar_play_button_svg__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../assets/tool-bar-play-button.svg */ "./src/assets/tool-bar-play-button.svg");
+/* harmony import */ var _assets_tool_bar_play_button_svg__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_assets_tool_bar_play_button_svg__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _assets_tool_bar_pause_button_svg__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../assets/tool-bar-pause-button.svg */ "./src/assets/tool-bar-pause-button.svg");
+/* harmony import */ var _assets_tool_bar_pause_button_svg__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_assets_tool_bar_pause_button_svg__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var unistore_preact__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! unistore/preact */ "./node_modules/unistore/preact.js");
+/* harmony import */ var unistore_preact__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(unistore_preact__WEBPACK_IMPORTED_MODULE_3__);
+/* harmony import */ var _utils_style__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../utils/style */ "./src/utils/style.ts");
+/* harmony import */ var _utils_render__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../utils/render */ "./src/utils/render.tsx");
+/* harmony import */ var _utils_event__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../utils/event */ "./src/utils/event.ts");
+/* harmony import */ var _utils__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../utils */ "./src/utils/index.ts");
+var __extends = (undefined && undefined.__extends) || (function () {
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+
+
+
+
+
+
+
+
 function mapStateToProps(state, props) {
     var videoState = state.videoState, emitter = state.emitter;
     return {
@@ -4051,7 +4484,7 @@ var ToolBarPlayButton = /** @class */ (function (_super) {
     }
     ToolBarPlayButton.prototype.render = function () {
         var svg = this.props.videoState.playing ? (Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])("div", { className: _utils_style__WEBPACK_IMPORTED_MODULE_4__["styleToolbarButtonIcon"], dangerouslySetInnerHTML: { __html: _assets_tool_bar_pause_button_svg__WEBPACK_IMPORTED_MODULE_2__ }, onClick: this.pause })) : (Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])("div", { className: _utils_style__WEBPACK_IMPORTED_MODULE_4__["styleToolbarButtonIcon"], dangerouslySetInnerHTML: { __html: _assets_tool_bar_play_button_svg__WEBPACK_IMPORTED_MODULE_1__ }, onClick: this.play }));
-        return Object(_utils_render__WEBPACK_IMPORTED_MODULE_5__["getToolBarButtonTemplate"])(svg);
+        return !_utils__WEBPACK_IMPORTED_MODULE_7__["IS_TOUCHABLE_DEVICE"] ? Object(_utils_render__WEBPACK_IMPORTED_MODULE_5__["getToolBarButtonTemplate"])(svg) : null;
     };
     ToolBarPlayButton = __decorate([
         Object(unistore_preact__WEBPACK_IMPORTED_MODULE_3__["connect"])(mapStateToProps)
@@ -4177,7 +4610,7 @@ var ToolBarProgressBar = /** @class */ (function (_super) {
         };
         return _this;
     }
-    ToolBarProgressBar.prototype.componentDidMount = function () {
+    ToolBarProgressBar.prototype.componentWillMount = function () {
         for (var event_1 in this.eventsMap) {
             this.props.emitter.on(event_1, this.eventsMap[event_1]);
         }
@@ -4329,7 +4762,7 @@ var ToolBarTopProgressBar = /** @class */ (function (_super) {
         };
         return _this;
     }
-    ToolBarTopProgressBar.prototype.componentDidMount = function () {
+    ToolBarTopProgressBar.prototype.componentWillMount = function () {
         var emitter = this.props.emitter;
         emitter.on(_utils_event__WEBPACK_IMPORTED_MODULE_5__["InnerEventType"].InnerToolBarShown, this.hide);
         emitter.on(_utils_event__WEBPACK_IMPORTED_MODULE_5__["InnerEventType"].InnerToolBarHidden, this.show);
@@ -4458,13 +4891,15 @@ var ToolBar = /** @class */ (function (_super) {
         };
         return _this;
     }
-    ToolBar.prototype.componentDidMount = function () {
+    ToolBar.prototype.componentWillMount = function () {
         var emitter = this.props.emitter;
         emitter.on(_utils_event__WEBPACK_IMPORTED_MODULE_4__["InnerEventType"].InnerToolBarShow, this.show);
         emitter.on(_utils_event__WEBPACK_IMPORTED_MODULE_4__["InnerEventType"].InnerToolBarHide, this.hide);
         emitter.on(_utils_event__WEBPACK_IMPORTED_MODULE_4__["InnerEventType"].InnerToolBarToggle, this.toggle);
         emitter.on(_utils_event__WEBPACK_IMPORTED_MODULE_4__["InnerEventType"].InnerSeeking, this.clearTimer);
         emitter.on(_utils_event__WEBPACK_IMPORTED_MODULE_4__["InnerEventType"].InnerSeeked, this.setTimer);
+    };
+    ToolBar.prototype.componentDidMount = function () {
         this.hide();
     };
     ToolBar.prototype.componentWillUnmount = function () {
@@ -4711,7 +5146,7 @@ var Player = /** @class */ (function (_super) {
         };
         return _this;
     }
-    Player.prototype.componentDidMount = function () {
+    Player.prototype.componentWillMount = function () {
         var emitter = this.props.emitter;
         emitter.on(_utils_event__WEBPACK_IMPORTED_MODULE_4__["InnerEventType"].InnerVideoPlay, this.play);
         emitter.on(_utils_event__WEBPACK_IMPORTED_MODULE_4__["InnerEventType"].InnerVideoPause, this.pause);
@@ -4719,7 +5154,11 @@ var Player = /** @class */ (function (_super) {
         emitter.on(_utils_event__WEBPACK_IMPORTED_MODULE_4__["InnerEventType"].InnerVideoSetCurrentTime, this.setNativeElementTime);
         emitter.on(_utils_event__WEBPACK_IMPORTED_MODULE_4__["InnerEventType"].InnerSeeking, this.handleSeeking);
         emitter.on(_utils_event__WEBPACK_IMPORTED_MODULE_4__["InnerEventType"].InnerSeeked, this.handleSeeked);
+    };
+    Player.prototype.componentDidMount = function () {
+        var emitter = this.props.emitter;
         emitter.emit(_utils_event__WEBPACK_IMPORTED_MODULE_4__["InnerEventType"].InnerProgressBarShow);
+        emitter.emit(_utils_event__WEBPACK_IMPORTED_MODULE_4__["InnerEventType"].InnerPlayerMountedOrUnmounted, this.el);
     };
     Player.prototype.componentWillUnmount = function () {
         if (this.el) {
@@ -4732,6 +5171,7 @@ var Player = /** @class */ (function (_super) {
         emitter.off(_utils_event__WEBPACK_IMPORTED_MODULE_4__["InnerEventType"].InnerVideoSetCurrentTime, this.setNativeElementTime);
         emitter.off(_utils_event__WEBPACK_IMPORTED_MODULE_4__["InnerEventType"].InnerSeeking, this.handleSeeking);
         emitter.off(_utils_event__WEBPACK_IMPORTED_MODULE_4__["InnerEventType"].InnerSeeked, this.handleSeeked);
+        emitter.emit(_utils_event__WEBPACK_IMPORTED_MODULE_4__["InnerEventType"].InnerPlayerMountedOrUnmounted, null);
     };
     Player.prototype.render = function () {
         var _a = this.props.options, playsinline = _a.playsinline, autoplay = _a.autoplay, preload = _a.preload, loop = _a.loop, muted = _a.muted;
@@ -4829,7 +5269,7 @@ var Player = /** @class */ (function (_super) {
         _this.pluginName = "Player";
         return _this;
     }
-    Player.prototype.componentDidMount = function () {
+    Player.prototype.componentWillMount = function () {
         // TODO: init video state when sourceChange event received
     };
     Player.prototype.render = function () {
@@ -4887,7 +5327,11 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _controls_tool_bar_play_button__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../controls/tool-bar-play-button */ "./src/controls/tool-bar-play-button.tsx");
 /* harmony import */ var _controls_tool_bar_top_progress_bar__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../controls/tool-bar-top-progress-bar */ "./src/controls/tool-bar-top-progress-bar.tsx");
 /* harmony import */ var _controls_tool_bar_progress_bar__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../controls/tool-bar-progress-bar */ "./src/controls/tool-bar-progress-bar.tsx");
-/* harmony import */ var ___WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! . */ "./src/utils/index.ts");
+/* harmony import */ var _controls_tool_bar_duration__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../controls/tool-bar-duration */ "./src/controls/tool-bar-duration.tsx");
+/* harmony import */ var _controls_tool_bar_current_time__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ../controls/tool-bar-current-time */ "./src/controls/tool-bar-current-time.tsx");
+/* harmony import */ var _controls_tool_bar_full_screen_button__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ../controls/tool-bar-full-screen-button */ "./src/controls/tool-bar-full-screen-button.tsx");
+
+
 
 
 
@@ -4922,15 +5366,27 @@ var buildInPluginList = [
         entry: "ToolBar",
         module: _controls_tool_bar_top_progress_bar__WEBPACK_IMPORTED_MODULE_6__["ToolBarTopProgressBar"],
     },
-    !___WEBPACK_IMPORTED_MODULE_8__["IS_TOUCHABLE_DEVICE"] && {
+    {
         entry: "ToolBar",
         module: _controls_tool_bar_play_button__WEBPACK_IMPORTED_MODULE_5__["ToolBarPlayButton"],
     },
     {
         entry: "ToolBar",
+        module: _controls_tool_bar_current_time__WEBPACK_IMPORTED_MODULE_9__["ToolBarCurrentTime"],
+    },
+    {
+        entry: "ToolBar",
         module: _controls_tool_bar_progress_bar__WEBPACK_IMPORTED_MODULE_7__["ToolBarProgressBar"],
     },
-].filter(function (item) { return item != null; });
+    {
+        entry: "ToolBar",
+        module: _controls_tool_bar_duration__WEBPACK_IMPORTED_MODULE_8__["ToolBarDuration"],
+    },
+    {
+        entry: "ToolBar",
+        module: _controls_tool_bar_full_screen_button__WEBPACK_IMPORTED_MODULE_10__["ToolBarFullScreenButton"],
+    },
+];
 
 
 /***/ }),
@@ -4950,6 +5406,8 @@ __webpack_require__.r(__webpack_exports__);
 var Emitter = /** @class */ (function () {
     function Emitter() {
         this.events = {};
+        this.addEventListener = this.on;
+        this.removeEventListener = this.off;
     }
     Emitter.prototype.on = function (event, listener) {
         this.events[event] = this.events[event] || [];
@@ -5047,6 +5505,8 @@ var InnerEventType;
     InnerEventType["InnerToolBarShown"] = "inner.toolBarShown";
     InnerEventType["InnerSeeking"] = "inner.seeking";
     InnerEventType["InnerSeeked"] = "inner.seeked";
+    InnerEventType["InnerPlayerMountedOrUnmounted"] = "inner.playerMountedOrUnmounted";
+    InnerEventType["InnerContainerMountedOrUnmounted"] = "inner.containerMountedOrUnmounted";
 })(InnerEventType || (InnerEventType = {}));
 var PlayerEvent = /** @class */ (function () {
     function PlayerEvent(type, detail) {
@@ -5064,7 +5524,7 @@ var PlayerEvent = /** @class */ (function () {
 /*!****************************!*\
   !*** ./src/utils/index.ts ***!
   \****************************/
-/*! exports provided: canPlayTypeByFlash, IS_IOS, IS_SUPPORT_MSE, IS_SUPPORT_FLASH, IS_TOUCHABLE_DEVICE, initOptions, initState, parsePercent */
+/*! exports provided: canPlayTypeByFlash, IS_IOS, IS_SUPPORT_MSE, IS_SUPPORT_FLASH, IS_TOUCHABLE_DEVICE, initOptions, initState, parsePercent, secondToMMSS */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -5077,6 +5537,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "initOptions", function() { return initOptions; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "initState", function() { return initState; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "parsePercent", function() { return parsePercent; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "secondToMMSS", function() { return secondToMMSS; });
 /* harmony import */ var _emitter__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./emitter */ "./src/utils/emitter.ts");
 
 var canPlayFormat = {
@@ -5155,6 +5616,16 @@ function parsePercent(percent) {
         percent = 0;
     return percent;
 }
+var secondToMMSS = function (seconds) {
+    if (!seconds)
+        return "00:00";
+    var date = new Date(null);
+    date.setSeconds(seconds); // specify value for SECONDS here
+    return date
+        .toISOString()
+        .substr(11, 8)
+        .replace(/^00:(.+:.+)$/, "$1");
+};
 
 
 /***/ }),
@@ -5163,7 +5634,7 @@ function parsePercent(percent) {
 /*!******************************!*\
   !*** ./src/utils/render.tsx ***!
   \******************************/
-/*! exports provided: mapPluginsToProps, renderPlugins, getPlugins, imagePlaceHolder, getToolBarButtonTemplate */
+/*! exports provided: mapPluginsToProps, renderPlugins, getPlugins, imagePlaceHolder, getToolBarButtonTemplate, getToolBarTextTemplate */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -5173,13 +5644,16 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getPlugins", function() { return getPlugins; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "imagePlaceHolder", function() { return imagePlaceHolder; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getToolBarButtonTemplate", function() { return getToolBarButtonTemplate; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getToolBarTextTemplate", function() { return getToolBarTextTemplate; });
 /* harmony import */ var preact__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! preact */ "./node_modules/preact/dist/preact.umd.js");
 /* harmony import */ var preact__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(preact__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var emotion__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! emotion */ "./node_modules/emotion/dist/index.esm.js");
+/* harmony import */ var _style__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./style */ "./src/utils/style.ts");
 var __makeTemplateObject = (undefined && undefined.__makeTemplateObject) || function (cooked, raw) {
     if (Object.defineProperty) { Object.defineProperty(cooked, "raw", { value: raw }); } else { cooked.raw = raw; }
     return cooked;
 };
+
 
 
 function mapPluginsToProps(state, props) {
@@ -5206,7 +5680,11 @@ function getToolBarButtonTemplate(content) {
         imagePlaceHolder,
         content));
 }
-var templateObject_1, templateObject_2;
+var styleTextContainer = Object(emotion__WEBPACK_IMPORTED_MODULE_1__["css"])(templateObject_3 || (templateObject_3 = __makeTemplateObject(["\n  height: 100%;\n  padding: 0 10px;\n  color: ", ";\n  display: flex;\n  align-items: center;\n  justify-content: center;\n"], ["\n  height: 100%;\n  padding: 0 10px;\n  color: ", ";\n  display: flex;\n  align-items: center;\n  justify-content: center;\n"])), _style__WEBPACK_IMPORTED_MODULE_2__["colorDefault"]);
+function getToolBarTextTemplate(content, className) {
+    return Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])("div", { className: Object(emotion__WEBPACK_IMPORTED_MODULE_1__["cx"])(styleTextContainer, className) }, content);
+}
+var templateObject_1, templateObject_2, templateObject_3;
 
 
 /***/ }),
@@ -5215,13 +5693,14 @@ var templateObject_1, templateObject_2;
 /*!****************************!*\
   !*** ./src/utils/style.ts ***!
   \****************************/
-/*! exports provided: colorDefault, colorPrimary, styleToolbarButtonIcon */
+/*! exports provided: colorDefault, colorPrimary, fontSizeDefault, styleToolbarButtonIcon */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "colorDefault", function() { return colorDefault; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "colorPrimary", function() { return colorPrimary; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "fontSizeDefault", function() { return fontSizeDefault; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "styleToolbarButtonIcon", function() { return styleToolbarButtonIcon; });
 /* harmony import */ var emotion__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! emotion */ "./node_modules/emotion/dist/index.esm.js");
 /* harmony import */ var ___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! . */ "./src/utils/index.ts");
@@ -5233,6 +5712,7 @@ var __makeTemplateObject = (undefined && undefined.__makeTemplateObject) || func
 
 var colorDefault = "#fff";
 var colorPrimary = "#00d7c6";
+var fontSizeDefault = "14px";
 var styleActive = Object(emotion__WEBPACK_IMPORTED_MODULE_0__["css"])(templateObject_1 || (templateObject_1 = __makeTemplateObject(["\n  &:active {\n    color: ", ";\n\n    svg {\n      fill: ", ";\n    }\n  }\n"], ["\n  &:active {\n    color: ", ";\n\n    svg {\n      fill: ", ";\n    }\n  }\n"])), colorPrimary, colorPrimary);
 var styleHover = Object(emotion__WEBPACK_IMPORTED_MODULE_0__["css"])(templateObject_2 || (templateObject_2 = __makeTemplateObject(["\n  &:hover {\n    color: ", ";\n\n    svg {\n      fill: ", ";\n    }\n  }\n"], ["\n  &:hover {\n    color: ", ";\n\n    svg {\n      fill: ", ";\n    }\n  }\n"])), colorPrimary, colorPrimary);
 var styleToolbarButtonIcon = Object(emotion__WEBPACK_IMPORTED_MODULE_0__["css"])(templateObject_3 || (templateObject_3 = __makeTemplateObject(["\n  position: absolute;\n  top: 0;\n  left: 0;\n  right: 0;\n  bottom: 0;\n  cursor: pointer;\n\n  svg {\n    position: absolute;\n    fill: ", ";\n    transition: fill 0.5s;\n    left: 50%;\n    top: 50%;\n    width: 50%;\n    height: 50%;\n    transform: translateX(-50%) translateY(-50%);\n  }\n\n  ", ";\n"], ["\n  position: absolute;\n  top: 0;\n  left: 0;\n  right: 0;\n  bottom: 0;\n  cursor: pointer;\n\n  svg {\n    position: absolute;\n    fill: ", ";\n    transition: fill 0.5s;\n    left: 50%;\n    top: 50%;\n    width: 50%;\n    height: 50%;\n    transform: translateX(-50%) translateY(-50%);\n  }\n\n  ", ";\n"])), colorDefault, ___WEBPACK_IMPORTED_MODULE_1__["IS_TOUCHABLE_DEVICE"] ? styleActive : styleHover);

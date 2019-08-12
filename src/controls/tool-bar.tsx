@@ -32,7 +32,7 @@ export class ToolBar extends Component<IProps, IState> {
   pluginName = "ToolBar";
   timer: number;
 
-  componentDidMount() {
+  componentWillMount() {
     const { emitter } = this.props;
 
     emitter.on(InnerEventType.InnerToolBarShow, this.show);
@@ -40,7 +40,9 @@ export class ToolBar extends Component<IProps, IState> {
     emitter.on(InnerEventType.InnerToolBarToggle, this.toggle);
     emitter.on(InnerEventType.InnerSeeking, this.clearTimer);
     emitter.on(InnerEventType.InnerSeeked, this.setTimer);
+  }
 
+  componentDidMount() {
     this.hide();
   }
 

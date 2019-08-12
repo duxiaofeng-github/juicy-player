@@ -5,6 +5,9 @@ export type EventListener<T = any> = (e: PlayerEvent<T>) => boolean | void;
 export class Emitter {
   private events: { [event: string]: EventListener[] } = {};
 
+  addEventListener = this.on;
+  removeEventListener = this.off;
+
   on<T>(event: PlayerEventType, listener: EventListener<T>) {
     this.events[event] = this.events[event] || [];
     this.events[event].push(listener);

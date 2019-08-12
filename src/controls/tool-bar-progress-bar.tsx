@@ -63,7 +63,7 @@ export class ToolBarProgressBar extends Component<IProps, IState> {
     };
   }
 
-  componentDidMount() {
+  componentWillMount() {
     for (let event in this.eventsMap) {
       this.props.emitter.on(event as PlayerEventType, this.eventsMap[event]);
     }

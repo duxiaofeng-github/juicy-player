@@ -9,6 +9,7 @@ import { styleToolbarButtonIcon } from "../utils/style";
 import { getToolBarButtonTemplate } from "../utils/render";
 import { Emitter } from "../utils/emitter";
 import { InnerEventType } from "../utils/event";
+import { IS_TOUCHABLE_DEVICE } from "../utils";
 
 interface IProps {
   videoState?: IVideoState;
@@ -45,7 +46,7 @@ export class ToolBarPlayButton extends Component<IProps, IState> {
       />
     );
 
-    return getToolBarButtonTemplate(svg);
+    return !IS_TOUCHABLE_DEVICE ? getToolBarButtonTemplate(svg) : null;
   }
 
   play = (e: Event) => {

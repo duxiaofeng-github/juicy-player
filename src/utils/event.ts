@@ -46,6 +46,8 @@ export enum InnerEventType {
   InnerToolBarShown = "inner.toolBarShown",
   InnerSeeking = "inner.seeking",
   InnerSeeked = "inner.seeked",
+  InnerPlayerMountedOrUnmounted = "inner.playerMountedOrUnmounted",
+  InnerContainerMountedOrUnmounted = "inner.containerMountedOrUnmounted",
 }
 
 export type PlayerEventType = InnerEventType | CustomEventType | NativeEvent;

@@ -1,6 +1,7 @@
 import { h } from "preact";
 import { IPlugin, IPlayerStore } from "../interface";
-import { css } from "emotion";
+import { css, cx } from "emotion";
+import { colorDefault } from "./style";
 
 export interface IPluginsProps {
   plugins?: IPlugin[];
@@ -49,4 +50,17 @@ export function getToolBarButtonTemplate(content) {
       {content}
     </div>
   );
+}
+
+const styleTextContainer = css`
+  height: 100%;
+  padding: 0 10px;
+  color: ${colorDefault};
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
+
+export function getToolBarTextTemplate(content, className?: string) {
+  return <div className={cx(styleTextContainer, className)}>{content}</div>;
 }

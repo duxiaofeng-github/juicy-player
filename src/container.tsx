@@ -1,15 +1,47 @@
 import { h, Component } from "preact";
 import { css } from "emotion";
-import { renderPlugins, mapPluginsToProps, IPluginsProps } from "./utils/render";
+import { renderPlugins } from "./utils/render";
 import { connect } from "unistore/preact";
-import JuicyPlayer from ".";
+import { fontSizeDefault } from "./utils/style";
+import { IPlugin, IPlayerStore } from "./interface";
+import { Emitter } from "./utils/emitter";
+import { InnerEventType } from "./utils/event";
 
-@connect(mapPluginsToProps)
-export class Container extends Component<IPluginsProps> {
+interface IProps {
+  plugins?: IPlugin[];
+  emitter?: Emitter;
+}
+
+function mapStateToProps(state: IPlayerStore, props): IProps {
+  const { plugins, emitter } = state;
+
+  return {
+    plugins,
+    emitter,
+  };
+}
+
+@connect(mapStateToProps)
+export class Container extends Component<IProps> {
   pluginName = "Container";
+  el: HTMLDivElement;
+
+  componentDidMount() {
+    this.props.emitter.emit<HTMLDivElement>(InnerEventType.InnerContainerMountedOrUnmounted, this.el);
+  }
+
+  componentWillUnmount() {
+    this.props.emitter.emit<HTMLDivElement>(InnerEventType.InnerContainerMountedOrUnmounted, null);
+  }
+
+  setRef = (el: HTMLDivElement) => (this.el = el);
 
   render() {
-    return <div className={styleContainer}>{renderPlugins(this.pluginName, this.props.plugins)}</div>;
+    return (
+      <div className={styleContainer} ref={this.setRef}>
+        {renderPlugins(this.pluginName, this.props.plugins)}
+      </div>
+    );
   }
 }
 
@@ -22,6 +54,7 @@ const styleContainer = css`
   overflow: hidden;
   background-color: #000;
   font-family: "PingFang SC", Arial, "Microsoft YaHei", sans-serif;
+  font-size: ${fontSizeDefault};
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   -webkit-overflow-scrolling: touch;
@@ -29,7 +62,6 @@ const styleContainer = css`
 
   * {
     box-sizing: content-box;
-    padding: 0;
     margin: 0;
   }
 `;

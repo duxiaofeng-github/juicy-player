@@ -6,7 +6,7 @@ import { IOptions, IPlayerStore, IVideoState } from "../interface";
 import { connect } from "unistore/preact";
 import { Emitter } from "../utils/emitter";
 import { InnerEventType } from "../utils/event";
-import { getToolBarButtonTemplate, imagePlaceHolder } from "../utils/render";
+import { imagePlaceHolder } from "../utils/render";
 
 interface IProps {
   options?: IOptions;

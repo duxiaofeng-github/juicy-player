@@ -28,7 +28,7 @@ function mapStateToProps(state: IPlayerStore, props): IProps {
 export class Player extends Component<IProps, IState> {
   pluginName = "Player";
 
-  componentDidMount() {
+  componentWillMount() {
     // TODO: init video state when sourceChange event received
   }
 

@@ -49,7 +49,7 @@ class Player extends Component<IProps, IState> {
   private el: HTMLVideoElement;
   seeking: boolean;
 
-  componentDidMount() {
+  componentWillMount() {
     const { emitter } = this.props;
     emitter.on(InnerEventType.InnerVideoPlay, this.play);
     emitter.on(InnerEventType.InnerVideoPause, this.pause);
@@ -57,8 +57,13 @@ class Player extends Component<IProps, IState> {
     emitter.on<number>(InnerEventType.InnerVideoSetCurrentTime, this.setNativeElementTime);
     emitter.on(InnerEventType.InnerSeeking, this.handleSeeking);
     emitter.on(InnerEventType.InnerSeeked, this.handleSeeked);
+  }
+
+  componentDidMount() {
+    const { emitter } = this.props;
 
     emitter.emit(InnerEventType.InnerProgressBarShow);
+    emitter.emit(InnerEventType.InnerPlayerMountedOrUnmounted, this.el);
   }
 
   componentWillUnmount() {
@@ -74,6 +79,8 @@ class Player extends Component<IProps, IState> {
     emitter.off(InnerEventType.InnerVideoSetCurrentTime, this.setNativeElementTime);
     emitter.off(InnerEventType.InnerSeeking, this.handleSeeking);
     emitter.off(InnerEventType.InnerSeeked, this.handleSeeked);
+
+    emitter.emit(InnerEventType.InnerPlayerMountedOrUnmounted, null);
   }
 
   render() {

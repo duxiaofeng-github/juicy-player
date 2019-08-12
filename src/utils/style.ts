@@ -3,6 +3,7 @@ import { IS_TOUCHABLE_DEVICE } from ".";
 
 export const colorDefault = "#fff";
 export const colorPrimary = "#00d7c6";
+export const fontSizeDefault = "14px";
 
 const styleActive = css`
   &:active {

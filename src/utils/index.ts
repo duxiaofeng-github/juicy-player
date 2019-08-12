@@ -85,3 +85,13 @@ export function parsePercent(percent: number): number {
 
   return percent;
 }
+
+export const secondToMMSS = (seconds: number) => {
+  if (!seconds) return "00:00";
+  const date = new Date(null);
+  date.setSeconds(seconds); // specify value for SECONDS here
+  return date
+    .toISOString()
+    .substr(11, 8)
+    .replace(/^00:(.+:.+)$/, "$1");
+};
