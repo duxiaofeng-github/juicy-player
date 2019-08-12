@@ -6068,7 +6068,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var unistore_preact__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! unistore/preact */ "./node_modules/unistore/preact.js");
 /* harmony import */ var unistore_preact__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(unistore_preact__WEBPACK_IMPORTED_MODULE_3__);
 /* harmony import */ var _utils_event__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../utils/event */ "./src/utils/event.ts");
-/* harmony import */ var _utils_render__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../utils/render */ "./src/utils/render.tsx");
+/* harmony import */ var _utils_image_placeholder__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../utils/image-placeholder */ "./src/utils/image-placeholder.tsx");
 var __extends = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -6119,7 +6119,7 @@ var BigPlayButton = /** @class */ (function (_super) {
     }
     BigPlayButton.prototype.render = function () {
         return !this.props.properties.playing ? (Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])("div", { className: stylePlayButton, onClick: this.play },
-            _utils_render__WEBPACK_IMPORTED_MODULE_5__["imagePlaceHolder"],
+            Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])(_utils_image_placeholder__WEBPACK_IMPORTED_MODULE_5__["ImagePlaceHolder"], null),
             Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])("div", { className: stylePlayButtonIcon, dangerouslySetInnerHTML: { __html: _assets_big_play_svg__WEBPACK_IMPORTED_MODULE_2__ } }))) : null;
     };
     BigPlayButton = __decorate([
@@ -6128,7 +6128,7 @@ var BigPlayButton = /** @class */ (function (_super) {
     return BigPlayButton;
 }(preact__WEBPACK_IMPORTED_MODULE_0__["Component"]));
 
-var stylePlayButton = Object(emotion__WEBPACK_IMPORTED_MODULE_1__["css"])(templateObject_1 || (templateObject_1 = __makeTemplateObject(["\n  position: absolute;\n  top: 50%;\n  left: 50%;\n  height: 25%;\n  transform: translateY(-50%) translateX(-50%);\n  cursor: pointer;\n  opacity: 0.8;\n  transition: opacity 0.3s;\n\n  &:hover {\n    opacity: 1;\n  }\n"], ["\n  position: absolute;\n  top: 50%;\n  left: 50%;\n  height: 25%;\n  transform: translateY(-50%) translateX(-50%);\n  cursor: pointer;\n  opacity: 0.8;\n  transition: opacity 0.3s;\n\n  &:hover {\n    opacity: 1;\n  }\n"])));
+var stylePlayButton = Object(emotion__WEBPACK_IMPORTED_MODULE_1__["css"])(templateObject_1 || (templateObject_1 = __makeTemplateObject(["\n  position: absolute;\n  top: 50%;\n  left: 50%;\n  height: calc(15% + 25px);\n  transform: translateY(-50%) translateX(-50%);\n  cursor: pointer;\n  opacity: 0.8;\n  transition: opacity 0.3s;\n\n  &:hover {\n    opacity: 1;\n  }\n"], ["\n  position: absolute;\n  top: 50%;\n  left: 50%;\n  height: calc(15% + 25px);\n  transform: translateY(-50%) translateX(-50%);\n  cursor: pointer;\n  opacity: 0.8;\n  transition: opacity 0.3s;\n\n  &:hover {\n    opacity: 1;\n  }\n"])));
 var stylePlayButtonIcon = Object(emotion__WEBPACK_IMPORTED_MODULE_1__["css"])(templateObject_2 || (templateObject_2 = __makeTemplateObject(["\n  svg {\n    position: absolute;\n    top: 0;\n    left: 0;\n    right: 0;\n    bottom: 0;\n  }\n"], ["\n  svg {\n    position: absolute;\n    top: 0;\n    left: 0;\n    right: 0;\n    bottom: 0;\n  }\n"])));
 var templateObject_1, templateObject_2;
 
@@ -6796,13 +6796,13 @@ var styleProgressBarFill = Object(emotion__WEBPACK_IMPORTED_MODULE_1__["css"])(t
     .alpha(0.6)
     .rgb()
     .string());
-var styleTime = Object(emotion__WEBPACK_IMPORTED_MODULE_1__["css"])(templateObject_5 || (templateObject_5 = __makeTemplateObject(["\n  position: absolute;\n  top: 0;\n  height: 100%;\n  display: flex;\n  align-items: center;\n  color: ", ";\n"], ["\n  position: absolute;\n  top: 0;\n  height: 100%;\n  display: flex;\n  align-items: center;\n  color: ",
+var styleTime = Object(emotion__WEBPACK_IMPORTED_MODULE_1__["css"])(templateObject_5 || (templateObject_5 = __makeTemplateObject(["\n  position: absolute;\n  top: 50%;\n  transform: translateY(-50%);\n  color: ", ";\n"], ["\n  position: absolute;\n  top: 50%;\n  transform: translateY(-50%);\n  color: ",
     ";\n"])), color__WEBPACK_IMPORTED_MODULE_7___default()(_utils_style__WEBPACK_IMPORTED_MODULE_4__["colorDefault"])
     .alpha(0.5)
     .rgb()
     .string());
-var styleCurrentTime = Object(emotion__WEBPACK_IMPORTED_MODULE_1__["css"])(templateObject_6 || (templateObject_6 = __makeTemplateObject(["\n  left: 10px;\n"], ["\n  left: 10px;\n"])));
-var styleDuration = Object(emotion__WEBPACK_IMPORTED_MODULE_1__["css"])(templateObject_7 || (templateObject_7 = __makeTemplateObject(["\n  right: 10px;\n"], ["\n  right: 10px;\n"])));
+var styleCurrentTime = Object(emotion__WEBPACK_IMPORTED_MODULE_1__["css"])(templateObject_6 || (templateObject_6 = __makeTemplateObject(["\n  left: calc(0.8% + 5px);\n"], ["\n  left: calc(0.8% + 5px);\n"])));
+var styleDuration = Object(emotion__WEBPACK_IMPORTED_MODULE_1__["css"])(templateObject_7 || (templateObject_7 = __makeTemplateObject(["\n  right: calc(0.8% + 5px);\n"], ["\n  right: calc(0.8% + 5px);\n"])));
 var templateObject_1, templateObject_2, templateObject_3, templateObject_4, templateObject_5, templateObject_6, templateObject_7;
 
 
@@ -7257,7 +7257,7 @@ var ToolBar = /** @class */ (function (_super) {
     return ToolBar;
 }(preact__WEBPACK_IMPORTED_MODULE_0__["Component"]));
 
-var styleToolBar = Object(emotion__WEBPACK_IMPORTED_MODULE_1__["css"])(templateObject_1 || (templateObject_1 = __makeTemplateObject(["\n  position: absolute;\n  bottom: 0;\n  left: 0;\n  right: 0;\n  height: 8%;\n  max-height: 48px;\n  background-color: rgba(0, 0, 0, 0.5);\n  display: flex;\n  transition: transform 0.5s;\n  transform: translateY(0);\n"], ["\n  position: absolute;\n  bottom: 0;\n  left: 0;\n  right: 0;\n  height: 8%;\n  max-height: 48px;\n  background-color: rgba(0, 0, 0, 0.5);\n  display: flex;\n  transition: transform 0.5s;\n  transform: translateY(0);\n"])));
+var styleToolBar = Object(emotion__WEBPACK_IMPORTED_MODULE_1__["css"])(templateObject_1 || (templateObject_1 = __makeTemplateObject(["\n  position: absolute;\n  bottom: 0;\n  left: 0;\n  right: 0;\n  height: calc(3% + 25px);\n  background-color: rgba(0, 0, 0, 0.5);\n  display: flex;\n  transition: transform 0.5s;\n  transform: translateY(0);\n"], ["\n  position: absolute;\n  bottom: 0;\n  left: 0;\n  right: 0;\n  height: calc(3% + 25px);\n  background-color: rgba(0, 0, 0, 0.5);\n  display: flex;\n  transition: transform 0.5s;\n  transform: translateY(0);\n"])));
 var styleToolbarHidden = Object(emotion__WEBPACK_IMPORTED_MODULE_1__["css"])(templateObject_2 || (templateObject_2 = __makeTemplateObject(["\n  transform: translateY(100%);\n"], ["\n  transform: translateY(100%);\n"])));
 var templateObject_1, templateObject_2;
 
@@ -7868,6 +7868,86 @@ var PlayerEvent = /** @class */ (function () {
 
 /***/ }),
 
+/***/ "./src/utils/image-placeholder.tsx":
+/*!*****************************************!*\
+  !*** ./src/utils/image-placeholder.tsx ***!
+  \*****************************************/
+/*! exports provided: ImagePlaceHolder */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ImagePlaceHolder", function() { return ImagePlaceHolder; });
+/* harmony import */ var preact__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! preact */ "./node_modules/preact/dist/preact.umd.js");
+/* harmony import */ var preact__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(preact__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var unistore_preact__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! unistore/preact */ "./node_modules/unistore/preact.js");
+/* harmony import */ var unistore_preact__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(unistore_preact__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var emotion__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! emotion */ "./node_modules/emotion/dist/index.esm.js");
+var __extends = (undefined && undefined.__extends) || (function () {
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+var __makeTemplateObject = (undefined && undefined.__makeTemplateObject) || function (cooked, raw) {
+    if (Object.defineProperty) { Object.defineProperty(cooked, "raw", { value: raw }); } else { cooked.raw = raw; }
+    return cooked;
+};
+var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+
+
+
+function mapStateToProps(state, props) {
+    var emitter = state.emitter;
+    return {
+        emitter: emitter,
+    };
+}
+var ImagePlaceHolder = /** @class */ (function (_super) {
+    __extends(ImagePlaceHolder, _super);
+    function ImagePlaceHolder() {
+        var _this = _super !== null && _super.apply(this, arguments) || this;
+        _this.toggle = function () {
+            _this.setState({
+                needRender: !_this.state.needRender,
+            });
+        };
+        return _this;
+    }
+    ImagePlaceHolder.prototype.componentWillMount = function () {
+        window.addEventListener("resize", this.toggle);
+    };
+    ImagePlaceHolder.prototype.componentWillUnmount = function () {
+        window.removeEventListener("resize", this.toggle);
+    };
+    ImagePlaceHolder.prototype.render = function () {
+        return (Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])("div", { className: Object(emotion__WEBPACK_IMPORTED_MODULE_2__["cx"])(styleButtonPlaceholder, this.state.needRender && "rerender") },
+            Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])("img", { src: "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" })));
+    };
+    ImagePlaceHolder = __decorate([
+        Object(unistore_preact__WEBPACK_IMPORTED_MODULE_1__["connect"])(mapStateToProps)
+    ], ImagePlaceHolder);
+    return ImagePlaceHolder;
+}(preact__WEBPACK_IMPORTED_MODULE_0__["Component"]));
+
+var styleButtonPlaceholder = Object(emotion__WEBPACK_IMPORTED_MODULE_2__["css"])(templateObject_1 || (templateObject_1 = __makeTemplateObject(["\n  height: 100%;\n  pointer-events: none;\n\n  img {\n    height: 100%;\n  }\n\n  &.rerender {\n    &:before {\n      display: block;\n      content: \" \";\n      height: 1px;\n    }\n\n    img {\n      margin-top: -1px;\n    }\n  }\n"], ["\n  height: 100%;\n  pointer-events: none;\n\n  img {\n    height: 100%;\n  }\n\n  &.rerender {\n    &:before {\n      display: block;\n      content: \" \";\n      height: 1px;\n    }\n\n    img {\n      margin-top: -1px;\n    }\n  }\n"])));
+var templateObject_1;
+
+
+/***/ }),
+
 /***/ "./src/utils/index.ts":
 /*!****************************!*\
   !*** ./src/utils/index.ts ***!
@@ -7983,7 +8063,7 @@ var secondToMMSS = function (seconds) {
 /*!******************************!*\
   !*** ./src/utils/render.tsx ***!
   \******************************/
-/*! exports provided: mapPluginsToProps, renderPlugins, getPlugins, imagePlaceHolder, getToolBarButtonTemplate, getToolBarTextTemplate */
+/*! exports provided: mapPluginsToProps, renderPlugins, getPlugins, getToolBarButtonTemplate, getToolBarTextTemplate */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -7991,17 +8071,18 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "mapPluginsToProps", function() { return mapPluginsToProps; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "renderPlugins", function() { return renderPlugins; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getPlugins", function() { return getPlugins; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "imagePlaceHolder", function() { return imagePlaceHolder; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getToolBarButtonTemplate", function() { return getToolBarButtonTemplate; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getToolBarTextTemplate", function() { return getToolBarTextTemplate; });
 /* harmony import */ var preact__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! preact */ "./node_modules/preact/dist/preact.umd.js");
 /* harmony import */ var preact__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(preact__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var emotion__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! emotion */ "./node_modules/emotion/dist/index.esm.js");
 /* harmony import */ var _style__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./style */ "./src/utils/style.ts");
+/* harmony import */ var _image_placeholder__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./image-placeholder */ "./src/utils/image-placeholder.tsx");
 var __makeTemplateObject = (undefined && undefined.__makeTemplateObject) || function (cooked, raw) {
     if (Object.defineProperty) { Object.defineProperty(cooked, "raw", { value: raw }); } else { cooked.raw = raw; }
     return cooked;
 };
+
 
 
 
@@ -8022,18 +8103,16 @@ function getPlugins(entry, plugins) {
     return plugins.filter(function (item) { return item && item.entry === entry; });
 }
 var styleButtonContainer = Object(emotion__WEBPACK_IMPORTED_MODULE_1__["css"])(templateObject_1 || (templateObject_1 = __makeTemplateObject(["\n  position: relative;\n  height: 100%;\n"], ["\n  position: relative;\n  height: 100%;\n"])));
-var styleButtonPlaceholder = Object(emotion__WEBPACK_IMPORTED_MODULE_1__["css"])(templateObject_2 || (templateObject_2 = __makeTemplateObject(["\n  pointer-events: none;\n  height: 100%;\n"], ["\n  pointer-events: none;\n  height: 100%;\n"])));
-var imagePlaceHolder = (Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])("img", { className: styleButtonPlaceholder, src: "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" }));
 function getToolBarButtonTemplate(content) {
     return (Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])("div", { className: styleButtonContainer },
-        imagePlaceHolder,
+        Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])(_image_placeholder__WEBPACK_IMPORTED_MODULE_3__["ImagePlaceHolder"], null),
         content));
 }
-var styleTextContainer = Object(emotion__WEBPACK_IMPORTED_MODULE_1__["css"])(templateObject_3 || (templateObject_3 = __makeTemplateObject(["\n  height: 100%;\n  padding: 0 10px;\n  color: ", ";\n  display: flex;\n  align-items: center;\n  justify-content: center;\n"], ["\n  height: 100%;\n  padding: 0 10px;\n  color: ", ";\n  display: flex;\n  align-items: center;\n  justify-content: center;\n"])), _style__WEBPACK_IMPORTED_MODULE_2__["colorDefault"]);
+var styleTextContainer = Object(emotion__WEBPACK_IMPORTED_MODULE_1__["css"])(templateObject_2 || (templateObject_2 = __makeTemplateObject(["\n  height: 100%;\n  padding: 0 10px;\n  color: ", ";\n  display: flex;\n  align-items: center;\n  justify-content: center;\n"], ["\n  height: 100%;\n  padding: 0 10px;\n  color: ", ";\n  display: flex;\n  align-items: center;\n  justify-content: center;\n"])), _style__WEBPACK_IMPORTED_MODULE_2__["colorDefault"]);
 function getToolBarTextTemplate(content, className) {
     return Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])("div", { className: Object(emotion__WEBPACK_IMPORTED_MODULE_1__["cx"])(styleTextContainer, className) }, content);
 }
-var templateObject_1, templateObject_2, templateObject_3;
+var templateObject_1, templateObject_2;
 
 
 /***/ }),

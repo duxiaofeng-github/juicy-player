@@ -246,10 +246,8 @@ const styleProgressBarFill = css`
 
 const styleTime = css`
   position: absolute;
-  top: 0;
-  height: 100%;
-  display: flex;
-  align-items: center;
+  top: 50%;
+  transform: translateY(-50%);
   color: ${color(colorDefault)
     .alpha(0.5)
     .rgb()
@@ -257,9 +255,9 @@ const styleTime = css`
 `;
 
 const styleCurrentTime = css`
-  left: 10px;
+  left: calc(0.8% + 5px);
 `;
 
 const styleDuration = css`
-  right: 10px;
+  right: calc(0.8% + 5px);
 `;

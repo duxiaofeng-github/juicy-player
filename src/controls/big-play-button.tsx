@@ -6,7 +6,7 @@ import { IOptions, IPlayerStore, IProperties } from "../interface";
 import { connect } from "unistore/preact";
 import { Emitter } from "../utils/emitter";
 import { InnerEventType } from "../utils/event";
-import { imagePlaceHolder } from "../utils/render";
+import { ImagePlaceHolder } from "../utils/image-placeholder";
 
 interface IProps {
   options?: IOptions;
@@ -33,7 +33,7 @@ export class BigPlayButton extends Component<IProps, IState> {
   render() {
     return !this.props.properties.playing ? (
       <div className={stylePlayButton} onClick={this.play}>
-        {imagePlaceHolder}
+        <ImagePlaceHolder />
         <div className={stylePlayButtonIcon} dangerouslySetInnerHTML={{ __html: (bigPlayIcon as any) as string }} />
       </div>
     ) : null;
@@ -50,7 +50,7 @@ const stylePlayButton = css`
   position: absolute;
   top: 50%;
   left: 50%;
-  height: 25%;
+  height: calc(15% + 25px);
   transform: translateY(-50%) translateX(-50%);
   cursor: pointer;
   opacity: 0.8;

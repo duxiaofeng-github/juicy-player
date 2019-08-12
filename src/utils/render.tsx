@@ -2,6 +2,7 @@ import { h } from "preact";
 import { IPlugin, IPlayerStore } from "../interface";
 import { css, cx } from "emotion";
 import { colorDefault } from "./style";
+import { ImagePlaceHolder } from "./image-placeholder";
 
 export interface IPluginsProps {
   plugins?: IPlugin[];
@@ -32,22 +33,10 @@ const styleButtonContainer = css`
   height: 100%;
 `;
 
-const styleButtonPlaceholder = css`
-  pointer-events: none;
-  height: 100%;
-`;
-
-export const imagePlaceHolder = (
-  <img
-    className={styleButtonPlaceholder}
-    src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"
-  />
-);
-
 export function getToolBarButtonTemplate(content) {
   return (
     <div className={styleButtonContainer}>
-      {imagePlaceHolder}
+      <ImagePlaceHolder />
       {content}
     </div>
   );
