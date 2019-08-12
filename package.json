@@ -18,12 +18,14 @@
   },
   "homepage": "https://github.com/duxiaofeng-github/juicy-player#readme",
   "dependencies": {
+    "color": "^3.1.2",
     "emotion": "^9.2.12",
     "immer": "^3.2.0",
     "preact": "^8.5.1",
     "unistore": "^3.4.1"
   },
   "devDependencies": {
+    "@types/color": "^3.0.0",
     "@types/lodash": "^4.14.136",
     "copy-webpack-plugin": "^5.0.4",
     "fork-ts-checker-webpack-plugin": "^1.5.0",

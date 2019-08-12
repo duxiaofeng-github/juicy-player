@@ -1,13 +1,14 @@
 import { h, Component } from "preact";
-import { css } from "emotion";
+import { css, cx } from "emotion";
 
 import { IPlayerStore, IProperties } from "../interface";
 import { connect } from "unistore/preact";
-import { parsePercent, IS_TOUCHABLE_DEVICE } from "../utils";
-import { colorPrimary } from "../utils/style";
+import { parsePercent, IS_TOUCHABLE_DEVICE, secondToMMSS } from "../utils";
+import { colorPrimary, colorDefault } from "../utils/style";
 import { Emitter } from "../utils/emitter";
 import { InnerEventType, PlayerEventType } from "../utils/event";
 import { ISetCurrentTime, setCurrentTime } from "../utils/video";
+import color from "color";
 
 interface IProps {
   properties?: IProperties;
@@ -39,7 +40,6 @@ function mapStateToProps(state: IPlayerStore, props): IProps {
 export class ToolBarProgressBar extends Component<IProps, IState> {
   pluginName = "ToolBarProgressBar";
   sliderEl: HTMLDivElement;
-  cursorEl: HTMLDivElement;
   mouseDown: boolean;
   rectCache: ClientRect | DOMRect;
   eventsMap = {
@@ -76,28 +76,24 @@ export class ToolBarProgressBar extends Component<IProps, IState> {
   }
 
   setSliderRef = (el: HTMLDivElement) => (this.sliderEl = el);
-  setCursorRef = (el: HTMLDivElement) => (this.cursorEl = el);
 
   render() {
+    const { duration, currentTime } = this.props.properties;
     return (
       <div className={styleProgressBar}>
         {!this.state.isProgressBarHidden && (
           <div
-            className={styleProgressBarContent}
+            className={styleProgressBarBackground}
             onTouchStart={IS_TOUCHABLE_DEVICE && this.onTouchStart}
             onTouchMove={IS_TOUCHABLE_DEVICE && this.onTouchMove}
             onTouchEnd={IS_TOUCHABLE_DEVICE && this.onTouchEnd}
             onMouseDown={!IS_TOUCHABLE_DEVICE && this.onMouseDown}
+            ref={this.setSliderRef}
           >
-            <div className={styleProgressBarBackground} ref={this.setSliderRef}>
-              {this.getBufferedComponent()}
-              <div className={styleProgressBarFill} style={{ width: `${this.getCursorLeft()}%` }} />
-              <div
-                className={styleProgressBarCursor}
-                style={{ left: `${this.getCursorLeft()}%` }}
-                ref={this.setCursorRef}
-              />
-            </div>
+            {this.getBufferedComponent()}
+            <div className={styleProgressBarFill} style={{ width: `${this.getCursorLeft()}%` }} />
+            <div className={cx(styleTime, styleCurrentTime)}>{secondToMMSS(currentTime)}</div>
+            <div className={cx(styleTime, styleDuration)}>{secondToMMSS(duration)}</div>
           </div>
         )}
       </div>
@@ -153,13 +149,11 @@ export class ToolBarProgressBar extends Component<IProps, IState> {
   };
 
   onMouseDown = (e: MouseEvent) => {
-    if (e.target === this.sliderEl || e.target === this.cursorEl) {
-      this.mouseDown = true;
-      this.setCurrentTimeBasedOnPoint(e.x);
+    this.mouseDown = true;
+    this.setCurrentTimeBasedOnPoint(e.x);
 
-      window.addEventListener("mousemove", this.onMouseMove);
-      window.addEventListener("mouseup", this.onMouseUp);
-    }
+    window.addEventListener("mousemove", this.onMouseMove);
+    window.addEventListener("mouseup", this.onMouseUp);
   };
 
   onMouseMove = (e: MouseEvent) => {
@@ -210,32 +204,24 @@ export class ToolBarProgressBar extends Component<IProps, IState> {
 
 const styleProgressBar = css`
   flex-grow: 1;
-  padding: 0 13px;
-`;
-
-const styleProgressBarContent = css`
-  position: relative;
-  height: 100%;
 `;
 
 const styleProgressBarBackground = css`
-  position: absolute;
-  top: 50%;
-  left: 0;
-  right: 0;
-  height: 8%;
-  max-height: 10px;
-  background-color: rgba(200, 200, 200, 0.5);
+  position: relative;
+  height: 100%;
+  background-color: rgba(255, 255, 255, 0.2);
   cursor: pointer;
   -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
-  transform: translateY(-50%);
 `;
 
 const styleProgressBarBuffered = css`
   position: absolute;
   top: 0;
   bottom: 0;
-  background-color: rgba(255, 255, 255, 0.5);
+  background-color: ${color(colorPrimary)
+    .alpha(0.1)
+    .rgb()
+    .string()};
   pointer-events: none;
 `;
 
@@ -245,19 +231,35 @@ const styleProgressBarFill = css`
   bottom: 0;
   left: 0;
   width: 0;
-  background-color: ${colorPrimary};
+  background-color: ${color(colorPrimary)
+    .alpha(0.4)
+    .rgb()
+    .string()};
+  border-right: solid 1px
+    ${color(colorPrimary)
+      .lighten(0.5)
+      .alpha(0.6)
+      .rgb()
+      .string()};
   pointer-events: none;
 `;
 
-const styleProgressBarCursor = css`
-  height: 15px;
-  width: 15px;
-  border-radius: 50%;
-  background-color: rgb(255, 255, 255);
-  box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+const styleTime = css`
   position: absolute;
-  left: 0;
-  top: 50%;
-  transform: translateX(-50%) translateY(-50%);
-  cursor: pointer;
+  top: 0;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  color: ${color(colorDefault)
+    .alpha(0.5)
+    .rgb()
+    .string()};
+`;
+
+const styleCurrentTime = css`
+  left: 10px;
+`;
+
+const styleDuration = css`
+  right: 10px;
 `;

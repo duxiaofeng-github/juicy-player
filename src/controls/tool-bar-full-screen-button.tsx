@@ -113,17 +113,13 @@ export class ToolBarFullScreenButton extends Component<IProps, IState> {
       return null;
     }
 
-    const svg = !this.state.isFullScreen ? (
+    const svg = (
       <div
         className={styleToolbarButtonIcon}
-        dangerouslySetInnerHTML={{ __html: (enterFullScreenIcon as any) as string }}
-        onClick={this.enter}
-      />
-    ) : (
-      <div
-        className={styleToolbarButtonIcon}
-        dangerouslySetInnerHTML={{ __html: (exitFullScreenIcon as any) as string }}
-        onClick={this.exit}
+        dangerouslySetInnerHTML={{
+          __html: (!this.state.isFullScreen ? enterFullScreenIcon : (exitFullScreenIcon as any)) as string,
+        }}
+        onClick={this.toggle}
       />
     );
 
@@ -233,11 +229,19 @@ export class ToolBarFullScreenButton extends Component<IProps, IState> {
     }
   };
 
-  enter = () => {
-    this.enterFullScreen();
+  toggle = () => {
+    if (this.state.isFullScreen) {
+      this.exit();
+    } else {
+      this.enter();
+    }
   };
 
-  exit = () => {
+  enter() {
+    this.enterFullScreen();
+  }
+
+  exit() {
     this.exitFullScreen();
-  };
+  }
 }

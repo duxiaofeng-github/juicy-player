@@ -42,6 +42,7 @@ export const styleToolbarButtonIcon = css`
     width: 50%;
     height: 50%;
     transform: translateX(-50%) translateY(-50%);
+    pointer-events: none;
   }
 
   ${IS_TOUCHABLE_DEVICE ? styleActive : styleHover};

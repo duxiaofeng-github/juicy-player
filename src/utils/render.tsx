@@ -33,6 +33,7 @@ const styleButtonContainer = css`
 `;
 
 const styleButtonPlaceholder = css`
+  pointer-events: none;
   height: 100%;
 `;
 

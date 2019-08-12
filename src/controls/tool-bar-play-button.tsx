@@ -32,28 +32,30 @@ export class ToolBarPlayButton extends Component<IProps, IState> {
   pluginName = "ToolBarPlayButton";
 
   render() {
-    const svg = this.props.properties.playing ? (
+    const svg = (
       <div
         className={styleToolbarButtonIcon}
-        dangerouslySetInnerHTML={{ __html: (pauseIcon as any) as string }}
-        onClick={this.pause}
-      />
-    ) : (
-      <div
-        className={styleToolbarButtonIcon}
-        dangerouslySetInnerHTML={{ __html: (playIcon as any) as string }}
-        onClick={this.play}
+        dangerouslySetInnerHTML={{ __html: (this.props.properties.playing ? pauseIcon : (playIcon as any)) as string }}
+        onClick={this.toggle}
       />
     );
 
     return !IS_TOUCHABLE_DEVICE ? getToolBarButtonTemplate(svg) : null;
   }
 
-  play = (e: Event) => {
-    this.props.emitter.emit(InnerEventType.InnerVideoPlay);
+  toggle = () => {
+    if (this.props.properties.playing) {
+      this.pause();
+    } else {
+      this.play();
+    }
   };
 
-  pause = (e: Event) => {
+  play() {
+    this.props.emitter.emit(InnerEventType.InnerVideoPlay);
+  }
+
+  pause() {
     this.props.emitter.emit(InnerEventType.InnerVideoPause);
-  };
+  }
 }

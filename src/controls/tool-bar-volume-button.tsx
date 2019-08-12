@@ -58,7 +58,6 @@ export class ToolBarVolumeButton extends Component<IProps, IState> {
   }
 
   setVolumeByLocalData() {
-    const { emitter } = this.props;
     let volume;
 
     try {
@@ -67,7 +66,7 @@ export class ToolBarVolumeButton extends Component<IProps, IState> {
 
     if (volume != null && !isNaN(volume)) {
       this.volumeCache = volume;
-      emitter.emit<number>(InnerEventType.InnerVideoSetVolume, volume);
+      this.props.emitter.emit<number>(InnerEventType.InnerVideoSetVolume, volume);
     }
   }
 
@@ -75,24 +74,17 @@ export class ToolBarVolumeButton extends Component<IProps, IState> {
   setCursorRef = (el: HTMLDivElement) => (this.cursorEl = el);
 
   render() {
-    const svg =
-      this.props.properties.volume !== 0 ? (
-        <div
-          className={styleToolbarButtonIcon}
-          dangerouslySetInnerHTML={{ __html: (volumeOnIcon as any) as string }}
-          onClick={this.muted}
-          onMouseEnter={this.onMouseEnter}
-          onMouseLeave={this.onMouseLeave}
-        />
-      ) : (
-        <div
-          className={styleToolbarButtonIcon}
-          dangerouslySetInnerHTML={{ __html: (volumeOffIcon as any) as string }}
-          onClick={this.unmuted}
-          onMouseEnter={this.onMouseEnter}
-          onMouseLeave={this.onMouseLeave}
-        />
-      );
+    const svg = (
+      <div
+        className={styleToolbarButtonIcon}
+        dangerouslySetInnerHTML={{
+          __html: (this.props.properties.volume !== 0 ? volumeOnIcon : (volumeOffIcon as any)) as string,
+        }}
+        onClick={this.toggle}
+        onMouseEnter={this.onMouseEnter}
+        onMouseLeave={this.onMouseLeave}
+      />
+    );
 
     const content = (
       <div>
@@ -205,22 +197,42 @@ export class ToolBarVolumeButton extends Component<IProps, IState> {
       this.volumeCache = properties.volume;
     }
 
-    try {
-      localStorage.setItem(volumeKey, `${properties.volume}`);
-    } catch {}
+    this.saveVolumnToLocalData(properties.volume);
 
     emitter.emit<number>(InnerEventType.InnerVideoSetVolume, properties.volume);
   }
 
-  muted = () => {
-    this.volumeCache = this.props.properties.volume;
-    this.props.emitter.emit<number>(InnerEventType.InnerVideoSetVolume, 0);
+  saveVolumnToLocalData(volume: number) {
+    try {
+      localStorage.setItem(volumeKey, `${volume}`);
+    } catch {}
+  }
+
+  toggle = () => {
+    if (this.props.properties.volume === 0) {
+      this.unmuted();
+    } else {
+      this.muted();
+    }
   };
 
-  unmuted = () => {
+  muted() {
+    const { emitter, properties } = this.props;
+
+    this.volumeCache = properties.volume;
+
+    this.saveVolumnToLocalData(0);
+
+    emitter.emit<number>(InnerEventType.InnerVideoSetVolume, 0);
+  }
+
+  unmuted() {
     const volume = this.volumeCache !== 0 ? this.volumeCache : 0.5;
+
+    this.saveVolumnToLocalData(volume);
+
     this.props.emitter.emit<number>(InnerEventType.InnerVideoSetVolume, volume);
-  };
+  }
 }
 
 const styleVolumeBar = css`
@@ -232,6 +244,8 @@ const styleVolumeBar = css`
   bottom: 100%;
   display: flex;
   flex-direction: column;
+  background-color: rgba(0, 0, 0, 0.5);
+  padding-bottom: 8px;
   opacity: 0;
   transform: translateY(100%);
   transition: transform 0s 0.4s, opacity 0.4s ease-out;

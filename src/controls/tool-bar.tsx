@@ -129,7 +129,7 @@ const styleToolBar = css`
   bottom: 0;
   left: 0;
   right: 0;
-  height: 11%;
+  height: 8%;
   max-height: 48px;
   background-color: rgba(0, 0, 0, 0.5);
   display: flex;
