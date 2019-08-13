@@ -3,8 +3,10 @@ import { h, Component } from "preact";
 import { IPlayerStore, IProperties, IOptions, IPlugin } from "../interface";
 import { connect } from "unistore/preact";
 import { Emitter } from "../utils/emitter";
-import { getToolBarTextTemplate } from "../utils/render";
 import { ILang, printf } from "../i18n";
+import { cx, css } from "emotion";
+import { styleToolBarText, colorPrimary } from "../utils/style";
+import { IS_TOUCHABLE_DEVICE } from "../utils";
 
 interface IProps {
   options?: IOptions;
@@ -13,7 +15,9 @@ interface IProps {
   emitter?: Emitter;
 }
 
-interface IState {}
+interface IState {
+  isShown?: boolean;
+}
 
 function mapStateToProps(state: IPlayerStore, props): IProps {
   const { properties, emitter, options, lang } = state;
@@ -29,23 +33,106 @@ function mapStateToProps(state: IPlayerStore, props): IProps {
 @connect(mapStateToProps)
 class ToolBarVideoSelector extends Component<IProps, IState> {
   pluginName = "ToolBarVideoSelector";
+  timer;
 
   render() {
     const { options, lang, properties } = this.props;
     const { currentListIndex, currentVideoIndex } = properties;
     const list = options.playList[currentListIndex];
-    const video = list && list[currentVideoIndex];
-    const text = "quality" in video ? video.quality : printf(lang.SourceN, currentVideoIndex);
+    const currentVideo = list && list[currentVideoIndex];
+    const currentText = "quality" in currentVideo ? currentVideo.quality : printf(lang.SourceN, currentVideoIndex);
 
-    return video ? getToolBarTextTemplate(text) : printf(lang.UnknownSource);
+    const listComponent = list.map((video, index) => {
+      const text = "quality" in video ? video.quality : printf(lang.SourceN, index);
+
+      return <div className={cx("item", currentVideoIndex === index && "selected")}>{text}</div>;
+    });
+
+    const popup = (
+      <div className={cx(stylePopup, IS_TOUCHABLE_DEVICE && "mobile", this.state.isShown && "shown")}>
+        {[...listComponent].reverse()}
+      </div>
+    );
+
+    return (
+      <div
+        onMouseEnter={this.onMouseEnter}
+        onMouseLeave={this.onMouseLeave}
+        className={cx(styleToolBarText, styleText, IS_TOUCHABLE_DEVICE && "mobile")}
+      >
+        {currentVideo ? currentText : printf(lang.UnknownSource)}
+        {popup}
+      </div>
+    );
   }
+
+  onMouseEnter = () => {
+    clearTimeout(this.timer);
+
+    this.setState({
+      isShown: true,
+    });
+  };
+
+  onMouseLeave = () => {
+    clearTimeout(this.timer);
+
+    this.timer = setTimeout(() => {
+      this.setState({
+        isShown: false,
+      });
+    }, 200);
+  };
 }
 
-const plugin: IPlugin = [
-  {
-    entry: "ToolBar",
-    component: ToolBarVideoSelector,
-  },
-];
+const styleText = css`
+  position: relative;
+
+  &.mobile {
+    position: static;
+  }
+`;
+
+const stylePopup = css`
+  position: absolute;
+  left: 50%;
+  bottom: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  opacity: 0;
+  transform: translateY(100%) translateX(-50%);
+  transition: transform 0s 0.4s, opacity 0.4s ease-out;
+
+  &.shown {
+    opacity: 1;
+    transform: translateY(0) translateX(-50%);
+    transition: transform 0.2s, opacity 0.4s ease-out;
+  }
+
+  .item {
+    white-space: nowrap;
+    padding: 10px;
+
+    &.selected {
+      background-color: ${colorPrimary};
+    }
+  }
+
+  &.mobile {
+    height: calc(97% - 25px);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+
+    .item {
+      padding: 10px;
+      text-align: center;
+    }
+  }
+`;
+
+const plugin: IPlugin = {
+  entry: "ToolBar",
+  component: ToolBarVideoSelector,
+};
 
 export default plugin;

@@ -20,7 +20,7 @@ interface IProps {
 }
 
 interface IState {
-  isVolumeBarShown?: boolean;
+  isShown?: boolean;
 }
 
 const volumeKey = "juicy.volume";
@@ -49,7 +49,7 @@ class ToolBarVolumeButton extends Component<IProps, IState> {
   mouseDown: boolean;
   rectCache: ClientRect | DOMRect;
   volumeCache: number;
-  volumeBarTimer;
+  timer;
 
   componentDidMount() {
     this.volumeCache = this.props.properties.volume;
@@ -77,22 +77,16 @@ class ToolBarVolumeButton extends Component<IProps, IState> {
     const svg = (
       <div
         className={styleToolbarButtonIcon}
-        dangerouslySetInnerHTML={{
-          __html: (this.props.properties.volume !== 0 ? volumeOnIcon : (volumeOffIcon as any)) as string,
-        }}
         onClick={this.toggle}
         onMouseEnter={this.onMouseEnter}
         onMouseLeave={this.onMouseLeave}
-      />
-    );
-
-    const content = (
-      <div>
+      >
         <div
-          className={cx(styleVolumeBar, this.state.isVolumeBarShown && "shown")}
-          onMouseEnter={this.onMouseEnterVolumeBar}
-          onMouseLeave={this.onMouseLeaveVolumeBar}
-        >
+          dangerouslySetInnerHTML={{
+            __html: (this.props.properties.volume !== 0 ? volumeOnIcon : (volumeOffIcon as any)) as string,
+          }}
+        />
+        <div className={cx(styleVolumeBar, this.state.isShown && "shown")} onClick={(e) => e.stopPropagation()}>
           <div className={styleVolumeBarText}>{(this.props.properties.volume * 100).toFixed(0)}</div>
           <div className={styleVolumeBarContent} onMouseDown={this.onMouseDown}>
             <div className={styleVolumeBarBackground} ref={this.setSliderRef}>
@@ -105,11 +99,10 @@ class ToolBarVolumeButton extends Component<IProps, IState> {
             </div>
           </div>
         </div>
-        {svg}
       </div>
     );
 
-    return !IS_TOUCHABLE_DEVICE ? getToolBarButtonTemplate(content) : null;
+    return !IS_TOUCHABLE_DEVICE ? getToolBarButtonTemplate(svg) : null;
   }
 
   getCursorBottom() {
@@ -118,31 +111,21 @@ class ToolBarVolumeButton extends Component<IProps, IState> {
   }
 
   onMouseEnter = () => {
+    clearTimeout(this.timer);
+
     this.setState({
-      isVolumeBarShown: true,
+      isShown: true,
     });
   };
 
   onMouseLeave = () => {
-    this.setVolumeBarTimer();
-  };
+    clearTimeout(this.timer);
 
-  setVolumeBarTimer() {
-    clearTimeout(this.volumeBarTimer);
-
-    this.volumeBarTimer = setTimeout(() => {
+    this.timer = setTimeout(() => {
       this.setState({
-        isVolumeBarShown: false,
+        isShown: false,
       });
     }, 200);
-  }
-
-  onMouseEnterVolumeBar = () => {
-    clearTimeout(this.volumeBarTimer);
-  };
-
-  onMouseLeaveVolumeBar = () => {
-    this.setVolumeBarTimer();
   };
 
   onMouseDown = (e: MouseEvent) => {
