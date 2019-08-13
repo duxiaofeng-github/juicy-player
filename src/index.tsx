@@ -5,13 +5,22 @@ import { initOptions, initState } from "./utils";
 import createStore, { Store } from "unistore";
 import { Provider } from "unistore/preact";
 import { Container } from "./container";
-import { buildInPluginList } from "./utils/build-in-plugin-list";
+import controls from "./controls";
+import htmlPlayer from "./player/html-player";
+import player from "./player";
+import bigPlayButton from "./controls/big-play-button";
+import toolBar from "./controls/tool-bar";
+import toolBarTopProgressBar from "./controls/tool-bar-top-progress-bar";
+import toolBarPlayButton from "./controls/tool-bar-play-button";
+import toolBarProgressBar from "./controls/tool-bar-progress-bar";
+import toolBarVolumeButton from "./controls/tool-bar-volume-button";
+import toolBarFullScreenButton from "./controls/tool-bar-full-screen-button";
 
 function checkPluginExistence(plugin: IPlugin, plugins: IPlugin[]) {
   let existed = false;
 
   for (let oldPlugin of plugins) {
-    if (oldPlugin.entry === plugin.entry && oldPlugin.module === plugin.module) {
+    if (oldPlugin === plugin) {
       existed = true;
       break;
     }
@@ -24,7 +33,18 @@ export default class JuicyPlayer {
   store: Store<IPlayerStore>;
   private containerPositionCache = "";
 
-  static plugins = buildInPluginList;
+  static plugins = [
+    player,
+    htmlPlayer,
+    controls,
+    bigPlayButton,
+    toolBar,
+    toolBarTopProgressBar,
+    toolBarPlayButton,
+    toolBarProgressBar,
+    toolBarVolumeButton,
+    toolBarFullScreenButton,
+  ];
   static use(plugin: IPlugin) {
     if (!checkPluginExistence(plugin, this.plugins)) {
       this.plugins.push(plugin);

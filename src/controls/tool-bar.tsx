@@ -3,7 +3,7 @@ import { css, cx } from "emotion";
 
 import { IOptions, IPlayerStore, IPlugin } from "../interface";
 import { connect } from "unistore/preact";
-import { renderPlugins } from "../utils/render";
+import { renderComponents } from "../utils/render";
 import { Emitter } from "../utils/emitter";
 import { InnerEventType } from "../utils/event";
 
@@ -28,7 +28,7 @@ function mapStateToProps(state: IPlayerStore, props): IProps {
 }
 
 @connect(mapStateToProps)
-export class ToolBar extends Component<IProps, IState> {
+class ToolBar extends Component<IProps, IState> {
   pluginName = "ToolBar";
   timer;
 
@@ -66,7 +66,7 @@ export class ToolBar extends Component<IProps, IState> {
         onMouseLeave={this.onMouseLeave}
         onClick={this.onClick}
       >
-        {renderPlugins(this.pluginName, plugins)}
+        {renderComponents(this.pluginName, plugins)}
       </div>
     );
   }
@@ -123,6 +123,11 @@ export class ToolBar extends Component<IProps, IState> {
     }
   };
 }
+
+export default {
+  entry: "Controls",
+  component: ToolBar,
+};
 
 const styleToolBar = css`
   position: absolute;

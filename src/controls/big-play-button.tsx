@@ -27,7 +27,7 @@ function mapStateToProps(state: IPlayerStore, props): IProps {
 }
 
 @connect(mapStateToProps)
-export class BigPlayButton extends Component<IProps, IState> {
+class BigPlayButton extends Component<IProps, IState> {
   pluginName = "BigPlayButton";
 
   render() {
@@ -45,6 +45,11 @@ export class BigPlayButton extends Component<IProps, IState> {
     e.stopPropagation();
   };
 }
+
+export default {
+  entry: "Controls",
+  component: BigPlayButton,
+};
 
 const stylePlayButton = css`
   position: absolute;

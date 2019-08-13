@@ -232,12 +232,12 @@ class Player extends Component<IProps, IState> {
   };
 }
 
-const playerWrapper = connect(
+const HTMLPlayer = connect(
   mapStateToProps,
   actions
 )(Player);
 
-playerWrapper.__proto__.canPlay = (source: ISource) => {
+HTMLPlayer.__proto__.canPlay = (source: ISource) => {
   if ("src" in source) {
     if (document.createElement("video").canPlayType(source.mimetype)) {
       return true;
@@ -249,7 +249,10 @@ playerWrapper.__proto__.canPlay = (source: ISource) => {
   return false;
 };
 
-export const HTMLPlayer = playerWrapper;
+export default {
+  entry: "Player",
+  component: HTMLPlayer,
+};
 
 const styleVideo = css`
   position: absolute;

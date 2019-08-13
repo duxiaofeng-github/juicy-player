@@ -16,16 +16,40 @@ export function mapPluginsToProps(state: IPlayerStore, props): IPluginsProps {
   };
 }
 
-export function renderPlugins(entry: string, plugins: IPlugin[]) {
-  return plugins
-    .filter((item) => item.entry === entry)
-    .map((item) => {
-      return <item.module />;
-    });
+export function renderComponents(entry: string, plugins: IPlugin[]) {
+  return getComponents(entry, plugins).map((item) => {
+    return <item.component />;
+  });
 }
 
-export function getPlugins(entry: string, plugins: IPlugin[]) {
-  return plugins.filter((item) => item && item.entry === entry);
+function getPluginComponentByEntry(entry: string, plugin: IPlugin) {
+  if (entry === plugin.entry) {
+    return plugin.component;
+  }
+}
+
+export function getComponents(entry: string, plugins: IPlugin[]) {
+  const components = [];
+
+  for (let pluginArray of plugins) {
+    if (Array.isArray(pluginArray)) {
+      for (let plugin of pluginArray) {
+        const component = getPluginComponentByEntry(entry, plugin);
+
+        if (component != null) {
+          components.push(component);
+        }
+      }
+    } else {
+      const component = getPluginComponentByEntry(entry, pluginArray);
+
+      if (component != null) {
+        components.push(component);
+      }
+    }
+  }
+
+  return components;
 }
 
 const styleButtonContainer = css`

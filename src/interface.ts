@@ -12,7 +12,7 @@ export interface IProperties {
 
 export interface IPlugin {
   entry: string;
-  module: any;
+  component: any;
 }
 
 export interface IPlayerStore {

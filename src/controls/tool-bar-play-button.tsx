@@ -28,7 +28,7 @@ function mapStateToProps(state: IPlayerStore, props): IProps {
 }
 
 @connect(mapStateToProps)
-export class ToolBarPlayButton extends Component<IProps, IState> {
+class ToolBarPlayButton extends Component<IProps, IState> {
   pluginName = "ToolBarPlayButton";
 
   render() {
@@ -59,3 +59,8 @@ export class ToolBarPlayButton extends Component<IProps, IState> {
     this.props.emitter.emit(InnerEventType.InnerVideoPause);
   }
 }
+
+export default {
+  entry: "ToolBar",
+  component: ToolBarPlayButton,
+};

@@ -1,6 +1,6 @@
 import { h, Component } from "preact";
 import { css } from "emotion";
-import { renderPlugins } from "./utils/render";
+import { renderComponents } from "./utils/render";
 import { connect } from "unistore/preact";
 import { fontSizeDefault } from "./utils/style";
 import { IPlugin, IPlayerStore } from "./interface";
@@ -39,7 +39,7 @@ export class Container extends Component<IProps> {
   render() {
     return (
       <div className={styleContainer} ref={this.setRef}>
-        {renderPlugins(this.pluginName, this.props.plugins)}
+        {renderComponents(this.pluginName, this.props.plugins)}
       </div>
     );
   }

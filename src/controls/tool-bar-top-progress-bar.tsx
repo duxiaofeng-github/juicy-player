@@ -27,7 +27,7 @@ function mapStateToProps(state: IPlayerStore, props): IProps {
 }
 
 @connect(mapStateToProps)
-export class ToolBarTopProgressBar extends Component<IProps, IState> {
+class ToolBarTopProgressBar extends Component<IProps, IState> {
   pluginName = "ToolBarTopProgressBar";
 
   componentWillMount() {
@@ -65,6 +65,11 @@ export class ToolBarTopProgressBar extends Component<IProps, IState> {
     });
   };
 }
+
+export default {
+  entry: "ToolBar",
+  component: ToolBarTopProgressBar,
+};
 
 const styleProgressBar = css`
   position: absolute;

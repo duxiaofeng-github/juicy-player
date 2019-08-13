@@ -42,7 +42,7 @@ function mapStateToProps(state: IPlayerStore, props): IProps {
   mapStateToProps,
   actions
 )
-export class ToolBarVolumeButton extends Component<IProps, IState> {
+class ToolBarVolumeButton extends Component<IProps, IState> {
   pluginName = "ToolBarVolumeButton";
   sliderEl: HTMLDivElement;
   cursorEl: HTMLDivElement;
@@ -234,6 +234,11 @@ export class ToolBarVolumeButton extends Component<IProps, IState> {
     this.props.emitter.emit<number>(InnerEventType.InnerVideoSetVolume, volume);
   }
 }
+
+export default {
+  entry: "ToolBar",
+  component: ToolBarVolumeButton,
+};
 
 const styleVolumeBar = css`
   position: absolute;

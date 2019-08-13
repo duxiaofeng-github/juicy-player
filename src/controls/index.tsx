@@ -3,7 +3,7 @@ import { css } from "emotion";
 
 import { IOptions, IPlayerStore, IPlugin } from "../interface";
 import { connect } from "unistore/preact";
-import { renderPlugins } from "../utils/render";
+import { renderComponents } from "../utils/render";
 import { IS_TOUCHABLE_DEVICE } from "../utils";
 import { Emitter } from "../utils/emitter";
 import { InnerEventType } from "../utils/event";
@@ -27,14 +27,14 @@ function mapStateToProps(state: IPlayerStore, props): IProps {
 }
 
 @connect(mapStateToProps)
-export class Controls extends Component<IProps, IState> {
+class Controls extends Component<IProps, IState> {
   pluginName = "Controls";
   timer;
 
   render() {
     return (
       <div className={styleControls} onClick={this.onClick} onMouseMove={!IS_TOUCHABLE_DEVICE && this.onMouseMove}>
-        {renderPlugins(this.pluginName, this.props.plugins)}
+        {renderComponents(this.pluginName, this.props.plugins)}
       </div>
     );
   }
@@ -81,6 +81,11 @@ export class Controls extends Component<IProps, IState> {
     emitter.emit(InnerEventType.InnerToolBarShow);
   };
 }
+
+export default {
+  entry: "Container",
+  component: Controls,
+};
 
 const styleControls = css`
   position: absolute;

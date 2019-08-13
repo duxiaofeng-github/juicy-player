@@ -2,7 +2,7 @@ import { h, Component } from "preact";
 import { connect } from "unistore/preact";
 import { IOptions, IPlayerStore, IProperties, IPlugin } from "../interface";
 import { Emitter } from "../utils/emitter";
-import { getPlugins } from "../utils/render";
+import { getComponents } from "../utils/render";
 
 interface IProps {
   options?: IOptions;
@@ -25,7 +25,7 @@ function mapStateToProps(state: IPlayerStore, props): IProps {
 }
 
 @connect(mapStateToProps)
-export class Player extends Component<IProps, IState> {
+class Player extends Component<IProps, IState> {
   pluginName = "Player";
 
   componentWillMount() {
@@ -54,11 +54,11 @@ export class Player extends Component<IProps, IState> {
       return null;
     }
 
-    const playerPlugins = getPlugins(this.pluginName, this.props.plugins);
+    const playerPlugins = getComponents(this.pluginName, this.props.plugins);
 
     for (let player of playerPlugins) {
-      if (player.module && player.module.canPlay(currentQuality)) {
-        return <player.module />;
+      if (player.component && player.component.canPlay(currentQuality)) {
+        return <player.component />;
       }
     }
 
@@ -67,3 +67,8 @@ export class Player extends Component<IProps, IState> {
     return null;
   }
 }
+
+export default {
+  entry: "Container",
+  component: Player,
+};

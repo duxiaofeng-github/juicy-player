@@ -41,7 +41,7 @@ function mapStateToProps(state: IPlayerStore, props): IProps {
   mapStateToProps,
   actions
 )
-export class ToolBarProgressBar extends Component<IProps, IState> {
+class ToolBarProgressBar extends Component<IProps, IState> {
   pluginName = "ToolBarProgressBar";
   sliderEl: HTMLDivElement;
   mouseDown: boolean;
@@ -205,6 +205,11 @@ export class ToolBarProgressBar extends Component<IProps, IState> {
     emitter.emit(InnerEventType.InnerSeeked);
   }
 }
+
+export default {
+  entry: "ToolBar",
+  component: ToolBarProgressBar,
+};
 
 const styleProgressBar = css`
   flex-grow: 1;
