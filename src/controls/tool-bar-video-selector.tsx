@@ -39,11 +39,23 @@ class ToolBarVideoSelector extends Component<IProps, IState> {
     const { options, lang, properties } = this.props;
     const { currentListIndex, currentVideoIndex } = properties;
     const list = options.playList[currentListIndex];
+
+    if (!list || list.length <= 1) {
+      return null;
+    }
+
     const currentVideo = list && list[currentVideoIndex];
-    const currentText = "quality" in currentVideo ? currentVideo.quality : printf(lang.SourceN, currentVideoIndex);
+    let currentText: string;
+    if (!currentVideo) {
+      currentText = lang.UnknownSource;
+    } else if (typeof currentVideo.title === "string") {
+      currentText = currentVideo.title;
+    } else {
+      currentText = printf(lang.SourceN, currentVideoIndex);
+    }
 
     const listComponent = list.map((video, index) => {
-      const text = "quality" in video ? video.quality : printf(lang.SourceN, index);
+      const text = typeof video.title === "string" ? video.title : printf(lang.SourceN, index);
 
       return <div className={cx("item", currentVideoIndex === index && "selected")}>{text}</div>;
     });
@@ -111,6 +123,7 @@ const stylePopup = css`
   .item {
     white-space: nowrap;
     padding: 10px;
+    text-align: center;
 
     &.selected {
       background-color: ${colorPrimary};
@@ -125,7 +138,6 @@ const stylePopup = css`
 
     .item {
       padding: 10px;
-      text-align: center;
     }
   }
 `;

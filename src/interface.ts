@@ -38,13 +38,11 @@ export interface IControlsOption {
   showVideoSelector: boolean;
 }
 
-export interface ISourceOption {
-  src: string;
-  quality: string;
+export interface ISource {
+  src: string | MediaSource;
+  title: string;
   mimetype: string;
 }
-
-export type ISource = ISourceOption | MediaSource;
 
 export enum PlayerMode {
   Mobile = "mobile",

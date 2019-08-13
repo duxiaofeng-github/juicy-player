@@ -172,7 +172,7 @@ class Player extends Component<IProps, IState> {
     const { options, properties } = this.props;
     const currentVideo = options.playList[properties.currentListIndex][properties.currentVideoIndex];
 
-    return "src" in currentVideo ? currentVideo.src : URL.createObjectURL(currentVideo);
+    return typeof currentVideo.src === "string" ? currentVideo.src : URL.createObjectURL(currentVideo.src);
   }
 
   play = () => {
@@ -238,11 +238,11 @@ const HTMLPlayer = connect(
 )(Player);
 
 HTMLPlayer.__proto__.canPlay = (source: ISource) => {
-  if ("src" in source) {
+  if (typeof source.src === "string") {
     if (document.createElement("video").canPlayType(source.mimetype)) {
       return true;
     }
-  } else if (source instanceof MediaSource) {
+  } else if (source.src instanceof MediaSource) {
     return true;
   }
 

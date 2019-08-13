@@ -3422,10 +3422,22 @@ var ToolBarVideoSelector = /** @class */ (function (_super) {
         var _a = this.props, options = _a.options, lang = _a.lang, properties = _a.properties;
         var currentListIndex = properties.currentListIndex, currentVideoIndex = properties.currentVideoIndex;
         var list = options.playList[currentListIndex];
+        if (!list || list.length <= 1) {
+            return null;
+        }
         var currentVideo = list && list[currentVideoIndex];
-        var currentText = "quality" in currentVideo ? currentVideo.quality : Object(_i18n__WEBPACK_IMPORTED_MODULE_2__["printf"])(lang.SourceN, currentVideoIndex);
+        var currentText;
+        if (!currentVideo) {
+            currentText = lang.UnknownSource;
+        }
+        else if (typeof currentVideo.title === "string") {
+            currentText = currentVideo.title;
+        }
+        else {
+            currentText = Object(_i18n__WEBPACK_IMPORTED_MODULE_2__["printf"])(lang.SourceN, currentVideoIndex);
+        }
         var listComponent = list.map(function (video, index) {
-            var text = "quality" in video ? video.quality : Object(_i18n__WEBPACK_IMPORTED_MODULE_2__["printf"])(lang.SourceN, index);
+            var text = typeof video.title === "string" ? video.title : Object(_i18n__WEBPACK_IMPORTED_MODULE_2__["printf"])(lang.SourceN, index);
             return Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])("div", { className: Object(emotion__WEBPACK_IMPORTED_MODULE_3__["cx"])("item", currentVideoIndex === index && "selected") }, text);
         });
         var popup = (Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])("div", { className: Object(emotion__WEBPACK_IMPORTED_MODULE_3__["cx"])(stylePopup, _utils__WEBPACK_IMPORTED_MODULE_5__["IS_TOUCHABLE_DEVICE"] && "mobile", this.state.isShown && "shown") }, listComponent.slice().reverse()));
@@ -3439,7 +3451,7 @@ var ToolBarVideoSelector = /** @class */ (function (_super) {
     return ToolBarVideoSelector;
 }(preact__WEBPACK_IMPORTED_MODULE_0__["Component"]));
 var styleText = Object(emotion__WEBPACK_IMPORTED_MODULE_3__["css"])(templateObject_1 || (templateObject_1 = __makeTemplateObject(["\n  position: relative;\n\n  &.mobile {\n    position: static;\n  }\n"], ["\n  position: relative;\n\n  &.mobile {\n    position: static;\n  }\n"])));
-var stylePopup = Object(emotion__WEBPACK_IMPORTED_MODULE_3__["css"])(templateObject_2 || (templateObject_2 = __makeTemplateObject(["\n  position: absolute;\n  left: 50%;\n  bottom: 100%;\n  background-color: rgba(0, 0, 0, 0.5);\n  opacity: 0;\n  transform: translateY(100%) translateX(-50%);\n  transition: transform 0s 0.4s, opacity 0.4s ease-out;\n\n  &.shown {\n    opacity: 1;\n    transform: translateY(0) translateX(-50%);\n    transition: transform 0.2s, opacity 0.4s ease-out;\n  }\n\n  .item {\n    white-space: nowrap;\n    padding: 10px;\n\n    &.selected {\n      background-color: ", ";\n    }\n  }\n\n  &.mobile {\n    height: calc(97% - 25px);\n    display: flex;\n    flex-direction: column;\n    justify-content: space-around;\n\n    .item {\n      padding: 10px;\n      text-align: center;\n    }\n  }\n"], ["\n  position: absolute;\n  left: 50%;\n  bottom: 100%;\n  background-color: rgba(0, 0, 0, 0.5);\n  opacity: 0;\n  transform: translateY(100%) translateX(-50%);\n  transition: transform 0s 0.4s, opacity 0.4s ease-out;\n\n  &.shown {\n    opacity: 1;\n    transform: translateY(0) translateX(-50%);\n    transition: transform 0.2s, opacity 0.4s ease-out;\n  }\n\n  .item {\n    white-space: nowrap;\n    padding: 10px;\n\n    &.selected {\n      background-color: ", ";\n    }\n  }\n\n  &.mobile {\n    height: calc(97% - 25px);\n    display: flex;\n    flex-direction: column;\n    justify-content: space-around;\n\n    .item {\n      padding: 10px;\n      text-align: center;\n    }\n  }\n"])), _utils_style__WEBPACK_IMPORTED_MODULE_4__["colorPrimary"]);
+var stylePopup = Object(emotion__WEBPACK_IMPORTED_MODULE_3__["css"])(templateObject_2 || (templateObject_2 = __makeTemplateObject(["\n  position: absolute;\n  left: 50%;\n  bottom: 100%;\n  background-color: rgba(0, 0, 0, 0.5);\n  opacity: 0;\n  transform: translateY(100%) translateX(-50%);\n  transition: transform 0s 0.4s, opacity 0.4s ease-out;\n\n  &.shown {\n    opacity: 1;\n    transform: translateY(0) translateX(-50%);\n    transition: transform 0.2s, opacity 0.4s ease-out;\n  }\n\n  .item {\n    white-space: nowrap;\n    padding: 10px;\n    text-align: center;\n\n    &.selected {\n      background-color: ", ";\n    }\n  }\n\n  &.mobile {\n    height: calc(97% - 25px);\n    display: flex;\n    flex-direction: column;\n    justify-content: space-around;\n\n    .item {\n      padding: 10px;\n    }\n  }\n"], ["\n  position: absolute;\n  left: 50%;\n  bottom: 100%;\n  background-color: rgba(0, 0, 0, 0.5);\n  opacity: 0;\n  transform: translateY(100%) translateX(-50%);\n  transition: transform 0s 0.4s, opacity 0.4s ease-out;\n\n  &.shown {\n    opacity: 1;\n    transform: translateY(0) translateX(-50%);\n    transition: transform 0.2s, opacity 0.4s ease-out;\n  }\n\n  .item {\n    white-space: nowrap;\n    padding: 10px;\n    text-align: center;\n\n    &.selected {\n      background-color: ", ";\n    }\n  }\n\n  &.mobile {\n    height: calc(97% - 25px);\n    display: flex;\n    flex-direction: column;\n    justify-content: space-around;\n\n    .item {\n      padding: 10px;\n    }\n  }\n"])), _utils_style__WEBPACK_IMPORTED_MODULE_4__["colorPrimary"]);
 var plugin = {
     entry: "ToolBar",
     component: ToolBarVideoSelector,
@@ -4163,7 +4175,7 @@ var Player = /** @class */ (function (_super) {
     Player.prototype.getSrc = function () {
         var _a = this.props, options = _a.options, properties = _a.properties;
         var currentVideo = options.playList[properties.currentListIndex][properties.currentVideoIndex];
-        return "src" in currentVideo ? currentVideo.src : URL.createObjectURL(currentVideo);
+        return typeof currentVideo.src === "string" ? currentVideo.src : URL.createObjectURL(currentVideo.src);
     };
     Player.prototype.setCurrentTime = function () {
         this.props.setCurrentTime(this.el.currentTime);
@@ -4175,12 +4187,12 @@ var Player = /** @class */ (function (_super) {
 }(preact__WEBPACK_IMPORTED_MODULE_0__["Component"]));
 var HTMLPlayer = Object(unistore_preact__WEBPACK_IMPORTED_MODULE_1__["connect"])(mapStateToProps, actions)(Player);
 HTMLPlayer.__proto__.canPlay = function (source) {
-    if ("src" in source) {
+    if (typeof source.src === "string") {
         if (document.createElement("video").canPlayType(source.mimetype)) {
             return true;
         }
     }
-    else if (source instanceof MediaSource) {
+    else if (source.src instanceof MediaSource) {
         return true;
     }
     return false;
