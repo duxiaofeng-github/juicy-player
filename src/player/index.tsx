@@ -1,6 +1,6 @@
 import { h, Component } from "preact";
 import { connect } from "unistore/preact";
-import { IOptions, IPlayerStore, IProperties, IPlugins } from "../interface";
+import { IOptions, IPlayerStore, IProperties, IPlugins, IPlugin } from "../interface";
 import { Emitter } from "../utils/emitter";
 import { getPlugins } from "../utils/render";
 
@@ -68,7 +68,9 @@ class Player extends Component<IProps, IState> {
   }
 }
 
-export default {
+const plugin: IPlugin = {
   entry: "Container",
   component: Player,
 };
+
+export default plugin;

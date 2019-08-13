@@ -1,7 +1,7 @@
 import { h, Component } from "preact";
 import { css, cx } from "emotion";
 
-import { IPlayerStore, IProperties } from "../interface";
+import { IPlayerStore, IProperties, IPlugin } from "../interface";
 import { connect } from "unistore/preact";
 import { parsePercent, IS_TOUCHABLE_DEVICE } from "../utils";
 import { colorPrimary, styleToolbarButtonIcon, colorDefault } from "../utils/style";
@@ -235,10 +235,12 @@ class ToolBarVolumeButton extends Component<IProps, IState> {
   }
 }
 
-export default {
+const plugin: IPlugin = {
   entry: "ToolBar",
   component: ToolBarVolumeButton,
 };
+
+export default plugin;
 
 const styleVolumeBar = css`
   position: absolute;

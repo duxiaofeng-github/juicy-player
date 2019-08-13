@@ -3,7 +3,7 @@ import { h, Component } from "preact";
 import * as enterFullScreenIcon from "../assets/enter-full-screen.svg";
 import * as exitFullScreenIcon from "../assets/exit-full-screen.svg";
 
-import { IPlayerStore } from "../interface";
+import { IPlayerStore, IPlugin } from "../interface";
 import { connect } from "unistore/preact";
 import { styleToolbarButtonIcon } from "../utils/style";
 import { getToolBarButtonTemplate } from "../utils/render";
@@ -246,7 +246,9 @@ class ToolBarFullScreenButton extends Component<IProps, IState> {
   }
 }
 
-export default {
+const plugin: IPlugin = {
   entry: "ToolBar",
   component: ToolBarFullScreenButton,
 };
+
+export default plugin;

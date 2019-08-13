@@ -3,7 +3,7 @@ import { h, Component } from "preact";
 import * as playIcon from "../assets/play.svg";
 import * as pauseIcon from "../assets/pause.svg";
 
-import { IPlayerStore, IProperties } from "../interface";
+import { IPlayerStore, IProperties, IPlugin } from "../interface";
 import { connect } from "unistore/preact";
 import { styleToolbarButtonIcon } from "../utils/style";
 import { getToolBarButtonTemplate } from "../utils/render";
@@ -60,7 +60,9 @@ class ToolBarPlayButton extends Component<IProps, IState> {
   }
 }
 
-export default {
+const plugin: IPlugin = {
   entry: "ToolBar",
   component: ToolBarPlayButton,
 };
+
+export default plugin;

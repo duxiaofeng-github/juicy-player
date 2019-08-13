@@ -1,6 +1,6 @@
 import { h, Component } from "preact";
 import { connect } from "unistore/preact";
-import { IOptions, IPlayerStore, IProperties, ISource } from "../interface";
+import { IOptions, IPlayerStore, IProperties, ISource, IPlugin } from "../interface";
 import {
   setPlayState,
   setDuration,
@@ -249,10 +249,12 @@ HTMLPlayer.__proto__.canPlay = (source: ISource) => {
   return false;
 };
 
-export default {
+const plugin: IPlugin = {
   entry: "Player",
   component: HTMLPlayer,
 };
+
+export default plugin;
 
 const styleVideo = css`
   position: absolute;

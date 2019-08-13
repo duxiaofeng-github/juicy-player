@@ -1,7 +1,7 @@
 import { h, Component } from "preact";
 import { css, cx } from "emotion";
 
-import { IOptions, IPlayerStore, IPlugins } from "../interface";
+import { IOptions, IPlayerStore, IPlugins, IPlugin } from "../interface";
 import { connect } from "unistore/preact";
 import { renderComponents } from "../utils/render";
 import { Emitter } from "../utils/emitter";
@@ -124,10 +124,12 @@ class ToolBar extends Component<IProps, IState> {
   };
 }
 
-export default {
+const plugin: IPlugin = {
   entry: "Controls",
   component: ToolBar,
 };
+
+export default plugin;
 
 const styleToolBar = css`
   position: absolute;

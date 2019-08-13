@@ -1,7 +1,7 @@
 import { h, Component } from "preact";
 import { css, cx } from "emotion";
 
-import { IPlayerStore, IProperties } from "../interface";
+import { IPlayerStore, IProperties, IPlugin } from "../interface";
 import { connect } from "unistore/preact";
 import { parsePercent } from "../utils";
 import { colorPrimary } from "../utils/style";
@@ -66,10 +66,12 @@ class ToolBarTopProgressBar extends Component<IProps, IState> {
   };
 }
 
-export default {
+const plugin: IPlugin = {
   entry: "ToolBar",
   component: ToolBarTopProgressBar,
 };
+
+export default plugin;
 
 const styleProgressBar = css`
   position: absolute;

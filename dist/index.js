@@ -2562,10 +2562,11 @@ var BigPlayButton = /** @class */ (function (_super) {
     ], BigPlayButton);
     return BigPlayButton;
 }(preact__WEBPACK_IMPORTED_MODULE_0__["Component"]));
-/* harmony default export */ __webpack_exports__["default"] = ({
+var plugin = {
     entry: "Controls",
     component: BigPlayButton,
-});
+};
+/* harmony default export */ __webpack_exports__["default"] = (plugin);
 var stylePlayButton = Object(emotion__WEBPACK_IMPORTED_MODULE_1__["css"])(templateObject_1 || (templateObject_1 = __makeTemplateObject(["\n  position: absolute;\n  top: 50%;\n  left: 50%;\n  height: calc(15% + 25px);\n  transform: translateY(-50%) translateX(-50%);\n  cursor: pointer;\n  opacity: 0.8;\n  transition: opacity 0.3s;\n\n  &:hover {\n    opacity: 1;\n  }\n"], ["\n  position: absolute;\n  top: 50%;\n  left: 50%;\n  height: calc(15% + 25px);\n  transform: translateY(-50%) translateX(-50%);\n  cursor: pointer;\n  opacity: 0.8;\n  transition: opacity 0.3s;\n\n  &:hover {\n    opacity: 1;\n  }\n"])));
 var stylePlayButtonIcon = Object(emotion__WEBPACK_IMPORTED_MODULE_1__["css"])(templateObject_2 || (templateObject_2 = __makeTemplateObject(["\n  svg {\n    position: absolute;\n    top: 0;\n    left: 0;\n    right: 0;\n    bottom: 0;\n  }\n"], ["\n  svg {\n    position: absolute;\n    top: 0;\n    left: 0;\n    right: 0;\n    bottom: 0;\n  }\n"])));
 var templateObject_1, templateObject_2;
@@ -2678,10 +2679,11 @@ var Controls = /** @class */ (function (_super) {
     ], Controls);
     return Controls;
 }(preact__WEBPACK_IMPORTED_MODULE_0__["Component"]));
-/* harmony default export */ __webpack_exports__["default"] = ({
+var plugin = {
     entry: "Container",
     component: Controls,
-});
+};
+/* harmony default export */ __webpack_exports__["default"] = (plugin);
 var styleControls = Object(emotion__WEBPACK_IMPORTED_MODULE_1__["css"])(templateObject_1 || (templateObject_1 = __makeTemplateObject(["\n  position: absolute;\n  top: 0;\n  bottom: 0;\n  left: 0;\n  right: 0;\n"], ["\n  position: absolute;\n  top: 0;\n  bottom: 0;\n  left: 0;\n  right: 0;\n"])));
 var templateObject_1;
 
@@ -2937,10 +2939,11 @@ var ToolBarFullScreenButton = /** @class */ (function (_super) {
     ], ToolBarFullScreenButton);
     return ToolBarFullScreenButton;
 }(preact__WEBPACK_IMPORTED_MODULE_0__["Component"]));
-/* harmony default export */ __webpack_exports__["default"] = ({
+var plugin = {
     entry: "ToolBar",
     component: ToolBarFullScreenButton,
-});
+};
+/* harmony default export */ __webpack_exports__["default"] = (plugin);
 
 
 /***/ }),
@@ -3030,10 +3033,11 @@ var ToolBarPlayButton = /** @class */ (function (_super) {
     ], ToolBarPlayButton);
     return ToolBarPlayButton;
 }(preact__WEBPACK_IMPORTED_MODULE_0__["Component"]));
-/* harmony default export */ __webpack_exports__["default"] = ({
+var plugin = {
     entry: "ToolBar",
     component: ToolBarPlayButton,
-});
+};
+/* harmony default export */ __webpack_exports__["default"] = (plugin);
 
 
 /***/ }),
@@ -3218,10 +3222,11 @@ var ToolBarProgressBar = /** @class */ (function (_super) {
     ], ToolBarProgressBar);
     return ToolBarProgressBar;
 }(preact__WEBPACK_IMPORTED_MODULE_0__["Component"]));
-/* harmony default export */ __webpack_exports__["default"] = ({
+var plugin = {
     entry: "ToolBar",
     component: ToolBarProgressBar,
-});
+};
+/* harmony default export */ __webpack_exports__["default"] = (plugin);
 var styleProgressBar = Object(emotion__WEBPACK_IMPORTED_MODULE_1__["css"])(templateObject_1 || (templateObject_1 = __makeTemplateObject(["\n  flex-grow: 1;\n"], ["\n  flex-grow: 1;\n"])));
 var styleProgressBarBackground = Object(emotion__WEBPACK_IMPORTED_MODULE_1__["css"])(templateObject_2 || (templateObject_2 = __makeTemplateObject(["\n  position: relative;\n  height: 100%;\n  background-color: rgba(255, 255, 255, 0.2);\n  cursor: pointer;\n  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);\n"], ["\n  position: relative;\n  height: 100%;\n  background-color: rgba(255, 255, 255, 0.2);\n  cursor: pointer;\n  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);\n"])));
 var styleProgressBarBuffered = Object(emotion__WEBPACK_IMPORTED_MODULE_1__["css"])(templateObject_3 || (templateObject_3 = __makeTemplateObject(["\n  position: absolute;\n  top: 0;\n  bottom: 0;\n  background-color: ", ";\n  pointer-events: none;\n"], ["\n  position: absolute;\n  top: 0;\n  bottom: 0;\n  background-color: ", ";\n  pointer-events: none;\n"])), _utils_style__WEBPACK_IMPORTED_MODULE_4__["colorPrimaryAlpha01"]);
@@ -3325,10 +3330,11 @@ var ToolBarTopProgressBar = /** @class */ (function (_super) {
     ], ToolBarTopProgressBar);
     return ToolBarTopProgressBar;
 }(preact__WEBPACK_IMPORTED_MODULE_0__["Component"]));
-/* harmony default export */ __webpack_exports__["default"] = ({
+var plugin = {
     entry: "ToolBar",
     component: ToolBarTopProgressBar,
-});
+};
+/* harmony default export */ __webpack_exports__["default"] = (plugin);
 var styleProgressBar = Object(emotion__WEBPACK_IMPORTED_MODULE_1__["css"])(templateObject_1 || (templateObject_1 = __makeTemplateObject(["\n  position: absolute;\n  top: 0;\n  left: 0;\n  right: 0;\n  height: 8%;\n  max-height: 10px;\n  background-color: rgba(200, 200, 200, 0.5);\n  transform: translateY(-100%);\n  opacity: 0;\n  transition: none;\n\n  &.shown {\n    transition: opacity 0.2s 0.35s;\n    opacity: 1;\n  }\n"], ["\n  position: absolute;\n  top: 0;\n  left: 0;\n  right: 0;\n  height: 8%;\n  max-height: 10px;\n  background-color: rgba(200, 200, 200, 0.5);\n  transform: translateY(-100%);\n  opacity: 0;\n  transition: none;\n\n  &.shown {\n    transition: opacity 0.2s 0.35s;\n    opacity: 1;\n  }\n"])));
 var styleProgressBarFill = Object(emotion__WEBPACK_IMPORTED_MODULE_1__["css"])(templateObject_2 || (templateObject_2 = __makeTemplateObject(["\n  position: absolute;\n  top: 0;\n  bottom: 0;\n  left: 0;\n  width: 0;\n  background-color: ", ";\n"], ["\n  position: absolute;\n  top: 0;\n  bottom: 0;\n  left: 0;\n  width: 0;\n  background-color: ", ";\n"])), _utils_style__WEBPACK_IMPORTED_MODULE_4__["colorPrimary"]);
 var templateObject_1, templateObject_2;
@@ -3403,12 +3409,13 @@ var ToolBarVideoSelector = /** @class */ (function (_super) {
     ], ToolBarVideoSelector);
     return ToolBarVideoSelector;
 }(preact__WEBPACK_IMPORTED_MODULE_0__["Component"]));
-/* harmony default export */ __webpack_exports__["default"] = ([
+var plugin = [
     {
         entry: "ToolBar",
         component: ToolBarVideoSelector,
     },
-]);
+];
+/* harmony default export */ __webpack_exports__["default"] = (plugin);
 
 
 /***/ }),
@@ -3620,10 +3627,11 @@ var ToolBarVolumeButton = /** @class */ (function (_super) {
     ], ToolBarVolumeButton);
     return ToolBarVolumeButton;
 }(preact__WEBPACK_IMPORTED_MODULE_0__["Component"]));
-/* harmony default export */ __webpack_exports__["default"] = ({
+var plugin = {
     entry: "ToolBar",
     component: ToolBarVolumeButton,
-});
+};
+/* harmony default export */ __webpack_exports__["default"] = (plugin);
 var styleVolumeBar = Object(emotion__WEBPACK_IMPORTED_MODULE_1__["css"])(templateObject_1 || (templateObject_1 = __makeTemplateObject(["\n  position: absolute;\n  width: 100%;\n  height: 300%;\n  left: 0;\n  right: 0;\n  bottom: 100%;\n  display: flex;\n  flex-direction: column;\n  background-color: rgba(0, 0, 0, 0.5);\n  padding-bottom: 8px;\n  opacity: 0;\n  transform: translateY(100%);\n  transition: transform 0s 0.4s, opacity 0.4s ease-out;\n\n  &.shown {\n    opacity: 1;\n    transform: translateY(0);\n    transition: transform 0.2s, opacity 0.4s ease-out;\n  }\n"], ["\n  position: absolute;\n  width: 100%;\n  height: 300%;\n  left: 0;\n  right: 0;\n  bottom: 100%;\n  display: flex;\n  flex-direction: column;\n  background-color: rgba(0, 0, 0, 0.5);\n  padding-bottom: 8px;\n  opacity: 0;\n  transform: translateY(100%);\n  transition: transform 0s 0.4s, opacity 0.4s ease-out;\n\n  &.shown {\n    opacity: 1;\n    transform: translateY(0);\n    transition: transform 0.2s, opacity 0.4s ease-out;\n  }\n"])));
 var styleVolumeBarText = Object(emotion__WEBPACK_IMPORTED_MODULE_1__["css"])(templateObject_2 || (templateObject_2 = __makeTemplateObject(["\n  color: ", ";\n  padding: 8px;\n  text-align: center;\n"], ["\n  color: ", ";\n  padding: 8px;\n  text-align: center;\n"])), _utils_style__WEBPACK_IMPORTED_MODULE_4__["colorDefault"]);
 var styleVolumeBarContent = Object(emotion__WEBPACK_IMPORTED_MODULE_1__["css"])(templateObject_3 || (templateObject_3 = __makeTemplateObject(["\n  flex-grow: 1;\n  position: relative;\n"], ["\n  flex-grow: 1;\n  position: relative;\n"])));
@@ -3762,10 +3770,11 @@ var ToolBar = /** @class */ (function (_super) {
     ], ToolBar);
     return ToolBar;
 }(preact__WEBPACK_IMPORTED_MODULE_0__["Component"]));
-/* harmony default export */ __webpack_exports__["default"] = ({
+var plugin = {
     entry: "Controls",
     component: ToolBar,
-});
+};
+/* harmony default export */ __webpack_exports__["default"] = (plugin);
 var styleToolBar = Object(emotion__WEBPACK_IMPORTED_MODULE_1__["css"])(templateObject_1 || (templateObject_1 = __makeTemplateObject(["\n  position: absolute;\n  bottom: 0;\n  left: 0;\n  right: 0;\n  height: calc(3% + 25px);\n  background-color: rgba(0, 0, 0, 0.5);\n  display: flex;\n  transition: transform 0.5s;\n  transform: translateY(0);\n"], ["\n  position: absolute;\n  bottom: 0;\n  left: 0;\n  right: 0;\n  height: calc(3% + 25px);\n  background-color: rgba(0, 0, 0, 0.5);\n  display: flex;\n  transition: transform 0.5s;\n  transform: translateY(0);\n"])));
 var styleToolbarHidden = Object(emotion__WEBPACK_IMPORTED_MODULE_1__["css"])(templateObject_2 || (templateObject_2 = __makeTemplateObject(["\n  transform: translateY(100%);\n"], ["\n  transform: translateY(100%);\n"])));
 var templateObject_1, templateObject_2;
@@ -4168,10 +4177,11 @@ HTMLPlayer.__proto__.canPlay = function (source) {
     }
     return false;
 };
-/* harmony default export */ __webpack_exports__["default"] = ({
+var plugin = {
     entry: "Player",
     component: HTMLPlayer,
-});
+};
+/* harmony default export */ __webpack_exports__["default"] = (plugin);
 var styleVideo = Object(emotion__WEBPACK_IMPORTED_MODULE_3__["css"])(templateObject_1 || (templateObject_1 = __makeTemplateObject(["\n  position: absolute;\n  left: 0;\n  top: 0;\n  width: 100%;\n  height: 100%;\n"], ["\n  position: absolute;\n  left: 0;\n  top: 0;\n  width: 100%;\n  height: 100%;\n"])));
 var templateObject_1;
 
@@ -4265,10 +4275,11 @@ var Player = /** @class */ (function (_super) {
     ], Player);
     return Player;
 }(preact__WEBPACK_IMPORTED_MODULE_0__["Component"]));
-/* harmony default export */ __webpack_exports__["default"] = ({
+var plugin = {
     entry: "Container",
     component: Player,
-});
+};
+/* harmony default export */ __webpack_exports__["default"] = (plugin);
 
 
 /***/ }),

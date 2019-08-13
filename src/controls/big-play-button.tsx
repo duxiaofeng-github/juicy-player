@@ -2,7 +2,7 @@ import { h, Component } from "preact";
 import { css } from "emotion";
 
 import * as bigPlayIcon from "../assets/big-play.svg";
-import { IOptions, IPlayerStore, IProperties } from "../interface";
+import { IOptions, IPlayerStore, IProperties, IPlugin } from "../interface";
 import { connect } from "unistore/preact";
 import { Emitter } from "../utils/emitter";
 import { InnerEventType } from "../utils/event";
@@ -46,10 +46,12 @@ class BigPlayButton extends Component<IProps, IState> {
   };
 }
 
-export default {
+const plugin: IPlugin = {
   entry: "Controls",
   component: BigPlayButton,
 };
+
+export default plugin;
 
 const stylePlayButton = css`
   position: absolute;

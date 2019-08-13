@@ -1,7 +1,7 @@
 import { h, Component } from "preact";
 import { css, cx } from "emotion";
 
-import { IPlayerStore, IProperties } from "../interface";
+import { IPlayerStore, IProperties, IPlugin } from "../interface";
 import { connect } from "unistore/preact";
 import { parsePercent, IS_TOUCHABLE_DEVICE, secondToMMSS } from "../utils";
 import {
@@ -206,10 +206,12 @@ class ToolBarProgressBar extends Component<IProps, IState> {
   }
 }
 
-export default {
+const plugin: IPlugin = {
   entry: "ToolBar",
   component: ToolBarProgressBar,
 };
+
+export default plugin;
 
 const styleProgressBar = css`
   flex-grow: 1;

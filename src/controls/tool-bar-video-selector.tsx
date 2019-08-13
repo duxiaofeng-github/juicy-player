@@ -1,6 +1,6 @@
 import { h, Component } from "preact";
 
-import { IPlayerStore, IProperties, IOptions } from "../interface";
+import { IPlayerStore, IProperties, IOptions, IPlugin } from "../interface";
 import { connect } from "unistore/preact";
 import { IS_TOUCHABLE_DEVICE } from "../utils";
 import { Emitter } from "../utils/emitter";
@@ -42,9 +42,11 @@ class ToolBarVideoSelector extends Component<IProps, IState> {
   }
 }
 
-export default [
+const plugin: IPlugin = [
   {
     entry: "ToolBar",
     component: ToolBarVideoSelector,
   },
 ];
+
+export default plugin;

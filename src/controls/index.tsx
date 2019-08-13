@@ -1,7 +1,7 @@
 import { h, Component } from "preact";
 import { css } from "emotion";
 
-import { IOptions, IPlayerStore, IPlugins } from "../interface";
+import { IOptions, IPlayerStore, IPlugins, IPlugin } from "../interface";
 import { connect } from "unistore/preact";
 import { renderComponents } from "../utils/render";
 import { IS_TOUCHABLE_DEVICE } from "../utils";
@@ -82,10 +82,12 @@ class Controls extends Component<IProps, IState> {
   };
 }
 
-export default {
+const plugin: IPlugin = {
   entry: "Container",
   component: Controls,
 };
+
+export default plugin;
 
 const styleControls = css`
   position: absolute;
