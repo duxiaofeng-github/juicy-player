@@ -4104,7 +4104,7 @@ var Player = /** @class */ (function (_super) {
         if (!currentQuality) {
             return null;
         }
-        var playerPlugins = Object(_utils_render__WEBPACK_IMPORTED_MODULE_2__["getComponents"])(this.pluginName, this.props.plugins);
+        var playerPlugins = Object(_utils_render__WEBPACK_IMPORTED_MODULE_2__["getPlugins"])(this.pluginName, this.props.plugins);
         for (var _i = 0, playerPlugins_1 = playerPlugins; _i < playerPlugins_1.length; _i++) {
             var player = playerPlugins_1[_i];
             if (player.component && player.component.canPlay(currentQuality)) {
@@ -4446,14 +4446,14 @@ var secondToMMSS = function (seconds) {
 /*!******************************!*\
   !*** ./src/utils/render.tsx ***!
   \******************************/
-/*! exports provided: mapPluginsToProps, renderComponents, getComponents, getToolBarButtonTemplate, getToolBarTextTemplate */
+/*! exports provided: mapPluginsToProps, renderComponents, getPlugins, getToolBarButtonTemplate, getToolBarTextTemplate */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "mapPluginsToProps", function() { return mapPluginsToProps; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "renderComponents", function() { return renderComponents; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getComponents", function() { return getComponents; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getPlugins", function() { return getPlugins; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getToolBarButtonTemplate", function() { return getToolBarButtonTemplate; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getToolBarTextTemplate", function() { return getToolBarTextTemplate; });
 /* harmony import */ var preact__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! preact */ "./node_modules/preact/dist/preact.umd.js");
@@ -4476,30 +4476,30 @@ function mapPluginsToProps(state, props) {
     };
 }
 function renderComponents(entry, plugins) {
-    return getComponents(entry, plugins).map(function (item) {
-        return Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])(item.component, null);
+    return getPlugins(entry, plugins).map(function (plugin) {
+        return Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])(plugin.component, null);
     });
 }
-function getPluginComponentByEntry(entry, plugin) {
+function getPluginByEntry(entry, plugin) {
     if (entry === plugin.entry) {
-        return plugin.component;
+        return plugin;
     }
 }
-function getComponents(entry, plugins) {
+function getPlugins(entry, plugins) {
     var components = [];
     for (var _i = 0, plugins_1 = plugins; _i < plugins_1.length; _i++) {
         var pluginArray = plugins_1[_i];
         if (Array.isArray(pluginArray)) {
             for (var _a = 0, pluginArray_1 = pluginArray; _a < pluginArray_1.length; _a++) {
                 var plugin = pluginArray_1[_a];
-                var component = getPluginComponentByEntry(entry, plugin);
+                var component = getPluginByEntry(entry, plugin);
                 if (component != null) {
                     components.push(component);
                 }
             }
         }
         else {
-            var component = getPluginComponentByEntry(entry, pluginArray);
+            var component = getPluginByEntry(entry, pluginArray);
             if (component != null) {
                 components.push(component);
             }

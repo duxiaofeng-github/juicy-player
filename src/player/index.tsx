@@ -2,7 +2,7 @@ import { h, Component } from "preact";
 import { connect } from "unistore/preact";
 import { IOptions, IPlayerStore, IProperties, IPlugin } from "../interface";
 import { Emitter } from "../utils/emitter";
-import { getComponents } from "../utils/render";
+import { getPlugins } from "../utils/render";
 
 interface IProps {
   options?: IOptions;
@@ -54,7 +54,7 @@ class Player extends Component<IProps, IState> {
       return null;
     }
 
-    const playerPlugins = getComponents(this.pluginName, this.props.plugins);
+    const playerPlugins = getPlugins(this.pluginName, this.props.plugins);
 
     for (let player of playerPlugins) {
       if (player.component && player.component.canPlay(currentQuality)) {

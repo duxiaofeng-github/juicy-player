@@ -17,31 +17,31 @@ export function mapPluginsToProps(state: IPlayerStore, props): IPluginsProps {
 }
 
 export function renderComponents(entry: string, plugins: IPlugin[]) {
-  return getComponents(entry, plugins).map((item) => {
-    return <item.component />;
+  return getPlugins(entry, plugins).map((plugin) => {
+    return <plugin.component />;
   });
 }
 
-function getPluginComponentByEntry(entry: string, plugin: IPlugin) {
+function getPluginByEntry(entry: string, plugin: IPlugin) {
   if (entry === plugin.entry) {
-    return plugin.component;
+    return plugin;
   }
 }
 
-export function getComponents(entry: string, plugins: IPlugin[]) {
+export function getPlugins(entry: string, plugins: IPlugin[]) {
   const components = [];
 
   for (let pluginArray of plugins) {
     if (Array.isArray(pluginArray)) {
       for (let plugin of pluginArray) {
-        const component = getPluginComponentByEntry(entry, plugin);
+        const component = getPluginByEntry(entry, plugin);
 
         if (component != null) {
           components.push(component);
         }
       }
     } else {
-      const component = getPluginComponentByEntry(entry, pluginArray);
+      const component = getPluginByEntry(entry, pluginArray);
 
       if (component != null) {
         components.push(component);
