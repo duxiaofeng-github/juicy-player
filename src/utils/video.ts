@@ -1,41 +1,56 @@
 import { IPlayerStore } from "../interface";
 
-export type ISetPlayState = (playing: boolean) => IPlayerStore;
+export type ISetPlayState = (playing: boolean) => Partial<IPlayerStore>;
 
-export function setPlayState(state: IPlayerStore, playing: boolean): IPlayerStore {
-  state.properties.playing = playing;
-
-  return state;
+export function setPlayState(state: IPlayerStore, playing: boolean): Partial<IPlayerStore> {
+  return {
+    properties: {
+      ...state.properties,
+      playing,
+    },
+  };
 }
 
-export type ISetCurrentTime = (time: number) => IPlayerStore;
+export type ISetCurrentTime = (time: number) => Partial<IPlayerStore>;
 
-export function setCurrentTime(state: IPlayerStore, time: number): IPlayerStore {
-  state.properties.currentTime = time;
-
-  return state;
+export function setCurrentTime(state: IPlayerStore, currentTime: number): Partial<IPlayerStore> {
+  return {
+    properties: {
+      ...state.properties,
+      currentTime,
+    },
+  };
 }
 
-export type ISetVolume = (volume: number) => IPlayerStore;
+export type ISetVolume = (volume: number) => Partial<IPlayerStore>;
 
-export function setVolume(state: IPlayerStore, volume: number): IPlayerStore {
-  state.properties.volume = volume;
-
-  return state;
+export function setVolume(state: IPlayerStore, volume: number): Partial<IPlayerStore> {
+  return {
+    properties: {
+      ...state.properties,
+      volume,
+    },
+  };
 }
 
-export type ISetDuration = (duration: number) => IPlayerStore;
+export type ISetDuration = (duration: number) => Partial<IPlayerStore>;
 
-export function setDuration(state: IPlayerStore, duration: number): IPlayerStore {
-  state.properties.duration = duration;
-
-  return state;
+export function setDuration(state: IPlayerStore, duration: number): Partial<IPlayerStore> {
+  return {
+    properties: {
+      ...state.properties,
+      duration,
+    },
+  };
 }
 
-export type ISetBuffered = (buffered: TimeRanges) => IPlayerStore;
+export type ISetBuffered = (buffered: TimeRanges) => Partial<IPlayerStore>;
 
-export function setBuffered(state: IPlayerStore, buffered?: TimeRanges): IPlayerStore {
-  state.properties.buffered = buffered;
-
-  return state;
+export function setBuffered(state: IPlayerStore, buffered?: TimeRanges): Partial<IPlayerStore> {
+  return {
+    properties: {
+      ...state.properties,
+      buffered,
+    },
+  };
 }
