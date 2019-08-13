@@ -36,6 +36,7 @@ export enum InnerEventType {
   InnerVideoPlay = "inner.videoPlay",
   InnerVideoPause = "inner.videoPause",
   InnerVideoToggle = "inner.videoToggle",
+  InnerVideoSetSource = "inner.videoSetSource",
   InnerVideoSetCurrentTime = "inner.videoSetCurrentTime",
   InnerVideoSetVolume = "inner.videoSetVolume",
   InnerProgressBarHide = "inner.progressBarHide",
@@ -47,8 +48,6 @@ export enum InnerEventType {
   InnerToolBarShown = "inner.toolBarShown",
   InnerSeeking = "inner.seeking",
   InnerSeeked = "inner.seeked",
-  InnerPlayerMountedOrUnmounted = "inner.playerMountedOrUnmounted",
-  InnerContainerMountedOrUnmounted = "inner.containerMountedOrUnmounted",
 }
 
 export type PlayerEventType = InnerEventType | CustomEventType | NativeEvent;

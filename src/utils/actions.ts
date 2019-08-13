@@ -54,3 +54,30 @@ export function setBuffered(state: IPlayerStore, buffered?: TimeRanges): Partial
     },
   };
 }
+
+export type ISetIsFullScreen = (isFullScreen: boolean) => Partial<IPlayerStore>;
+
+export function setIsFullScreen(state: IPlayerStore, isFullScreen: boolean): Partial<IPlayerStore> {
+  return {
+    properties: {
+      ...state.properties,
+      isFullScreen,
+    },
+  };
+}
+
+export type ISetFullScreenMethods = (enterFullScreen: () => void, exitFullScreen: () => void) => Partial<IPlayerStore>;
+
+export function setFullScreenMethods(
+  state: IPlayerStore,
+  enterFullScreen: () => void,
+  exitFullScreen: () => void
+): Partial<IPlayerStore> {
+  return {
+    methods: {
+      ...state.methods,
+      enterFullScreen,
+      exitFullScreen,
+    },
+  };
+}

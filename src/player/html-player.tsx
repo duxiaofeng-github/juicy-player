@@ -12,10 +12,15 @@ import {
   setBuffered,
   ISetVolume,
   setVolume,
-} from "../utils/video";
+  ISetFullScreenMethods,
+  setFullScreenMethods,
+  setIsFullScreen,
+  ISetIsFullScreen,
+} from "../utils/actions";
 import { css } from "emotion";
 import { Emitter } from "../utils/emitter";
 import { InnerEventType, NativeEvent, PlayerEvent } from "../utils/event";
+import { IS_DOCUMENT_SUPPORT_FULLSCREEN, fullScreenApiList } from "../utils";
 
 interface IProps {
   options?: IOptions;
@@ -25,6 +30,8 @@ interface IProps {
   setCurrentTime?: ISetCurrentTime;
   setVolume?: ISetVolume;
   setBuffered?: ISetBuffered;
+  setFullScreenMethods?: ISetFullScreenMethods;
+  setIsFullScreen?: ISetIsFullScreen;
   emitter: Emitter;
 }
 
@@ -36,6 +43,8 @@ const actions = {
   setCurrentTime,
   setVolume,
   setBuffered,
+  setFullScreenMethods,
+  setIsFullScreen,
 };
 
 function mapStateToProps(state: IPlayerStore, props): IProps {
@@ -55,6 +64,7 @@ class Player extends Component<IProps, IState> {
 
   componentWillMount() {
     const { emitter } = this.props;
+
     emitter.on(InnerEventType.InnerVideoPlay, this.play);
     emitter.on(InnerEventType.InnerVideoPause, this.pause);
     emitter.on(InnerEventType.InnerVideoToggle, this.toggle);
@@ -68,7 +78,6 @@ class Player extends Component<IProps, IState> {
     const { emitter } = this.props;
 
     emitter.emit(InnerEventType.InnerProgressBarShow);
-    emitter.emit(InnerEventType.InnerPlayerMountedOrUnmounted, this.el);
   }
 
   componentWillUnmount() {
@@ -76,7 +85,7 @@ class Player extends Component<IProps, IState> {
       this.unbindEvents(this.el);
     }
 
-    const { emitter } = this.props;
+    const { emitter, setFullScreenMethods } = this.props;
 
     emitter.off(InnerEventType.InnerVideoPlay, this.play);
     emitter.off(InnerEventType.InnerVideoPause, this.pause);
@@ -86,7 +95,7 @@ class Player extends Component<IProps, IState> {
     emitter.off(InnerEventType.InnerSeeking, this.handleSeeking);
     emitter.off(InnerEventType.InnerSeeked, this.handleSeeked);
 
-    emitter.emit(InnerEventType.InnerPlayerMountedOrUnmounted, null);
+    setFullScreenMethods(null, null);
   }
 
   render() {
@@ -112,8 +121,46 @@ class Player extends Component<IProps, IState> {
 
     this.setVolume();
 
+    this.setFullScreenMethods();
+
     this.bindEvents(el);
   };
+
+  setFullScreenMethods() {
+    if (IS_DOCUMENT_SUPPORT_FULLSCREEN) {
+      return;
+    }
+
+    for (let item of fullScreenApiList) {
+      const requestFullscreen = item[0];
+      const exitFullscreen = item[1];
+      const fullscreenElement = item[2];
+
+      if (requestFullscreen in this.el) {
+        const { setFullScreenMethods, setIsFullScreen } = this.props;
+        const enterFullScreen = () => {
+          this.el[requestFullscreen]();
+        };
+
+        const exitFullScreen = () => {
+          this.el[exitFullscreen]();
+        };
+
+        const fullScreenChanged = () => {
+          const currentFullScreenElement = this.el[fullscreenElement];
+
+          setIsFullScreen(currentFullScreenElement === this.el);
+        };
+
+        this.el.addEventListener("webkitbeginfullscreen", fullScreenChanged);
+        this.el.addEventListener("webkitendfullscreen", fullScreenChanged);
+
+        setFullScreenMethods(enterFullScreen, exitFullScreen);
+
+        break;
+      }
+    }
+  }
 
   handleEvent = (e: Event) => {
     let hasEvt = false;

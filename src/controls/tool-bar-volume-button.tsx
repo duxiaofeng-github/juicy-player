@@ -7,7 +7,7 @@ import { parsePercent, IS_TOUCHABLE_DEVICE } from "../utils";
 import { colorPrimary, styleToolbarButtonIcon, colorDefault } from "../utils/style";
 import { Emitter } from "../utils/emitter";
 import { InnerEventType } from "../utils/event";
-import { ISetVolume, setVolume } from "../utils/video";
+import { ISetVolume, setVolume } from "../utils/actions";
 
 import * as volumeOnIcon from "../assets/volume-on.svg";
 import * as volumeOffIcon from "../assets/volume-off.svg";

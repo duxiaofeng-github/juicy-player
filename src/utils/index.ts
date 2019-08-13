@@ -13,6 +13,65 @@ const canPlayRtmpFormat = {
   "rtmp/flv": "FLV",
 };
 
+export const fullScreenApiList = [
+  [
+    "requestFullscreen",
+    "exitFullscreen",
+    "fullscreenElement",
+    "fullscreenEnabled",
+    "fullscreenchange",
+    "fullscreenerror",
+  ],
+  [
+    "webkitRequestFullscreen",
+    "webkitExitFullscreen",
+    "webkitFullscreenElement",
+    "webkitFullscreenEnabled",
+    "webkitfullscreenchange",
+    "webkitfullscreenerror",
+  ],
+  [
+    "webkitRequestFullScreen",
+    "webkitCancelFullScreen",
+    "webkitFullScreenElement",
+    "webkitCancelFullScreen",
+    "webkitfullscreenchange",
+    "webkitfullscreenerror",
+  ],
+  [
+    "mozRequestFullScreen",
+    "mozCancelFullScreen",
+    "mozFullScreenElement",
+    "mozFullScreenEnabled",
+    "mozfullscreenchange",
+    "mozfullscreenerror",
+  ],
+  [
+    "msRequestFullscreen",
+    "msExitFullscreen",
+    "msFullscreenElement",
+    "msFullscreenEnabled",
+    "MSFullscreenChange",
+    "MSFullscreenError",
+  ],
+  [
+    "webkitEnterFullscreen",
+    "webkitExitFullscreen",
+    "webkitDisplayingFullscreen",
+    "webkitSupportsFullscreen",
+    "webkitbeginfullscreen",
+    "webkitfullscreenerror",
+  ],
+  [
+    "webkitEnterFullScreen",
+    "webkitExitFullScreen",
+    "webkitDisplayingFullscreen",
+    "webkitSupportsFullscreen",
+    "webkitbeginfullscreen",
+    "webkitfullscreenerror",
+  ],
+];
+
 export function canPlayTypeByFlash(type: string) {
   if (type in Object.assign(canPlayFormat, canPlayRtmpFormat)) {
     return "maybe";
@@ -23,6 +82,20 @@ export function canPlayTypeByFlash(type: string) {
 
 // export const IS_SUPPORT_MSE = "MediaSource" in window;
 // export const IS_SUPPORT_FLASH = flashVersion()[0] >= "10";
+export const IS_DOCUMENT_SUPPORT_FULLSCREEN = (() => {
+  let isEnabled = false;
+
+  for (let item of fullScreenApiList) {
+    const fullscreenchange = item[4];
+
+    if (`on${fullscreenchange}` in document) {
+      isEnabled = true;
+      break;
+    }
+  }
+
+  return isEnabled;
+})();
 export const IS_TOUCHABLE_DEVICE = (() => {
   var prefixes = " -webkit- -moz- -o- -ms- ".split(" ");
   var mq = function(query) {
@@ -74,7 +147,9 @@ export function initState(options, plugins: IPlugins, lang: ILang): IPlayerStore
       duration: 0,
       buffered: null,
       volume: 0,
+      isFullScreen: false,
     },
+    methods: {},
     emitter: new Emitter(),
     plugins,
     lang,

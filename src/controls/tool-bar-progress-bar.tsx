@@ -12,7 +12,7 @@ import {
 } from "../utils/style";
 import { Emitter } from "../utils/emitter";
 import { InnerEventType, PlayerEventType } from "../utils/event";
-import { ISetCurrentTime, setCurrentTime } from "../utils/video";
+import { ISetCurrentTime, setCurrentTime } from "../utils/actions";
 
 interface IProps {
   properties?: IProperties;

@@ -2420,7 +2420,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var unistore_preact__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! unistore/preact */ "./node_modules/unistore/preact.js");
 /* harmony import */ var unistore_preact__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(unistore_preact__WEBPACK_IMPORTED_MODULE_3__);
 /* harmony import */ var _utils_style__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./utils/style */ "./src/utils/style.ts");
-/* harmony import */ var _utils_event__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./utils/event */ "./src/utils/event.ts");
+/* harmony import */ var _utils__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./utils */ "./src/utils/index.ts");
+/* harmony import */ var _utils_actions__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./utils/actions */ "./src/utils/actions.ts");
 var __extends = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -2450,6 +2451,7 @@ var __decorate = (undefined && undefined.__decorate) || function (decorators, ta
 
 
 
+
 function mapStateToProps(state, props) {
     var plugins = state.plugins, emitter = state.emitter;
     return {
@@ -2457,25 +2459,58 @@ function mapStateToProps(state, props) {
         emitter: emitter,
     };
 }
+var actions = {
+    setFullScreenMethods: _utils_actions__WEBPACK_IMPORTED_MODULE_6__["setFullScreenMethods"],
+    setIsFullScreen: _utils_actions__WEBPACK_IMPORTED_MODULE_6__["setIsFullScreen"],
+};
 var Container = /** @class */ (function (_super) {
     __extends(Container, _super);
     function Container() {
         var _this = _super !== null && _super.apply(this, arguments) || this;
         _this.pluginName = "Container";
-        _this.setRef = function (el) { return (_this.el = el); };
+        _this.setRef = function (el) {
+            var _loop_1 = function (item) {
+                var requestFullscreen = item[0];
+                var exitFullscreen = item[1];
+                var fullscreenElement = item[2];
+                var fullscreenchange = item[4];
+                if ("on" + fullscreenchange in document) {
+                    var enterFullScreen = function () {
+                        el[requestFullscreen]();
+                    };
+                    var exitFullScreen = function () {
+                        document[exitFullscreen]();
+                    };
+                    document.addEventListener(fullscreenchange, _this.fullScreenChanged);
+                    _this.fullscreenchangeName = fullscreenchange;
+                    _this.fullscreenElementName = fullscreenElement;
+                    _this.el = el;
+                    _this.props.setFullScreenMethods(enterFullScreen, exitFullScreen);
+                    return "break";
+                }
+            };
+            for (var _i = 0, fullScreenApiList_1 = _utils__WEBPACK_IMPORTED_MODULE_5__["fullScreenApiList"]; _i < fullScreenApiList_1.length; _i++) {
+                var item = fullScreenApiList_1[_i];
+                var state_1 = _loop_1(item);
+                if (state_1 === "break")
+                    break;
+            }
+        };
+        _this.fullScreenChanged = function () {
+            var currentFullScreenElement = document[_this.fullscreenElementName];
+            _this.props.setIsFullScreen(currentFullScreenElement === _this.el);
+        };
         return _this;
     }
-    Container.prototype.componentDidMount = function () {
-        this.props.emitter.emit(_utils_event__WEBPACK_IMPORTED_MODULE_5__["InnerEventType"].InnerContainerMountedOrUnmounted, this.el);
-    };
     Container.prototype.componentWillUnmount = function () {
-        this.props.emitter.emit(_utils_event__WEBPACK_IMPORTED_MODULE_5__["InnerEventType"].InnerContainerMountedOrUnmounted, null);
+        this.props.setFullScreenMethods(null, null);
+        document.removeEventListener(this.fullscreenchangeName, this.fullScreenChanged);
     };
     Container.prototype.render = function () {
         return (Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])("div", { className: styleContainer, ref: this.setRef }, Object(_utils_render__WEBPACK_IMPORTED_MODULE_2__["renderComponents"])(this.pluginName, this.props.plugins)));
     };
     Container = __decorate([
-        Object(unistore_preact__WEBPACK_IMPORTED_MODULE_3__["connect"])(mapStateToProps)
+        Object(unistore_preact__WEBPACK_IMPORTED_MODULE_3__["connect"])(mapStateToProps, actions)
     ], Container);
     return Container;
 }(preact__WEBPACK_IMPORTED_MODULE_0__["Component"]));
@@ -2709,7 +2744,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var unistore_preact__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(unistore_preact__WEBPACK_IMPORTED_MODULE_3__);
 /* harmony import */ var _utils_style__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../utils/style */ "./src/utils/style.ts");
 /* harmony import */ var _utils_render__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../utils/render */ "./src/utils/render.tsx");
-/* harmony import */ var _utils_event__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../utils/event */ "./src/utils/event.ts");
 var __extends = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -2735,69 +2769,11 @@ var __decorate = (undefined && undefined.__decorate) || function (decorators, ta
 
 
 
-
-var fullScreenApiList = [
-    [
-        "requestFullscreen",
-        "exitFullscreen",
-        "fullscreenElement",
-        "fullscreenEnabled",
-        "fullscreenchange",
-        "fullscreenerror",
-    ],
-    [
-        "webkitRequestFullscreen",
-        "webkitExitFullscreen",
-        "webkitFullscreenElement",
-        "webkitFullscreenEnabled",
-        "webkitfullscreenchange",
-        "webkitfullscreenerror",
-    ],
-    [
-        "webkitRequestFullScreen",
-        "webkitCancelFullScreen",
-        "webkitFullScreenElement",
-        "webkitCancelFullScreen",
-        "webkitfullscreenchange",
-        "webkitfullscreenerror",
-    ],
-    [
-        "mozRequestFullScreen",
-        "mozCancelFullScreen",
-        "mozFullScreenElement",
-        "mozFullScreenEnabled",
-        "mozfullscreenchange",
-        "mozfullscreenerror",
-    ],
-    [
-        "msRequestFullscreen",
-        "msExitFullscreen",
-        "msFullscreenElement",
-        "msFullscreenEnabled",
-        "MSFullscreenChange",
-        "MSFullscreenError",
-    ],
-    [
-        "webkitEnterFullscreen",
-        "webkitExitFullscreen",
-        "webkitDisplayingFullscreen",
-        "webkitSupportsFullscreen",
-        "webkitbeginfullscreen",
-        "webkitfullscreenerror",
-    ],
-    [
-        "webkitEnterFullScreen",
-        "webkitExitFullScreen",
-        "webkitDisplayingFullscreen",
-        "webkitSupportsFullscreen",
-        "webkitbeginfullscreen",
-        "webkitfullscreenerror",
-    ],
-];
 function mapStateToProps(state, props) {
-    var emitter = state.emitter;
+    var properties = state.properties, methods = state.methods;
     return {
-        emitter: emitter,
+        properties: properties,
+        methods: methods,
     };
 }
 var ToolBarFullScreenButton = /** @class */ (function (_super) {
@@ -2805,134 +2781,26 @@ var ToolBarFullScreenButton = /** @class */ (function (_super) {
     function ToolBarFullScreenButton() {
         var _this = _super !== null && _super.apply(this, arguments) || this;
         _this.pluginName = "ToolBarFullScreenButton";
-        _this.prepareFullScreenApiByContainer = function (e) {
-            var el = e.detail;
-            var _loop_1 = function (item) {
-                var requestFullscreen = item[0];
-                var exitFullscreen = item[1];
-                var fullscreenElement = item[2];
-                var fullscreenchange = item[4];
-                if ("on" + fullscreenchange in document) {
-                    _this.enterFullScreen = function () {
-                        el[requestFullscreen]();
-                    };
-                    _this.exitFullScreen = function () {
-                        document[exitFullscreen]();
-                    };
-                    document.addEventListener(fullscreenchange, function (e) {
-                        var currentFullScreenElement = document[fullscreenElement];
-                        if (currentFullScreenElement === el) {
-                            _this.setState({
-                                isFullScreen: true,
-                            });
-                        }
-                        else {
-                            _this.setState({
-                                isFullScreen: false,
-                            });
-                        }
-                    });
-                    _this.setState({
-                        isFullScreenEnabled: true,
-                    });
-                    return "break";
-                }
-            };
-            for (var _i = 0, fullScreenApiList_1 = fullScreenApiList; _i < fullScreenApiList_1.length; _i++) {
-                var item = fullScreenApiList_1[_i];
-                var state_1 = _loop_1(item);
-                if (state_1 === "break")
-                    break;
-            }
-        };
-        _this.prepareFullScreenApiByPlayer = function (e) {
-            if (_this.checkIsContainerFullScreenEnabled()) {
-                return;
-            }
-            var el = e.detail;
-            var _loop_2 = function (item) {
-                var requestFullscreen = item[0];
-                var exitFullscreen = item[1];
-                var fullscreenElement = item[2];
-                if (requestFullscreen in el) {
-                    _this.enterFullScreen = function () {
-                        el[requestFullscreen]();
-                    };
-                    _this.exitFullScreen = function () {
-                        el[exitFullscreen]();
-                    };
-                    var fullScreenChanged = function (e) {
-                        var currentFullScreenElement = el[fullscreenElement];
-                        if (currentFullScreenElement === el) {
-                            _this.setState({
-                                isFullScreen: true,
-                            });
-                        }
-                        else {
-                            _this.setState({
-                                isFullScreen: false,
-                            });
-                        }
-                    };
-                    el.addEventListener("webkitbeginfullscreen", fullScreenChanged);
-                    el.addEventListener("webkitendfullscreen", fullScreenChanged);
-                    _this.setState({
-                        isFullScreenEnabled: true,
-                    });
-                    return "break";
-                }
-            };
-            for (var _i = 0, fullScreenApiList_2 = fullScreenApiList; _i < fullScreenApiList_2.length; _i++) {
-                var item = fullScreenApiList_2[_i];
-                var state_2 = _loop_2(item);
-                if (state_2 === "break")
-                    break;
-            }
-        };
         _this.toggle = function () {
-            if (_this.state.isFullScreen) {
-                _this.exit();
+            var _a = _this.props, properties = _a.properties, methods = _a.methods;
+            if (properties.isFullScreen) {
+                methods.exitFullScreen();
             }
             else {
-                _this.enter();
+                methods.enterFullScreen();
             }
         };
         return _this;
     }
-    ToolBarFullScreenButton.prototype.componentWillMount = function () {
-        this.props.emitter.on(_utils_event__WEBPACK_IMPORTED_MODULE_6__["InnerEventType"].InnerContainerMountedOrUnmounted, this.prepareFullScreenApiByContainer);
-        this.props.emitter.on(_utils_event__WEBPACK_IMPORTED_MODULE_6__["InnerEventType"].InnerPlayerMountedOrUnmounted, this.prepareFullScreenApiByPlayer);
-    };
-    ToolBarFullScreenButton.prototype.componentWillUnmount = function () {
-        this.props.emitter.off(_utils_event__WEBPACK_IMPORTED_MODULE_6__["InnerEventType"].InnerContainerMountedOrUnmounted, this.prepareFullScreenApiByContainer);
-        this.props.emitter.off(_utils_event__WEBPACK_IMPORTED_MODULE_6__["InnerEventType"].InnerPlayerMountedOrUnmounted, this.prepareFullScreenApiByPlayer);
-    };
     ToolBarFullScreenButton.prototype.render = function () {
-        if (!this.state.isFullScreenEnabled) {
+        var _a = this.props, properties = _a.properties, methods = _a.methods;
+        if (!methods.enterFullScreen || !methods.exitFullScreen) {
             return null;
         }
         var svg = (Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])("div", { className: _utils_style__WEBPACK_IMPORTED_MODULE_4__["styleToolbarButtonIcon"], dangerouslySetInnerHTML: {
-                __html: (!this.state.isFullScreen ? _assets_enter_full_screen_svg__WEBPACK_IMPORTED_MODULE_1__ : _assets_exit_full_screen_svg__WEBPACK_IMPORTED_MODULE_2__),
+                __html: (!properties.isFullScreen ? _assets_enter_full_screen_svg__WEBPACK_IMPORTED_MODULE_1__ : _assets_exit_full_screen_svg__WEBPACK_IMPORTED_MODULE_2__),
             }, onClick: this.toggle }));
         return Object(_utils_render__WEBPACK_IMPORTED_MODULE_5__["getToolBarButtonTemplate"])(svg);
-    };
-    ToolBarFullScreenButton.prototype.checkIsContainerFullScreenEnabled = function () {
-        var isEnabled = false;
-        for (var _i = 0, fullScreenApiList_3 = fullScreenApiList; _i < fullScreenApiList_3.length; _i++) {
-            var item = fullScreenApiList_3[_i];
-            var fullscreenchange = item[4];
-            if ("on" + fullscreenchange in document) {
-                isEnabled = true;
-                break;
-            }
-        }
-        return isEnabled;
-    };
-    ToolBarFullScreenButton.prototype.enter = function () {
-        this.enterFullScreen();
-    };
-    ToolBarFullScreenButton.prototype.exit = function () {
-        this.exitFullScreen();
     };
     ToolBarFullScreenButton = __decorate([
         Object(unistore_preact__WEBPACK_IMPORTED_MODULE_3__["connect"])(mapStateToProps)
@@ -3059,7 +2927,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _utils__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../utils */ "./src/utils/index.ts");
 /* harmony import */ var _utils_style__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../utils/style */ "./src/utils/style.ts");
 /* harmony import */ var _utils_event__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../utils/event */ "./src/utils/event.ts");
-/* harmony import */ var _utils_video__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../utils/video */ "./src/utils/video.ts");
+/* harmony import */ var _utils_actions__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../utils/actions */ "./src/utils/actions.ts");
 var __extends = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -3091,7 +2959,7 @@ var __decorate = (undefined && undefined.__decorate) || function (decorators, ta
 
 
 var actions = {
-    setCurrentTime: _utils_video__WEBPACK_IMPORTED_MODULE_6__["setCurrentTime"],
+    setCurrentTime: _utils_actions__WEBPACK_IMPORTED_MODULE_6__["setCurrentTime"],
 };
 function mapStateToProps(state, props) {
     var properties = state.properties, emitter = state.emitter;
@@ -3479,7 +3347,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _utils__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../utils */ "./src/utils/index.ts");
 /* harmony import */ var _utils_style__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../utils/style */ "./src/utils/style.ts");
 /* harmony import */ var _utils_event__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../utils/event */ "./src/utils/event.ts");
-/* harmony import */ var _utils_video__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../utils/video */ "./src/utils/video.ts");
+/* harmony import */ var _utils_actions__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../utils/actions */ "./src/utils/actions.ts");
 /* harmony import */ var _assets_volume_on_svg__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../assets/volume-on.svg */ "./src/assets/volume-on.svg");
 /* harmony import */ var _assets_volume_on_svg__WEBPACK_IMPORTED_MODULE_7___default = /*#__PURE__*/__webpack_require__.n(_assets_volume_on_svg__WEBPACK_IMPORTED_MODULE_7__);
 /* harmony import */ var _assets_volume_off_svg__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../assets/volume-off.svg */ "./src/assets/volume-off.svg");
@@ -3520,7 +3388,7 @@ var __decorate = (undefined && undefined.__decorate) || function (decorators, ta
 
 var volumeKey = "juicy.volume";
 var actions = {
-    setVolume: _utils_video__WEBPACK_IMPORTED_MODULE_6__["setVolume"],
+    setVolume: _utils_actions__WEBPACK_IMPORTED_MODULE_6__["setVolume"],
 };
 function mapStateToProps(state, props) {
     var properties = state.properties, emitter = state.emitter;
@@ -4002,9 +3870,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var preact__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(preact__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var unistore_preact__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! unistore/preact */ "./node_modules/unistore/preact.js");
 /* harmony import */ var unistore_preact__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(unistore_preact__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var _utils_video__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../utils/video */ "./src/utils/video.ts");
+/* harmony import */ var _utils_actions__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../utils/actions */ "./src/utils/actions.ts");
 /* harmony import */ var emotion__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! emotion */ "./node_modules/emotion/dist/index.esm.js");
 /* harmony import */ var _utils_event__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../utils/event */ "./src/utils/event.ts");
+/* harmony import */ var _utils__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../utils */ "./src/utils/index.ts");
 var __extends = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -4027,12 +3896,15 @@ var __makeTemplateObject = (undefined && undefined.__makeTemplateObject) || func
 
 
 
+
 var actions = {
-    setPlayState: _utils_video__WEBPACK_IMPORTED_MODULE_2__["setPlayState"],
-    setDuration: _utils_video__WEBPACK_IMPORTED_MODULE_2__["setDuration"],
-    setCurrentTime: _utils_video__WEBPACK_IMPORTED_MODULE_2__["setCurrentTime"],
-    setVolume: _utils_video__WEBPACK_IMPORTED_MODULE_2__["setVolume"],
-    setBuffered: _utils_video__WEBPACK_IMPORTED_MODULE_2__["setBuffered"],
+    setPlayState: _utils_actions__WEBPACK_IMPORTED_MODULE_2__["setPlayState"],
+    setDuration: _utils_actions__WEBPACK_IMPORTED_MODULE_2__["setDuration"],
+    setCurrentTime: _utils_actions__WEBPACK_IMPORTED_MODULE_2__["setCurrentTime"],
+    setVolume: _utils_actions__WEBPACK_IMPORTED_MODULE_2__["setVolume"],
+    setBuffered: _utils_actions__WEBPACK_IMPORTED_MODULE_2__["setBuffered"],
+    setFullScreenMethods: _utils_actions__WEBPACK_IMPORTED_MODULE_2__["setFullScreenMethods"],
+    setIsFullScreen: _utils_actions__WEBPACK_IMPORTED_MODULE_2__["setIsFullScreen"],
 };
 function mapStateToProps(state, props) {
     var options = state.options, properties = state.properties, emitter = state.emitter;
@@ -4050,6 +3922,7 @@ var Player = /** @class */ (function (_super) {
         _this.createRef = function (el) {
             _this.el = el;
             _this.setVolume();
+            _this.setFullScreenMethods();
             _this.bindEvents(el);
         };
         _this.handleEvent = function (e) {
@@ -4142,13 +4015,12 @@ var Player = /** @class */ (function (_super) {
     Player.prototype.componentDidMount = function () {
         var emitter = this.props.emitter;
         emitter.emit(_utils_event__WEBPACK_IMPORTED_MODULE_4__["InnerEventType"].InnerProgressBarShow);
-        emitter.emit(_utils_event__WEBPACK_IMPORTED_MODULE_4__["InnerEventType"].InnerPlayerMountedOrUnmounted, this.el);
     };
     Player.prototype.componentWillUnmount = function () {
         if (this.el) {
             this.unbindEvents(this.el);
         }
-        var emitter = this.props.emitter;
+        var _a = this.props, emitter = _a.emitter, setFullScreenMethods = _a.setFullScreenMethods;
         emitter.off(_utils_event__WEBPACK_IMPORTED_MODULE_4__["InnerEventType"].InnerVideoPlay, this.play);
         emitter.off(_utils_event__WEBPACK_IMPORTED_MODULE_4__["InnerEventType"].InnerVideoPause, this.pause);
         emitter.off(_utils_event__WEBPACK_IMPORTED_MODULE_4__["InnerEventType"].InnerVideoToggle, this.toggle);
@@ -4156,11 +4028,46 @@ var Player = /** @class */ (function (_super) {
         emitter.off(_utils_event__WEBPACK_IMPORTED_MODULE_4__["InnerEventType"].InnerVideoSetVolume, this.setNativeElementVolume);
         emitter.off(_utils_event__WEBPACK_IMPORTED_MODULE_4__["InnerEventType"].InnerSeeking, this.handleSeeking);
         emitter.off(_utils_event__WEBPACK_IMPORTED_MODULE_4__["InnerEventType"].InnerSeeked, this.handleSeeked);
-        emitter.emit(_utils_event__WEBPACK_IMPORTED_MODULE_4__["InnerEventType"].InnerPlayerMountedOrUnmounted, null);
+        setFullScreenMethods(null, null);
     };
     Player.prototype.render = function () {
         var _a = this.props.options, playsinline = _a.playsinline, autoplay = _a.autoplay, preload = _a.preload, loop = _a.loop, muted = _a.muted;
         return (Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])("video", { className: styleVideo, ref: this.createRef, src: this.getSrc(), autoPlay: autoplay, preload: preload, loop: loop, muted: muted, "webkit-playsinline": playsinline, playsInline: playsinline }));
+    };
+    Player.prototype.setFullScreenMethods = function () {
+        var _this = this;
+        if (_utils__WEBPACK_IMPORTED_MODULE_5__["IS_DOCUMENT_SUPPORT_FULLSCREEN"]) {
+            return;
+        }
+        var _loop_1 = function (item) {
+            var requestFullscreen = item[0];
+            var exitFullscreen = item[1];
+            var fullscreenElement = item[2];
+            if (requestFullscreen in this_1.el) {
+                var _a = this_1.props, setFullScreenMethods_1 = _a.setFullScreenMethods, setIsFullScreen_1 = _a.setIsFullScreen;
+                var enterFullScreen = function () {
+                    _this.el[requestFullscreen]();
+                };
+                var exitFullScreen = function () {
+                    _this.el[exitFullscreen]();
+                };
+                var fullScreenChanged = function () {
+                    var currentFullScreenElement = _this.el[fullscreenElement];
+                    setIsFullScreen_1(currentFullScreenElement === _this.el);
+                };
+                this_1.el.addEventListener("webkitbeginfullscreen", fullScreenChanged);
+                this_1.el.addEventListener("webkitendfullscreen", fullScreenChanged);
+                setFullScreenMethods_1(enterFullScreen, exitFullScreen);
+                return "break";
+            }
+        };
+        var this_1 = this;
+        for (var _i = 0, fullScreenApiList_1 = _utils__WEBPACK_IMPORTED_MODULE_5__["fullScreenApiList"]; _i < fullScreenApiList_1.length; _i++) {
+            var item = fullScreenApiList_1[_i];
+            var state_1 = _loop_1(item);
+            if (state_1 === "break")
+                break;
+        }
     };
     Player.prototype.bindEvents = function (el) {
         for (var key in _utils_event__WEBPACK_IMPORTED_MODULE_4__["NativeEvent"]) {
@@ -4304,6 +4211,73 @@ var plugin = {
 
 /***/ }),
 
+/***/ "./src/utils/actions.ts":
+/*!******************************!*\
+  !*** ./src/utils/actions.ts ***!
+  \******************************/
+/*! exports provided: setPlayState, setCurrentTime, setVolume, setDuration, setBuffered, setIsFullScreen, setFullScreenMethods */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "setPlayState", function() { return setPlayState; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "setCurrentTime", function() { return setCurrentTime; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "setVolume", function() { return setVolume; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "setDuration", function() { return setDuration; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "setBuffered", function() { return setBuffered; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "setIsFullScreen", function() { return setIsFullScreen; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "setFullScreenMethods", function() { return setFullScreenMethods; });
+var __assign = (undefined && undefined.__assign) || function () {
+    __assign = Object.assign || function(t) {
+        for (var s, i = 1, n = arguments.length; i < n; i++) {
+            s = arguments[i];
+            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
+                t[p] = s[p];
+        }
+        return t;
+    };
+    return __assign.apply(this, arguments);
+};
+function setPlayState(state, playing) {
+    return {
+        properties: __assign({}, state.properties, { playing: playing }),
+    };
+}
+function setCurrentTime(state, currentTime) {
+    return {
+        properties: __assign({}, state.properties, { currentTime: currentTime }),
+    };
+}
+function setVolume(state, volume) {
+    return {
+        properties: __assign({}, state.properties, { volume: volume }),
+    };
+}
+function setDuration(state, duration) {
+    return {
+        properties: __assign({}, state.properties, { duration: duration }),
+    };
+}
+function setBuffered(state, buffered) {
+    return {
+        properties: __assign({}, state.properties, { buffered: buffered }),
+    };
+}
+function setIsFullScreen(state, isFullScreen) {
+    return {
+        properties: __assign({}, state.properties, { isFullScreen: isFullScreen }),
+    };
+}
+function setFullScreenMethods(state, enterFullScreen, exitFullScreen) {
+    return {
+        methods: __assign({}, state.methods, { enterFullScreen: enterFullScreen,
+            exitFullScreen: exitFullScreen }),
+    };
+}
+
+
+/***/ }),
+
 /***/ "./src/utils/emitter.ts":
 /*!******************************!*\
   !*** ./src/utils/emitter.ts ***!
@@ -4408,6 +4382,7 @@ var InnerEventType;
     InnerEventType["InnerVideoPlay"] = "inner.videoPlay";
     InnerEventType["InnerVideoPause"] = "inner.videoPause";
     InnerEventType["InnerVideoToggle"] = "inner.videoToggle";
+    InnerEventType["InnerVideoSetSource"] = "inner.videoSetSource";
     InnerEventType["InnerVideoSetCurrentTime"] = "inner.videoSetCurrentTime";
     InnerEventType["InnerVideoSetVolume"] = "inner.videoSetVolume";
     InnerEventType["InnerProgressBarHide"] = "inner.progressBarHide";
@@ -4419,8 +4394,6 @@ var InnerEventType;
     InnerEventType["InnerToolBarShown"] = "inner.toolBarShown";
     InnerEventType["InnerSeeking"] = "inner.seeking";
     InnerEventType["InnerSeeked"] = "inner.seeked";
-    InnerEventType["InnerPlayerMountedOrUnmounted"] = "inner.playerMountedOrUnmounted";
-    InnerEventType["InnerContainerMountedOrUnmounted"] = "inner.containerMountedOrUnmounted";
 })(InnerEventType || (InnerEventType = {}));
 var PlayerEvent = /** @class */ (function () {
     function PlayerEvent(type, detail) {
@@ -4518,12 +4491,14 @@ var templateObject_1;
 /*!****************************!*\
   !*** ./src/utils/index.ts ***!
   \****************************/
-/*! exports provided: canPlayTypeByFlash, IS_TOUCHABLE_DEVICE, initOptions, initState, parsePercent, secondToMMSS */
+/*! exports provided: fullScreenApiList, canPlayTypeByFlash, IS_DOCUMENT_SUPPORT_FULLSCREEN, IS_TOUCHABLE_DEVICE, initOptions, initState, parsePercent, secondToMMSS */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "fullScreenApiList", function() { return fullScreenApiList; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "canPlayTypeByFlash", function() { return canPlayTypeByFlash; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "IS_DOCUMENT_SUPPORT_FULLSCREEN", function() { return IS_DOCUMENT_SUPPORT_FULLSCREEN; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "IS_TOUCHABLE_DEVICE", function() { return IS_TOUCHABLE_DEVICE; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "initOptions", function() { return initOptions; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "initState", function() { return initState; });
@@ -4540,6 +4515,64 @@ var canPlayRtmpFormat = {
     "rtmp/mp4": "MP4",
     "rtmp/flv": "FLV",
 };
+var fullScreenApiList = [
+    [
+        "requestFullscreen",
+        "exitFullscreen",
+        "fullscreenElement",
+        "fullscreenEnabled",
+        "fullscreenchange",
+        "fullscreenerror",
+    ],
+    [
+        "webkitRequestFullscreen",
+        "webkitExitFullscreen",
+        "webkitFullscreenElement",
+        "webkitFullscreenEnabled",
+        "webkitfullscreenchange",
+        "webkitfullscreenerror",
+    ],
+    [
+        "webkitRequestFullScreen",
+        "webkitCancelFullScreen",
+        "webkitFullScreenElement",
+        "webkitCancelFullScreen",
+        "webkitfullscreenchange",
+        "webkitfullscreenerror",
+    ],
+    [
+        "mozRequestFullScreen",
+        "mozCancelFullScreen",
+        "mozFullScreenElement",
+        "mozFullScreenEnabled",
+        "mozfullscreenchange",
+        "mozfullscreenerror",
+    ],
+    [
+        "msRequestFullscreen",
+        "msExitFullscreen",
+        "msFullscreenElement",
+        "msFullscreenEnabled",
+        "MSFullscreenChange",
+        "MSFullscreenError",
+    ],
+    [
+        "webkitEnterFullscreen",
+        "webkitExitFullscreen",
+        "webkitDisplayingFullscreen",
+        "webkitSupportsFullscreen",
+        "webkitbeginfullscreen",
+        "webkitfullscreenerror",
+    ],
+    [
+        "webkitEnterFullScreen",
+        "webkitExitFullScreen",
+        "webkitDisplayingFullscreen",
+        "webkitSupportsFullscreen",
+        "webkitbeginfullscreen",
+        "webkitfullscreenerror",
+    ],
+];
 function canPlayTypeByFlash(type) {
     if (type in Object.assign(canPlayFormat, canPlayRtmpFormat)) {
         return "maybe";
@@ -4548,6 +4581,18 @@ function canPlayTypeByFlash(type) {
 }
 // export const IS_SUPPORT_MSE = "MediaSource" in window;
 // export const IS_SUPPORT_FLASH = flashVersion()[0] >= "10";
+var IS_DOCUMENT_SUPPORT_FULLSCREEN = (function () {
+    var isEnabled = false;
+    for (var _i = 0, fullScreenApiList_1 = fullScreenApiList; _i < fullScreenApiList_1.length; _i++) {
+        var item = fullScreenApiList_1[_i];
+        var fullscreenchange = item[4];
+        if ("on" + fullscreenchange in document) {
+            isEnabled = true;
+            break;
+        }
+    }
+    return isEnabled;
+})();
 var IS_TOUCHABLE_DEVICE = (function () {
     var prefixes = " -webkit- -moz- -o- -ms- ".split(" ");
     var mq = function (query) {
@@ -4593,7 +4638,9 @@ function initState(options, plugins, lang) {
             duration: 0,
             buffered: null,
             volume: 0,
+            isFullScreen: false,
         },
+        methods: {},
         emitter: new _emitter__WEBPACK_IMPORTED_MODULE_0__["Emitter"](),
         plugins: plugins,
         lang: lang,
@@ -4731,60 +4778,6 @@ var styleHover = Object(emotion__WEBPACK_IMPORTED_MODULE_0__["css"])(templateObj
 var styleToolbarButtonIcon = Object(emotion__WEBPACK_IMPORTED_MODULE_0__["css"])(templateObject_3 || (templateObject_3 = __makeTemplateObject(["\n  position: absolute;\n  top: 0;\n  left: 0;\n  right: 0;\n  bottom: 0;\n  cursor: pointer;\n\n  svg {\n    position: absolute;\n    fill: ", ";\n    transition: fill 0.5s;\n    left: 50%;\n    top: 50%;\n    width: 50%;\n    height: 50%;\n    transform: translateX(-50%) translateY(-50%);\n    pointer-events: none;\n  }\n\n  ", ";\n"], ["\n  position: absolute;\n  top: 0;\n  left: 0;\n  right: 0;\n  bottom: 0;\n  cursor: pointer;\n\n  svg {\n    position: absolute;\n    fill: ", ";\n    transition: fill 0.5s;\n    left: 50%;\n    top: 50%;\n    width: 50%;\n    height: 50%;\n    transform: translateX(-50%) translateY(-50%);\n    pointer-events: none;\n  }\n\n  ", ";\n"])), colorDefault, ___WEBPACK_IMPORTED_MODULE_1__["IS_TOUCHABLE_DEVICE"] ? styleActive : styleHover);
 var styleToolBarText = Object(emotion__WEBPACK_IMPORTED_MODULE_0__["css"])(templateObject_4 || (templateObject_4 = __makeTemplateObject(["\n  height: 100%;\n  padding: 0 calc(1% + 5px);\n  color: ", ";\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  cursor: pointer;\n"], ["\n  height: 100%;\n  padding: 0 calc(1% + 5px);\n  color: ", ";\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  cursor: pointer;\n"])), colorDefault);
 var templateObject_1, templateObject_2, templateObject_3, templateObject_4;
-
-
-/***/ }),
-
-/***/ "./src/utils/video.ts":
-/*!****************************!*\
-  !*** ./src/utils/video.ts ***!
-  \****************************/
-/*! exports provided: setPlayState, setCurrentTime, setVolume, setDuration, setBuffered */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "setPlayState", function() { return setPlayState; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "setCurrentTime", function() { return setCurrentTime; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "setVolume", function() { return setVolume; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "setDuration", function() { return setDuration; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "setBuffered", function() { return setBuffered; });
-var __assign = (undefined && undefined.__assign) || function () {
-    __assign = Object.assign || function(t) {
-        for (var s, i = 1, n = arguments.length; i < n; i++) {
-            s = arguments[i];
-            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
-                t[p] = s[p];
-        }
-        return t;
-    };
-    return __assign.apply(this, arguments);
-};
-function setPlayState(state, playing) {
-    return {
-        properties: __assign({}, state.properties, { playing: playing }),
-    };
-}
-function setCurrentTime(state, currentTime) {
-    return {
-        properties: __assign({}, state.properties, { currentTime: currentTime }),
-    };
-}
-function setVolume(state, volume) {
-    return {
-        properties: __assign({}, state.properties, { volume: volume }),
-    };
-}
-function setDuration(state, duration) {
-    return {
-        properties: __assign({}, state.properties, { duration: duration }),
-    };
-}
-function setBuffered(state, buffered) {
-    return {
-        properties: __assign({}, state.properties, { buffered: buffered }),
-    };
-}
 
 
 /***/ })

@@ -5,11 +5,14 @@ import { connect } from "unistore/preact";
 import { fontSizeDefault } from "./utils/style";
 import { IPlugins, IPlayerStore } from "./interface";
 import { Emitter } from "./utils/emitter";
-import { InnerEventType } from "./utils/event";
+import { fullScreenApiList } from "./utils";
+import { setFullScreenMethods, ISetFullScreenMethods, setIsFullScreen, ISetIsFullScreen } from "./utils/actions";
 
 interface IProps {
   plugins?: IPlugins;
   emitter?: Emitter;
+  setFullScreenMethods?: ISetFullScreenMethods;
+  setIsFullScreen?: ISetIsFullScreen;
 }
 
 function mapStateToProps(state: IPlayerStore, props): IProps {
@@ -21,20 +24,60 @@ function mapStateToProps(state: IPlayerStore, props): IProps {
   };
 }
 
-@connect(mapStateToProps)
+const actions = {
+  setFullScreenMethods,
+  setIsFullScreen,
+};
+
+@connect(
+  mapStateToProps,
+  actions
+)
 export class Container extends Component<IProps> {
   pluginName = "Container";
   el: HTMLDivElement;
-
-  componentDidMount() {
-    this.props.emitter.emit<HTMLDivElement>(InnerEventType.InnerContainerMountedOrUnmounted, this.el);
-  }
+  fullscreenchangeName: string;
+  fullscreenElementName: string;
 
   componentWillUnmount() {
-    this.props.emitter.emit<HTMLDivElement>(InnerEventType.InnerContainerMountedOrUnmounted, null);
+    this.props.setFullScreenMethods(null, null);
+    document.removeEventListener(this.fullscreenchangeName, this.fullScreenChanged);
   }
 
-  setRef = (el: HTMLDivElement) => (this.el = el);
+  setRef = (el: HTMLDivElement) => {
+    for (let item of fullScreenApiList) {
+      const requestFullscreen = item[0];
+      const exitFullscreen = item[1];
+      const fullscreenElement = item[2];
+      const fullscreenchange = item[4];
+
+      if (`on${fullscreenchange}` in document) {
+        const enterFullScreen = () => {
+          el[requestFullscreen]();
+        };
+
+        const exitFullScreen = () => {
+          document[exitFullscreen]();
+        };
+
+        document.addEventListener(fullscreenchange, this.fullScreenChanged);
+
+        this.fullscreenchangeName = fullscreenchange;
+        this.fullscreenElementName = fullscreenElement;
+        this.el = el;
+
+        this.props.setFullScreenMethods(enterFullScreen, exitFullScreen);
+
+        break;
+      }
+    }
+  };
+
+  fullScreenChanged = () => {
+    const currentFullScreenElement = document[this.fullscreenElementName];
+
+    this.props.setIsFullScreen(currentFullScreenElement === this.el);
+  };
 
   render() {
     return (

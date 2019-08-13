@@ -9,6 +9,12 @@ export interface IProperties {
   currentTime: number;
   buffered: TimeRanges;
   volume: number;
+  isFullScreen: boolean;
+}
+
+export interface IMethods {
+  enterFullScreen?: () => void;
+  exitFullScreen?: () => void;
 }
 
 export type IPlugins = IPlugin[];
@@ -23,6 +29,7 @@ export interface IPluginInfo {
 export interface IPlayerStore {
   options: IOptions;
   properties: IProperties;
+  methods: IMethods;
   emitter: Emitter;
   plugins: IPlugins;
   lang: ILang;
