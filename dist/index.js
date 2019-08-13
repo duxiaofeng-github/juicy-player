@@ -3336,6 +3336,83 @@ var templateObject_1, templateObject_2;
 
 /***/ }),
 
+/***/ "./src/controls/tool-bar-video-selector.tsx":
+/*!**************************************************!*\
+  !*** ./src/controls/tool-bar-video-selector.tsx ***!
+  \**************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var preact__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! preact */ "./node_modules/preact/dist/preact.umd.js");
+/* harmony import */ var preact__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(preact__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var unistore_preact__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! unistore/preact */ "./node_modules/unistore/preact.js");
+/* harmony import */ var unistore_preact__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(unistore_preact__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _utils_render__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../utils/render */ "./src/utils/render.tsx");
+/* harmony import */ var _i18n__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../i18n */ "./src/i18n/index.ts");
+var __extends = (undefined && undefined.__extends) || (function () {
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+
+
+
+
+function mapStateToProps(state, props) {
+    var properties = state.properties, emitter = state.emitter, options = state.options, i18n = state.i18n;
+    return {
+        options: options,
+        properties: properties,
+        emitter: emitter,
+        i18n: i18n,
+    };
+}
+var ToolBarVideoSelector = /** @class */ (function (_super) {
+    __extends(ToolBarVideoSelector, _super);
+    function ToolBarVideoSelector() {
+        var _this = _super !== null && _super.apply(this, arguments) || this;
+        _this.pluginName = "ToolBarVideoSelector";
+        return _this;
+    }
+    ToolBarVideoSelector.prototype.render = function () {
+        var _a = this.props, options = _a.options, i18n = _a.i18n, properties = _a.properties;
+        var currentListIndex = properties.currentListIndex, currentVideoIndex = properties.currentVideoIndex;
+        var list = options.playList[currentListIndex];
+        var video = list && list[currentVideoIndex];
+        var text = "quality" in video ? video.quality : i18n.translate(_i18n__WEBPACK_IMPORTED_MODULE_3__["I18nKey"].SourceN, currentVideoIndex);
+        return video ? Object(_utils_render__WEBPACK_IMPORTED_MODULE_2__["getToolBarTextTemplate"])(text) : i18n.translate(_i18n__WEBPACK_IMPORTED_MODULE_3__["I18nKey"].UnknownSource);
+    };
+    ToolBarVideoSelector = __decorate([
+        Object(unistore_preact__WEBPACK_IMPORTED_MODULE_1__["connect"])(mapStateToProps)
+    ], ToolBarVideoSelector);
+    return ToolBarVideoSelector;
+}(preact__WEBPACK_IMPORTED_MODULE_0__["Component"]));
+/* harmony default export */ __webpack_exports__["default"] = ([
+    {
+        entry: "ToolBar",
+        component: ToolBarVideoSelector,
+    },
+]);
+
+
+/***/ }),
+
 /***/ "./src/controls/tool-bar-volume-button.tsx":
 /*!*************************************************!*\
   !*** ./src/controls/tool-bar-volume-button.tsx ***!
@@ -3696,6 +3773,72 @@ var templateObject_1, templateObject_2;
 
 /***/ }),
 
+/***/ "./src/i18n/en.ts":
+/*!************************!*\
+  !*** ./src/i18n/en.ts ***!
+  \************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _index__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./index */ "./src/i18n/index.ts");
+var _a;
+
+/* harmony default export */ __webpack_exports__["default"] = (_a = {},
+    _a[_index__WEBPACK_IMPORTED_MODULE_0__["I18nKey"].SourceN] = "Source %s",
+    _a[_index__WEBPACK_IMPORTED_MODULE_0__["I18nKey"].UnknownSource] = "Unknown source",
+    _a);
+
+
+/***/ }),
+
+/***/ "./src/i18n/index.ts":
+/*!***************************!*\
+  !*** ./src/i18n/index.ts ***!
+  \***************************/
+/*! exports provided: I18nKey, I18n */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "I18nKey", function() { return I18nKey; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "I18n", function() { return I18n; });
+/* harmony import */ var _en__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./en */ "./src/i18n/en.ts");
+
+var I18nKey;
+(function (I18nKey) {
+    I18nKey[I18nKey["SourceN"] = 0] = "SourceN";
+    I18nKey[I18nKey["UnknownSource"] = 1] = "UnknownSource";
+})(I18nKey || (I18nKey = {}));
+var I18n = /** @class */ (function () {
+    function I18n() {
+        this.dict = _en__WEBPACK_IMPORTED_MODULE_0__["default"];
+    }
+    I18n.prototype.use = function (dict) {
+        this.dict = dict;
+    };
+    I18n.prototype.translate = function (key) {
+        var data = [];
+        for (var _i = 1; _i < arguments.length; _i++) {
+            data[_i - 1] = arguments[_i];
+        }
+        var content = this.dict[key];
+        if (content == null) {
+            return _en__WEBPACK_IMPORTED_MODULE_0__["default"][key] ? _en__WEBPACK_IMPORTED_MODULE_0__["default"][key] : "no translation";
+        }
+        data.forEach(function (item) {
+            content = content.replace("%s", "" + item);
+        });
+        return content;
+    };
+    return I18n;
+}());
+
+
+
+/***/ }),
+
 /***/ "./src/index.tsx":
 /*!***********************!*\
   !*** ./src/index.tsx ***!
@@ -3722,6 +3865,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _controls_tool_bar_progress_bar__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ./controls/tool-bar-progress-bar */ "./src/controls/tool-bar-progress-bar.tsx");
 /* harmony import */ var _controls_tool_bar_volume_button__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ./controls/tool-bar-volume-button */ "./src/controls/tool-bar-volume-button.tsx");
 /* harmony import */ var _controls_tool_bar_full_screen_button__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! ./controls/tool-bar-full-screen-button */ "./src/controls/tool-bar-full-screen-button.tsx");
+/* harmony import */ var _controls_tool_bar_video_selector__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! ./controls/tool-bar-video-selector */ "./src/controls/tool-bar-video-selector.tsx");
+
 
 
 
@@ -3804,6 +3949,7 @@ var JuicyPlayer = /** @class */ (function () {
         _controls_tool_bar_top_progress_bar__WEBPACK_IMPORTED_MODULE_10__["default"],
         _controls_tool_bar_play_button__WEBPACK_IMPORTED_MODULE_11__["default"],
         _controls_tool_bar_progress_bar__WEBPACK_IMPORTED_MODULE_12__["default"],
+        _controls_tool_bar_video_selector__WEBPACK_IMPORTED_MODULE_15__["default"],
         _controls_tool_bar_volume_button__WEBPACK_IMPORTED_MODULE_13__["default"],
         _controls_tool_bar_full_screen_button__WEBPACK_IMPORTED_MODULE_14__["default"],
     ];
@@ -3999,8 +4145,8 @@ var Player = /** @class */ (function (_super) {
     };
     Player.prototype.getSrc = function () {
         var _a = this.props, options = _a.options, properties = _a.properties;
-        var currentQuality = options.playList[properties.currentListIndex][properties.currentQualityIndex];
-        return "src" in currentQuality ? currentQuality.src : URL.createObjectURL(currentQuality);
+        var currentVideo = options.playList[properties.currentListIndex][properties.currentVideoIndex];
+        return "src" in currentVideo ? currentVideo.src : URL.createObjectURL(currentVideo);
     };
     Player.prototype.setCurrentTime = function () {
         this.props.setCurrentTime(this.el.currentTime);
@@ -4100,18 +4246,18 @@ var Player = /** @class */ (function (_super) {
         if (!currentList) {
             return null;
         }
-        var currentQuality = currentList[properties.currentQualityIndex];
-        if (!currentQuality) {
+        var currentVideo = currentList[properties.currentVideoIndex];
+        if (!currentVideo) {
             return null;
         }
         var playerPlugins = Object(_utils_render__WEBPACK_IMPORTED_MODULE_2__["getPlugins"])(this.pluginName, this.props.plugins);
         for (var _i = 0, playerPlugins_1 = playerPlugins; _i < playerPlugins_1.length; _i++) {
             var player = playerPlugins_1[_i];
-            if (player.component && player.component.canPlay(currentQuality)) {
+            if (player.component && player.component.canPlay(currentVideo)) {
                 return Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])(player.component, null);
             }
         }
-        console.error("can not play video: ", currentQuality);
+        console.error("can not play video: ", currentVideo);
         return null;
     };
     Player = __decorate([
@@ -4353,6 +4499,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "parsePercent", function() { return parsePercent; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "secondToMMSS", function() { return secondToMMSS; });
 /* harmony import */ var _emitter__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./emitter */ "./src/utils/emitter.ts");
+/* harmony import */ var _i18n__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../i18n */ "./src/i18n/index.ts");
+
 
 var canPlayFormat = {
     "video/flv": "FLV",
@@ -4411,7 +4559,7 @@ function initState(options, plugins) {
         properties: {
             playing: false,
             currentListIndex: 0,
-            currentQualityIndex: 0,
+            currentVideoIndex: 0,
             currentTime: 0,
             duration: 0,
             buffered: null,
@@ -4419,6 +4567,7 @@ function initState(options, plugins) {
         },
         emitter: new _emitter__WEBPACK_IMPORTED_MODULE_0__["Emitter"](),
         plugins: plugins,
+        i18n: new _i18n__WEBPACK_IMPORTED_MODULE_1__["I18n"](),
     };
 }
 function parsePercent(percent) {

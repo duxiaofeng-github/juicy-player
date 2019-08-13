@@ -1,11 +1,11 @@
 import { h } from "preact";
-import { IPlugin, IPlayerStore } from "../interface";
+import { IPluginInfo, IPlugins, IPlayerStore } from "../interface";
 import { css, cx } from "emotion";
 import { colorDefault } from "./style";
 import { ImagePlaceHolder } from "./image-placeholder";
 
 export interface IPluginsProps {
-  plugins?: IPlugin[];
+  plugins?: IPlugins;
 }
 
 export function mapPluginsToProps(state: IPlayerStore, props): IPluginsProps {
@@ -16,19 +16,19 @@ export function mapPluginsToProps(state: IPlayerStore, props): IPluginsProps {
   };
 }
 
-export function renderComponents(entry: string, plugins: IPlugin[]) {
+export function renderComponents(entry: string, plugins: IPlugins) {
   return getPlugins(entry, plugins).map((plugin) => {
     return <plugin.component />;
   });
 }
 
-function getPluginByEntry(entry: string, plugin: IPlugin) {
+function getPluginByEntry(entry: string, plugin: IPluginInfo) {
   if (entry === plugin.entry) {
     return plugin;
   }
 }
 
-export function getPlugins(entry: string, plugins: IPlugin[]) {
+export function getPlugins(entry: string, plugins: IPlugins) {
   const components = [];
 
   for (let pluginArray of plugins) {

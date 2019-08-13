@@ -1,6 +1,6 @@
 import { h, Component } from "preact";
 import { connect } from "unistore/preact";
-import { IOptions, IPlayerStore, IProperties, IPlugin } from "../interface";
+import { IOptions, IPlayerStore, IProperties, IPlugins } from "../interface";
 import { Emitter } from "../utils/emitter";
 import { getPlugins } from "../utils/render";
 
@@ -8,7 +8,7 @@ interface IProps {
   options?: IOptions;
   properties?: IProperties;
   emitter?: Emitter;
-  plugins?: IPlugin[];
+  plugins?: IPlugins;
 }
 
 interface IState {}
@@ -49,20 +49,20 @@ class Player extends Component<IProps, IState> {
       return null;
     }
 
-    const currentQuality = currentList[properties.currentQualityIndex];
-    if (!currentQuality) {
+    const currentVideo = currentList[properties.currentVideoIndex];
+    if (!currentVideo) {
       return null;
     }
 
     const playerPlugins = getPlugins(this.pluginName, this.props.plugins);
 
     for (let player of playerPlugins) {
-      if (player.component && player.component.canPlay(currentQuality)) {
+      if (player.component && player.component.canPlay(currentVideo)) {
         return <player.component />;
       }
     }
 
-    console.error(`can not play video: `, currentQuality);
+    console.error(`can not play video: `, currentVideo);
 
     return null;
   }

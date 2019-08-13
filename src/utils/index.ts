@@ -1,5 +1,6 @@
 import { IPlayerStore } from "../interface";
 import { Emitter } from "./emitter";
+import { I18n } from "../i18n";
 
 const canPlayFormat = {
   "video/flv": "FLV",
@@ -68,7 +69,7 @@ export function initState(options, plugins): IPlayerStore {
     properties: {
       playing: false,
       currentListIndex: 0,
-      currentQualityIndex: 0,
+      currentVideoIndex: 0,
       currentTime: 0,
       duration: 0,
       buffered: null,
@@ -76,6 +77,7 @@ export function initState(options, plugins): IPlayerStore {
     },
     emitter: new Emitter(),
     plugins,
+    i18n: new I18n(),
   };
 }
 

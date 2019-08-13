@@ -170,9 +170,9 @@ class Player extends Component<IProps, IState> {
 
   getSrc() {
     const { options, properties } = this.props;
-    const currentQuality = options.playList[properties.currentListIndex][properties.currentQualityIndex];
+    const currentVideo = options.playList[properties.currentListIndex][properties.currentVideoIndex];
 
-    return "src" in currentQuality ? currentQuality.src : URL.createObjectURL(currentQuality);
+    return "src" in currentVideo ? currentVideo.src : URL.createObjectURL(currentVideo);
   }
 
   play = () => {

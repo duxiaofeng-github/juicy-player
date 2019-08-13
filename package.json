@@ -6,9 +6,9 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "webpack --watch",
-    "pub": "webpack",
+    "pub": "webpack --config ./webpack.prod.config.js",
     "dev-docs": "cd docs && webpack-dev-server --hot",
-    "pub-docs": "cd docs && webpack"
+    "pub-docs": "cd docs && webpack --config ./docs/webpack.prod.config.js"
   },
   "repository": {
     "type": "git",

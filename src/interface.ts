@@ -1,16 +1,21 @@
 import { Emitter } from "./utils/emitter";
+import { I18n } from "./i18n";
 
 export interface IProperties {
   playing: boolean;
   currentListIndex: number;
-  currentQualityIndex: number;
+  currentVideoIndex: number;
   duration: number;
   currentTime: number;
   buffered: TimeRanges;
   volume: number;
 }
 
-export interface IPlugin {
+export type IPlugins = IPlugin[];
+
+export type IPlugin = IPluginInfo | IPluginInfo[];
+
+export interface IPluginInfo {
   entry: string;
   component: any;
 }
@@ -19,7 +24,8 @@ export interface IPlayerStore {
   options: IOptions;
   properties: IProperties;
   emitter: Emitter;
-  plugins: IPlugin[];
+  plugins: IPlugins;
+  i18n: I18n;
 }
 
 export interface IControlsOption {
@@ -29,7 +35,7 @@ export interface IControlsOption {
   showVolume: boolean;
   showDuration: boolean;
   showFullScreen: boolean;
-  showQuality: boolean;
+  showVideoSelector: boolean;
 }
 
 export interface ISourceOption {

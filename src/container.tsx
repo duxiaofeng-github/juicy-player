@@ -3,12 +3,12 @@ import { css } from "emotion";
 import { renderComponents } from "./utils/render";
 import { connect } from "unistore/preact";
 import { fontSizeDefault } from "./utils/style";
-import { IPlugin, IPlayerStore } from "./interface";
+import { IPlugins, IPlayerStore } from "./interface";
 import { Emitter } from "./utils/emitter";
 import { InnerEventType } from "./utils/event";
 
 interface IProps {
-  plugins?: IPlugin[];
+  plugins?: IPlugins;
   emitter?: Emitter;
 }
 

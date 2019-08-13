@@ -1,5 +1,5 @@
 import { h, render } from "preact";
-import { IOptions, IPlayerStore, IPlugin } from "./interface";
+import { IOptions, IPlayerStore, IPlugin, IPlugins } from "./interface";
 import { initOptions, initState } from "./utils";
 
 import createStore, { Store } from "unistore";
@@ -15,8 +15,9 @@ import toolBarPlayButton from "./controls/tool-bar-play-button";
 import toolBarProgressBar from "./controls/tool-bar-progress-bar";
 import toolBarVolumeButton from "./controls/tool-bar-volume-button";
 import toolBarFullScreenButton from "./controls/tool-bar-full-screen-button";
+import toolBarVideoSelector from "./controls/tool-bar-video-selector";
 
-function checkPluginExistence(plugin: IPlugin, plugins: IPlugin[]) {
+function checkPluginExistence(plugin: IPlugin, plugins: IPlugins) {
   let existed = false;
 
   for (let oldPlugin of plugins) {
@@ -33,7 +34,7 @@ export default class JuicyPlayer {
   store: Store<IPlayerStore>;
   private containerPositionCache = "";
 
-  static plugins = [
+  static plugins: IPlugins = [
     player,
     htmlPlayer,
     controls,
@@ -42,6 +43,7 @@ export default class JuicyPlayer {
     toolBarTopProgressBar,
     toolBarPlayButton,
     toolBarProgressBar,
+    toolBarVideoSelector,
     toolBarVolumeButton,
     toolBarFullScreenButton,
   ];

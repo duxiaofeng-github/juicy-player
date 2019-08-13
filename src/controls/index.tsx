@@ -1,7 +1,7 @@
 import { h, Component } from "preact";
 import { css } from "emotion";
 
-import { IOptions, IPlayerStore, IPlugin } from "../interface";
+import { IOptions, IPlayerStore, IPlugins } from "../interface";
 import { connect } from "unistore/preact";
 import { renderComponents } from "../utils/render";
 import { IS_TOUCHABLE_DEVICE } from "../utils";
@@ -10,7 +10,7 @@ import { InnerEventType } from "../utils/event";
 
 interface IProps {
   options?: IOptions;
-  plugins?: IPlugin[];
+  plugins?: IPlugins;
   emitter?: Emitter;
 }
 
