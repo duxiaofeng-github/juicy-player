@@ -6,12 +6,12 @@ import { fontSizeDefault } from "./utils/style";
 import { IPlugins, IPlayerStore } from "./interface";
 import { Emitter } from "./utils/emitter";
 import { fullScreenApiList } from "./utils";
-import { setFullScreenMethods, ISetFullScreenMethods, setIsFullScreen, ISetIsFullScreen } from "./utils/actions";
+import { setIsFullScreen, ISetIsFullScreen } from "./utils/actions";
+import { InnerEventType, PlayerEvent } from "./utils/event";
 
 interface IProps {
   plugins?: IPlugins;
   emitter?: Emitter;
-  setFullScreenMethods?: ISetFullScreenMethods;
   setIsFullScreen?: ISetIsFullScreen;
 }
 
@@ -25,7 +25,6 @@ function mapStateToProps(state: IPlayerStore, props): IProps {
 }
 
 const actions = {
-  setFullScreenMethods,
   setIsFullScreen,
 };
 
@@ -38,9 +37,16 @@ export class Container extends Component<IProps> {
   el: HTMLDivElement;
   fullscreenchangeName: string;
   fullscreenElementName: string;
+  enterFullScreen: () => void;
+  exitFullScreen: () => void;
+
+  componentWillMount() {
+    this.props.emitter.on<boolean>(InnerEventType.InnerChangeFullScreen, this.handleChangeFullScreen);
+  }
 
   componentWillUnmount() {
-    this.props.setFullScreenMethods(null, null);
+    this.props.emitter.off(InnerEventType.InnerChangeFullScreen, this.handleChangeFullScreen);
+
     document.removeEventListener(this.fullscreenchangeName, this.fullScreenChanged);
   }
 
@@ -52,11 +58,11 @@ export class Container extends Component<IProps> {
       const fullscreenchange = item[4];
 
       if (`on${fullscreenchange}` in document) {
-        const enterFullScreen = () => {
+        this.enterFullScreen = () => {
           el[requestFullscreen]();
         };
 
-        const exitFullScreen = () => {
+        this.exitFullScreen = () => {
           document[exitFullscreen]();
         };
 
@@ -66,7 +72,7 @@ export class Container extends Component<IProps> {
         this.fullscreenElementName = fullscreenElement;
         this.el = el;
 
-        this.props.setFullScreenMethods(enterFullScreen, exitFullScreen);
+        this.fullScreenChanged();
 
         break;
       }
@@ -86,6 +92,16 @@ export class Container extends Component<IProps> {
       </div>
     );
   }
+
+  handleChangeFullScreen = (e: PlayerEvent<boolean>) => {
+    if (this.enterFullScreen && this.exitFullScreen) {
+      if (e.detail === true) {
+        this.enterFullScreen();
+      } else {
+        this.exitFullScreen();
+      }
+    }
+  };
 }
 
 const styleContainer = css`

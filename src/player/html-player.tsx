@@ -12,8 +12,6 @@ import {
   setBuffered,
   ISetVolume,
   setVolume,
-  ISetFullScreenMethods,
-  setFullScreenMethods,
   setIsFullScreen,
   ISetIsFullScreen,
 } from "../utils/actions";
@@ -30,7 +28,6 @@ interface IProps {
   setCurrentTime?: ISetCurrentTime;
   setVolume?: ISetVolume;
   setBuffered?: ISetBuffered;
-  setFullScreenMethods?: ISetFullScreenMethods;
   setIsFullScreen?: ISetIsFullScreen;
   emitter: Emitter;
 }
@@ -43,7 +40,6 @@ const actions = {
   setCurrentTime,
   setVolume,
   setBuffered,
-  setFullScreenMethods,
   setIsFullScreen,
 };
 
@@ -61,6 +57,8 @@ class Player extends Component<IProps, IState> {
   pluginName = "HTMLPlayer";
   private el: HTMLVideoElement;
   seeking: boolean;
+  enterFullScreen: () => void;
+  exitFullScreen: () => void;
 
   componentWillMount() {
     const { emitter } = this.props;
@@ -72,6 +70,7 @@ class Player extends Component<IProps, IState> {
     emitter.on<number>(InnerEventType.InnerVideoSetVolume, this.setNativeElementVolume);
     emitter.on(InnerEventType.InnerSeeking, this.handleSeeking);
     emitter.on(InnerEventType.InnerSeeked, this.handleSeeked);
+    emitter.on<boolean>(InnerEventType.InnerChangeFullScreen, this.handleChangeFullScreen);
   }
 
   componentDidMount() {
@@ -85,7 +84,7 @@ class Player extends Component<IProps, IState> {
       this.unbindEvents(this.el);
     }
 
-    const { emitter, setFullScreenMethods } = this.props;
+    const { emitter } = this.props;
 
     emitter.off(InnerEventType.InnerVideoPlay, this.play);
     emitter.off(InnerEventType.InnerVideoPause, this.pause);
@@ -94,8 +93,7 @@ class Player extends Component<IProps, IState> {
     emitter.off(InnerEventType.InnerVideoSetVolume, this.setNativeElementVolume);
     emitter.off(InnerEventType.InnerSeeking, this.handleSeeking);
     emitter.off(InnerEventType.InnerSeeked, this.handleSeeked);
-
-    setFullScreenMethods(null, null);
+    emitter.off(InnerEventType.InnerChangeFullScreen, this.handleChangeFullScreen);
   }
 
   render() {
@@ -137,12 +135,13 @@ class Player extends Component<IProps, IState> {
       const fullscreenElement = item[2];
 
       if (requestFullscreen in this.el) {
-        const { setFullScreenMethods, setIsFullScreen } = this.props;
-        const enterFullScreen = () => {
+        const { setIsFullScreen } = this.props;
+
+        this.enterFullScreen = () => {
           this.el[requestFullscreen]();
         };
 
-        const exitFullScreen = () => {
+        this.exitFullScreen = () => {
           this.el[exitFullscreen]();
         };
 
@@ -155,7 +154,7 @@ class Player extends Component<IProps, IState> {
         this.el.addEventListener("webkitbeginfullscreen", fullScreenChanged);
         this.el.addEventListener("webkitendfullscreen", fullScreenChanged);
 
-        setFullScreenMethods(enterFullScreen, exitFullScreen);
+        fullScreenChanged();
 
         break;
       }
@@ -276,6 +275,16 @@ class Player extends Component<IProps, IState> {
 
   handleSeeked = () => {
     this.seeking = false;
+  };
+
+  handleChangeFullScreen = (e: PlayerEvent<boolean>) => {
+    if (this.enterFullScreen && this.exitFullScreen) {
+      if (e.detail === true) {
+        this.enterFullScreen();
+      } else {
+        this.exitFullScreen();
+      }
+    }
   };
 }
 

@@ -35,7 +35,7 @@ class ToolBarPlayButton extends Component<IProps, IState> {
     const svg = (
       <div
         className={styleToolbarButtonIcon}
-        dangerouslySetInnerHTML={{ __html: (this.props.properties.playing ? pauseIcon : (playIcon as any)) as string }}
+        dangerouslySetInnerHTML={{ __html: ((this.props.properties.playing ? pauseIcon : playIcon) as any) as string }}
         onClick={this.toggle}
       />
     );

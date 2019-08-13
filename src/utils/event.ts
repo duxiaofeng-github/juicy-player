@@ -39,15 +39,16 @@ export enum InnerEventType {
   InnerVideoSetSource = "inner.videoSetSource",
   InnerVideoSetCurrentTime = "inner.videoSetCurrentTime",
   InnerVideoSetVolume = "inner.videoSetVolume",
-  InnerProgressBarHide = "inner.progressBarHide",
-  InnerProgressBarShow = "inner.progressBarShow",
-  InnerToolBarHide = "inner.toolBarHide",
-  InnerToolBarShow = "inner.toolBarShow",
-  InnerToolBarToggle = "inner.toolBarToggle",
+  InnerProgressBarHide = "inner.progressBarHide", // need remove
+  InnerProgressBarShow = "inner.progressBarShow", // need remove
+  InnerToolBarHide = "inner.toolBarHide", // need remove
+  InnerToolBarShow = "inner.toolBarShow", // need remove
+  InnerToolBarToggle = "inner.toolBarToggle", // need remove
   InnerToolBarHidden = "inner.toolBarHidden",
   InnerToolBarShown = "inner.toolBarShown",
   InnerSeeking = "inner.seeking",
   InnerSeeked = "inner.seeked",
+  InnerChangeFullScreen = "inner.changeFullScreen",
 }
 
 export type PlayerEventType = InnerEventType | CustomEventType | NativeEvent;

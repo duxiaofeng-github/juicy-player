@@ -3,24 +3,26 @@ import { h, Component } from "preact";
 import * as enterFullScreenIcon from "../assets/enter-full-screen.svg";
 import * as exitFullScreenIcon from "../assets/exit-full-screen.svg";
 
-import { IPlayerStore, IPlugin, IProperties, IMethods } from "../interface";
+import { IPlayerStore, IPlugin, IProperties } from "../interface";
 import { connect } from "unistore/preact";
 import { styleToolbarButtonIcon } from "../utils/style";
 import { getToolBarButtonTemplate } from "../utils/render";
+import { Emitter } from "../utils/emitter";
+import { InnerEventType } from "../utils/event";
 
 interface IProps {
   properties?: IProperties;
-  methods?: IMethods;
+  emitter?: Emitter;
 }
 
 interface IState {}
 
 function mapStateToProps(state: IPlayerStore, props): IProps {
-  const { properties, methods } = state;
+  const { properties, emitter } = state;
 
   return {
     properties,
-    methods,
+    emitter,
   };
 }
 
@@ -29,8 +31,8 @@ class ToolBarFullScreenButton extends Component<IProps, IState> {
   pluginName = "ToolBarFullScreenButton";
 
   render() {
-    const { properties, methods } = this.props;
-    if (!methods.enterFullScreen || !methods.exitFullScreen) {
+    const { properties } = this.props;
+    if (properties.isFullScreen == null) {
       return null;
     }
 
@@ -38,7 +40,7 @@ class ToolBarFullScreenButton extends Component<IProps, IState> {
       <div
         className={styleToolbarButtonIcon}
         dangerouslySetInnerHTML={{
-          __html: (!properties.isFullScreen ? enterFullScreenIcon : (exitFullScreenIcon as any)) as string,
+          __html: ((properties.isFullScreen === false ? enterFullScreenIcon : exitFullScreenIcon) as any) as string,
         }}
         onClick={this.toggle}
       />
@@ -48,12 +50,12 @@ class ToolBarFullScreenButton extends Component<IProps, IState> {
   }
 
   toggle = () => {
-    const { properties, methods } = this.props;
+    const { properties, emitter } = this.props;
 
-    if (properties.isFullScreen) {
-      methods.exitFullScreen();
+    if (properties.isFullScreen === false) {
+      emitter.emit(InnerEventType.InnerChangeFullScreen, true);
     } else {
-      methods.enterFullScreen();
+      emitter.emit(InnerEventType.InnerChangeFullScreen, false);
     }
   };
 }

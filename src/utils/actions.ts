@@ -65,19 +65,3 @@ export function setIsFullScreen(state: IPlayerStore, isFullScreen: boolean): Par
     },
   };
 }
-
-export type ISetFullScreenMethods = (enterFullScreen: () => void, exitFullScreen: () => void) => Partial<IPlayerStore>;
-
-export function setFullScreenMethods(
-  state: IPlayerStore,
-  enterFullScreen: () => void,
-  exitFullScreen: () => void
-): Partial<IPlayerStore> {
-  return {
-    methods: {
-      ...state.methods,
-      enterFullScreen,
-      exitFullScreen,
-    },
-  };
-}

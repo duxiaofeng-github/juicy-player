@@ -83,7 +83,7 @@ class ToolBarVolumeButton extends Component<IProps, IState> {
       >
         <div
           dangerouslySetInnerHTML={{
-            __html: (this.props.properties.volume !== 0 ? volumeOnIcon : (volumeOffIcon as any)) as string,
+            __html: ((this.props.properties.volume !== 0 ? volumeOnIcon : volumeOffIcon) as any) as string,
           }}
         />
         <div className={cx(styleVolumeBar, this.state.isShown && "shown")} onClick={(e) => e.stopPropagation()}>
