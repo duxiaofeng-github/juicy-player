@@ -1,6 +1,8 @@
-import { I18nKey } from "./index";
+import { ILang } from "./index";
 
-export default {
-  [I18nKey.SourceN]: "视频源%s",
-  [I18nKey.UnknownSource]: "未知视频源",
+const dict: ILang = {
+  SourceN: "视频源%s",
+  UnknownSource: "未知视频源",
 };
+
+export default dict;

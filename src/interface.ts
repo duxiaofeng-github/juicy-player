@@ -1,5 +1,5 @@
 import { Emitter } from "./utils/emitter";
-import { I18n } from "./i18n";
+import { ILang } from "./i18n";
 
 export interface IProperties {
   playing: boolean;
@@ -25,7 +25,7 @@ export interface IPlayerStore {
   properties: IProperties;
   emitter: Emitter;
   plugins: IPlugins;
-  i18n: I18n;
+  lang: ILang;
 }
 
 export interface IControlsOption {

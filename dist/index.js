@@ -3381,12 +3381,12 @@ var __decorate = (undefined && undefined.__decorate) || function (decorators, ta
 
 
 function mapStateToProps(state, props) {
-    var properties = state.properties, emitter = state.emitter, options = state.options, i18n = state.i18n;
+    var properties = state.properties, emitter = state.emitter, options = state.options, lang = state.lang;
     return {
         options: options,
         properties: properties,
         emitter: emitter,
-        i18n: i18n,
+        lang: lang,
     };
 }
 var ToolBarVideoSelector = /** @class */ (function (_super) {
@@ -3397,12 +3397,12 @@ var ToolBarVideoSelector = /** @class */ (function (_super) {
         return _this;
     }
     ToolBarVideoSelector.prototype.render = function () {
-        var _a = this.props, options = _a.options, i18n = _a.i18n, properties = _a.properties;
+        var _a = this.props, options = _a.options, lang = _a.lang, properties = _a.properties;
         var currentListIndex = properties.currentListIndex, currentVideoIndex = properties.currentVideoIndex;
         var list = options.playList[currentListIndex];
         var video = list && list[currentVideoIndex];
-        var text = "quality" in video ? video.quality : i18n.translate(_i18n__WEBPACK_IMPORTED_MODULE_3__["I18nKey"].SourceN, currentVideoIndex);
-        return video ? Object(_utils_render__WEBPACK_IMPORTED_MODULE_2__["getToolBarTextTemplate"])(text) : i18n.translate(_i18n__WEBPACK_IMPORTED_MODULE_3__["I18nKey"].UnknownSource);
+        var text = "quality" in video ? video.quality : Object(_i18n__WEBPACK_IMPORTED_MODULE_3__["printf"])(lang.SourceN, currentVideoIndex);
+        return video ? Object(_utils_render__WEBPACK_IMPORTED_MODULE_2__["getToolBarTextTemplate"])(text) : Object(_i18n__WEBPACK_IMPORTED_MODULE_3__["printf"])(lang.UnknownSource);
     };
     ToolBarVideoSelector = __decorate([
         Object(unistore_preact__WEBPACK_IMPORTED_MODULE_1__["connect"])(mapStateToProps)
@@ -3791,13 +3791,11 @@ var templateObject_1, templateObject_2;
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _index__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./index */ "./src/i18n/index.ts");
-var _a;
-
-/* harmony default export */ __webpack_exports__["default"] = (_a = {},
-    _a[_index__WEBPACK_IMPORTED_MODULE_0__["I18nKey"].SourceN] = "Source %s",
-    _a[_index__WEBPACK_IMPORTED_MODULE_0__["I18nKey"].UnknownSource] = "Unknown source",
-    _a);
+var dict = {
+    SourceN: "Source %s",
+    UnknownSource: "Unknown source",
+};
+/* harmony default export */ __webpack_exports__["default"] = (dict);
 
 
 /***/ }),
@@ -3806,44 +3804,23 @@ var _a;
 /*!***************************!*\
   !*** ./src/i18n/index.ts ***!
   \***************************/
-/*! exports provided: I18nKey, I18n */
+/*! exports provided: printf */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "I18nKey", function() { return I18nKey; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "I18n", function() { return I18n; });
-/* harmony import */ var _en__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./en */ "./src/i18n/en.ts");
-
-var I18nKey;
-(function (I18nKey) {
-    I18nKey[I18nKey["SourceN"] = 0] = "SourceN";
-    I18nKey[I18nKey["UnknownSource"] = 1] = "UnknownSource";
-})(I18nKey || (I18nKey = {}));
-var I18n = /** @class */ (function () {
-    function I18n() {
-        this.dict = _en__WEBPACK_IMPORTED_MODULE_0__["default"];
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "printf", function() { return printf; });
+function printf(template) {
+    var data = [];
+    for (var _i = 1; _i < arguments.length; _i++) {
+        data[_i - 1] = arguments[_i];
     }
-    I18n.prototype.use = function (dict) {
-        this.dict = dict;
-    };
-    I18n.prototype.translate = function (key) {
-        var data = [];
-        for (var _i = 1; _i < arguments.length; _i++) {
-            data[_i - 1] = arguments[_i];
-        }
-        var content = this.dict[key];
-        if (content == null) {
-            return _en__WEBPACK_IMPORTED_MODULE_0__["default"][key] ? _en__WEBPACK_IMPORTED_MODULE_0__["default"][key] : "no translation";
-        }
-        data.forEach(function (item) {
-            content = content.replace("%s", "" + item);
-        });
-        return content;
-    };
-    return I18n;
-}());
-
+    var content = template;
+    data.forEach(function (item) {
+        content = content.replace("%s", "" + item);
+    });
+    return content;
+}
 
 
 /***/ }),
@@ -3875,6 +3852,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _controls_tool_bar_volume_button__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ./controls/tool-bar-volume-button */ "./src/controls/tool-bar-volume-button.tsx");
 /* harmony import */ var _controls_tool_bar_full_screen_button__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! ./controls/tool-bar-full-screen-button */ "./src/controls/tool-bar-full-screen-button.tsx");
 /* harmony import */ var _controls_tool_bar_video_selector__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! ./controls/tool-bar-video-selector */ "./src/controls/tool-bar-video-selector.tsx");
+/* harmony import */ var _i18n_en__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! ./i18n/en */ "./src/i18n/en.ts");
+
 
 
 
@@ -3906,13 +3885,16 @@ var JuicyPlayer = /** @class */ (function () {
     function JuicyPlayer(options) {
         this.containerPositionCache = "";
         Object(_utils__WEBPACK_IMPORTED_MODULE_1__["initOptions"])(options);
-        this.store = Object(unistore__WEBPACK_IMPORTED_MODULE_2__["default"])(Object(_utils__WEBPACK_IMPORTED_MODULE_1__["initState"])(options, JuicyPlayer.plugins));
+        this.store = Object(unistore__WEBPACK_IMPORTED_MODULE_2__["default"])(Object(_utils__WEBPACK_IMPORTED_MODULE_1__["initState"])(options, JuicyPlayer.defaultPlugin, JuicyPlayer.defaultLang));
         this.render();
     }
     JuicyPlayer.use = function (plugin) {
-        if (!checkPluginExistence(plugin, this.plugins)) {
-            this.plugins.push(plugin);
+        if (!checkPluginExistence(plugin, this.defaultPlugin)) {
+            this.defaultPlugin.push(plugin);
         }
+    };
+    JuicyPlayer.lang = function (lang) {
+        this.defaultLang = lang;
     };
     JuicyPlayer.prototype.use = function (plugin) {
         var plugins = this.store.getState().plugins;
@@ -3921,6 +3903,11 @@ var JuicyPlayer = /** @class */ (function () {
                 plugins: plugins.concat([plugin]),
             });
         }
+    };
+    JuicyPlayer.prototype.lang = function (lang) {
+        this.store.setState({
+            lang: lang,
+        });
     };
     JuicyPlayer.prototype.getTargetElement = function () {
         var options = this.store.getState().options;
@@ -3949,7 +3936,7 @@ var JuicyPlayer = /** @class */ (function () {
         container.style.position = this.containerPositionCache;
         Object(preact__WEBPACK_IMPORTED_MODULE_0__["render"])(null, this.getTargetElement());
     };
-    JuicyPlayer.plugins = [
+    JuicyPlayer.defaultPlugin = [
         _player__WEBPACK_IMPORTED_MODULE_7__["default"],
         _player_html_player__WEBPACK_IMPORTED_MODULE_6__["default"],
         _controls__WEBPACK_IMPORTED_MODULE_5__["default"],
@@ -3962,6 +3949,7 @@ var JuicyPlayer = /** @class */ (function () {
         _controls_tool_bar_volume_button__WEBPACK_IMPORTED_MODULE_13__["default"],
         _controls_tool_bar_full_screen_button__WEBPACK_IMPORTED_MODULE_14__["default"],
     ];
+    JuicyPlayer.defaultLang = _i18n_en__WEBPACK_IMPORTED_MODULE_16__["default"];
     return JuicyPlayer;
 }());
 /* harmony default export */ __webpack_exports__["default"] = (JuicyPlayer);
@@ -4510,8 +4498,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "parsePercent", function() { return parsePercent; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "secondToMMSS", function() { return secondToMMSS; });
 /* harmony import */ var _emitter__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./emitter */ "./src/utils/emitter.ts");
-/* harmony import */ var _i18n__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../i18n */ "./src/i18n/index.ts");
-
 
 var canPlayFormat = {
     "video/flv": "FLV",
@@ -4564,7 +4550,7 @@ function initOptions(opt) {
     if (!opt)
         throw new Error("option cannot be empty");
 }
-function initState(options, plugins) {
+function initState(options, plugins, lang) {
     return {
         options: options,
         properties: {
@@ -4578,7 +4564,7 @@ function initState(options, plugins) {
         },
         emitter: new _emitter__WEBPACK_IMPORTED_MODULE_0__["Emitter"](),
         plugins: plugins,
-        i18n: new _i18n__WEBPACK_IMPORTED_MODULE_1__["I18n"](),
+        lang: lang,
     };
 }
 function parsePercent(percent) {

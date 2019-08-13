@@ -1,6 +1,6 @@
-import { IPlayerStore } from "../interface";
+import { IPlayerStore, IPlugins } from "../interface";
 import { Emitter } from "./emitter";
-import { I18n } from "../i18n";
+import { ILang } from "../i18n";
 
 const canPlayFormat = {
   "video/flv": "FLV",
@@ -63,7 +63,7 @@ export function initOptions(opt) {
   if (!opt) throw new Error("option cannot be empty");
 }
 
-export function initState(options, plugins): IPlayerStore {
+export function initState(options, plugins: IPlugins, lang: ILang): IPlayerStore {
   return {
     options,
     properties: {
@@ -77,7 +77,7 @@ export function initState(options, plugins): IPlayerStore {
     },
     emitter: new Emitter(),
     plugins,
-    i18n: new I18n(),
+    lang,
   };
 }
 

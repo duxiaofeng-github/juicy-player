@@ -16,6 +16,8 @@ import toolBarProgressBar from "./controls/tool-bar-progress-bar";
 import toolBarVolumeButton from "./controls/tool-bar-volume-button";
 import toolBarFullScreenButton from "./controls/tool-bar-full-screen-button";
 import toolBarVideoSelector from "./controls/tool-bar-video-selector";
+import { ILang } from "./i18n";
+import en from "./i18n/en";
 
 function checkPluginExistence(plugin: IPlugin, plugins: IPlugins) {
   let existed = false;
@@ -34,7 +36,7 @@ export default class JuicyPlayer {
   store: Store<IPlayerStore>;
   private containerPositionCache = "";
 
-  static plugins: IPlugins = [
+  static defaultPlugin: IPlugins = [
     player,
     htmlPlayer,
     controls,
@@ -48,15 +50,20 @@ export default class JuicyPlayer {
     toolBarFullScreenButton,
   ];
   static use(plugin: IPlugin) {
-    if (!checkPluginExistence(plugin, this.plugins)) {
-      this.plugins.push(plugin);
+    if (!checkPluginExistence(plugin, this.defaultPlugin)) {
+      this.defaultPlugin.push(plugin);
     }
+  }
+
+  static defaultLang = en;
+  static lang(lang: ILang) {
+    this.defaultLang = lang;
   }
 
   constructor(options: IOptions) {
     initOptions(options);
 
-    this.store = createStore(initState(options, JuicyPlayer.plugins));
+    this.store = createStore(initState(options, JuicyPlayer.defaultPlugin, JuicyPlayer.defaultLang));
     this.render();
   }
 
@@ -68,6 +75,12 @@ export default class JuicyPlayer {
         plugins: plugins.concat([plugin]),
       });
     }
+  }
+
+  lang(lang: ILang) {
+    this.store.setState({
+      lang,
+    });
   }
 
   private getTargetElement() {
