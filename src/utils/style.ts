@@ -1,8 +1,12 @@
 import { css } from "emotion";
 import { IS_TOUCHABLE_DEVICE } from ".";
 
-export const colorDefault = "#fff";
-export const colorPrimary = "#00d7c6";
+export const colorDefault = "rgb(255, 255, 255)";
+export const colorDefaultAlpha05 = "rgba(255, 255, 255, 0.5)";
+export const colorPrimary = "rgb(0, 215, 198)";
+export const colorPrimaryAlpha04 = "rgba(0, 215, 198, 0.4)";
+export const colorPrimaryAlpha01 = "rgba(0, 215, 198, 0.1)";
+export const colorPrimaryLightenAlpha06 = "rgba(68, 255, 240, 0.6)";
 export const fontSizeDefault = "14px";
 
 const styleActive = css`

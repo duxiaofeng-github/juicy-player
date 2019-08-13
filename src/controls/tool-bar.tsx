@@ -30,7 +30,7 @@ function mapStateToProps(state: IPlayerStore, props): IProps {
 @connect(mapStateToProps)
 export class ToolBar extends Component<IProps, IState> {
   pluginName = "ToolBar";
-  timer: number;
+  timer;
 
   componentWillMount() {
     const { emitter } = this.props;

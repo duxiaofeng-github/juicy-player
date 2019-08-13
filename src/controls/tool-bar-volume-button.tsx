@@ -49,7 +49,7 @@ export class ToolBarVolumeButton extends Component<IProps, IState> {
   mouseDown: boolean;
   rectCache: ClientRect | DOMRect;
   volumeCache: number;
-  volumeBarTimer: number;
+  volumeBarTimer;
 
   componentDidMount() {
     this.volumeCache = this.props.properties.volume;

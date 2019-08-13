@@ -20,9 +20,8 @@ export function canPlayTypeByFlash(type: string) {
   return "";
 }
 
-export const IS_IOS = /iPhone|iPad/i.test(navigator.userAgent);
-export const IS_SUPPORT_MSE = "MediaSource" in window;
-export const IS_SUPPORT_FLASH = flashVersion()[0] >= "10";
+// export const IS_SUPPORT_MSE = "MediaSource" in window;
+// export const IS_SUPPORT_FLASH = flashVersion()[0] >= "10";
 export const IS_TOUCHABLE_DEVICE = (() => {
   var prefixes = " -webkit- -moz- -o- -ms- ".split(" ");
   var mq = function(query) {
@@ -40,24 +39,24 @@ export const IS_TOUCHABLE_DEVICE = (() => {
   return mq(query);
 })();
 
-function flashVersion() {
-  let version = "0,0,0";
-  try {
-    version = new (<any>window).ActiveXObject("ShockwaveFlash.ShockwaveFlash")
-      .GetVariable("$version")
-      .replace(/\D+/g, ",")
-      .match(/^,?(.+),?$/)[1];
-  } catch (e) {
-    try {
-      if (navigator.mimeTypes["application/x-shockwave-flash"].enabledPlugin) {
-        version = (navigator.plugins["Shockwave Flash 2.0"] || navigator.plugins["Shockwave Flash"]).description
-          .replace(/\D+/g, ",")
-          .match(/^,?(.+),?$/)[1];
-      }
-    } catch (err) {}
-  }
-  return version.split(",");
-}
+// function flashVersion() {
+//   let version = "0,0,0";
+//   try {
+//     version = new (<any>window).ActiveXObject("ShockwaveFlash.ShockwaveFlash")
+//       .GetVariable("$version")
+//       .replace(/\D+/g, ",")
+//       .match(/^,?(.+),?$/)[1];
+//   } catch (e) {
+//     try {
+//       if (navigator.mimeTypes["application/x-shockwave-flash"].enabledPlugin) {
+//         version = (navigator.plugins["Shockwave Flash 2.0"] || navigator.plugins["Shockwave Flash"]).description
+//           .replace(/\D+/g, ",")
+//           .match(/^,?(.+),?$/)[1];
+//       }
+//     } catch (err) {}
+//   }
+//   return version.split(",");
+// }
 
 export function initOptions(opt) {
   if (!opt) throw new Error("option cannot be empty");

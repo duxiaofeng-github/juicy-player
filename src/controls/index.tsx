@@ -29,7 +29,7 @@ function mapStateToProps(state: IPlayerStore, props): IProps {
 @connect(mapStateToProps)
 export class Controls extends Component<IProps, IState> {
   pluginName = "Controls";
-  timer: number;
+  timer;
 
   render() {
     return (

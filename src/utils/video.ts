@@ -1,42 +1,41 @@
 import { IPlayerStore } from "../interface";
-import produce from "immer";
 
 export type ISetPlayState = (playing: boolean) => IPlayerStore;
 
 export function setPlayState(state: IPlayerStore, playing: boolean): IPlayerStore {
-  return produce(state, (draft) => {
-    draft.properties.playing = playing;
-  });
+  state.properties.playing = playing;
+
+  return state;
 }
 
 export type ISetCurrentTime = (time: number) => IPlayerStore;
 
 export function setCurrentTime(state: IPlayerStore, time: number): IPlayerStore {
-  return produce(state, (draft) => {
-    draft.properties.currentTime = time;
-  });
+  state.properties.currentTime = time;
+
+  return state;
 }
 
 export type ISetVolume = (volume: number) => IPlayerStore;
 
 export function setVolume(state: IPlayerStore, volume: number): IPlayerStore {
-  return produce(state, (draft) => {
-    draft.properties.volume = volume;
-  });
+  state.properties.volume = volume;
+
+  return state;
 }
 
 export type ISetDuration = (duration: number) => IPlayerStore;
 
 export function setDuration(state: IPlayerStore, duration: number): IPlayerStore {
-  return produce(state, (draft) => {
-    draft.properties.duration = duration;
-  });
+  state.properties.duration = duration;
+
+  return state;
 }
 
 export type ISetBuffered = (buffered: TimeRanges) => IPlayerStore;
 
 export function setBuffered(state: IPlayerStore, buffered?: TimeRanges): IPlayerStore {
-  return produce(state, (draft) => {
-    draft.properties.buffered = buffered;
-  });
+  state.properties.buffered = buffered;
+
+  return state;
 }

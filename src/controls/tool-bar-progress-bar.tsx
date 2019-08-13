@@ -4,11 +4,15 @@ import { css, cx } from "emotion";
 import { IPlayerStore, IProperties } from "../interface";
 import { connect } from "unistore/preact";
 import { parsePercent, IS_TOUCHABLE_DEVICE, secondToMMSS } from "../utils";
-import { colorPrimary, colorDefault } from "../utils/style";
+import {
+  colorDefaultAlpha05,
+  colorPrimaryLightenAlpha06,
+  colorPrimaryAlpha04,
+  colorPrimaryAlpha01,
+} from "../utils/style";
 import { Emitter } from "../utils/emitter";
 import { InnerEventType, PlayerEventType } from "../utils/event";
 import { ISetCurrentTime, setCurrentTime } from "../utils/video";
-import color from "color";
 
 interface IProps {
   properties?: IProperties;
@@ -218,10 +222,7 @@ const styleProgressBarBuffered = css`
   position: absolute;
   top: 0;
   bottom: 0;
-  background-color: ${color(colorPrimary)
-    .alpha(0.1)
-    .rgb()
-    .string()};
+  background-color: ${colorPrimaryAlpha01};
   pointer-events: none;
 `;
 
@@ -231,16 +232,8 @@ const styleProgressBarFill = css`
   bottom: 0;
   left: 0;
   width: 0;
-  background-color: ${color(colorPrimary)
-    .alpha(0.4)
-    .rgb()
-    .string()};
-  border-right: solid 1px
-    ${color(colorPrimary)
-      .lighten(0.5)
-      .alpha(0.6)
-      .rgb()
-      .string()};
+  background-color: ${colorPrimaryAlpha04};
+  border-right: solid 1px ${colorPrimaryLightenAlpha06};
   pointer-events: none;
 `;
 
@@ -248,10 +241,7 @@ const styleTime = css`
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
-  color: ${color(colorDefault)
-    .alpha(0.5)
-    .rgb()
-    .string()};
+  color: ${colorDefaultAlpha05};
 `;
 
 const styleCurrentTime = css`

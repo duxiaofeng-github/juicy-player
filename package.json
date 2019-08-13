@@ -5,7 +5,10 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "webpack --watch"
+    "dev": "webpack --watch",
+    "pub": "webpack",
+    "dev-docs": "cd docs && webpack-dev-server --hot",
+    "pub-docs": "cd docs && webpack"
   },
   "repository": {
     "type": "git",
@@ -18,9 +21,7 @@
   },
   "homepage": "https://github.com/duxiaofeng-github/juicy-player#readme",
   "dependencies": {
-    "color": "^3.1.2",
     "emotion": "^9.2.12",
-    "immer": "^3.2.0",
     "preact": "^8.5.1",
     "unistore": "^3.4.1"
   },
@@ -29,10 +30,12 @@
     "@types/lodash": "^4.14.136",
     "copy-webpack-plugin": "^5.0.4",
     "fork-ts-checker-webpack-plugin": "^1.5.0",
+    "html-webpack-plugin": "^3.2.0",
     "svg-inline-loader": "^0.8.0",
     "ts-loader": "^6.0.4",
     "typescript": "^3.5.3",
     "webpack": "^4.39.1",
-    "webpack-cli": "^3.3.6"
+    "webpack-cli": "^3.3.6",
+    "webpack-dev-server": "^3.8.0"
   }
 }
