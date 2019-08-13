@@ -5,8 +5,9 @@ import { connect } from "unistore/preact";
 import { Emitter } from "../utils/emitter";
 import { ILang, printf } from "../i18n";
 import { cx, css } from "emotion";
-import { styleToolBarText, colorPrimary } from "../utils/style";
+import { styleToolBarText, colorPrimary, styleToolBarTextContainer } from "../utils/style";
 import { IS_TOUCHABLE_DEVICE } from "../utils";
+import { IInnerSetSourceData, InnerEventType, NativeEvent } from "../utils/event";
 
 interface IProps {
   options?: IOptions;
@@ -48,31 +49,39 @@ class ToolBarVideoSelector extends Component<IProps, IState> {
     let currentText: string;
     if (!currentVideo) {
       currentText = lang.UnknownSource;
-    } else if (typeof currentVideo.title === "string") {
-      currentText = currentVideo.title;
+    } else if (typeof currentVideo.name === "string") {
+      currentText = currentVideo.name;
     } else {
       currentText = printf(lang.SourceN, currentVideoIndex);
     }
 
-    const listComponent = list.map((video, index) => {
-      const text = typeof video.title === "string" ? video.title : printf(lang.SourceN, index);
-
-      return <div className={cx("item", currentVideoIndex === index && "selected")}>{text}</div>;
-    });
-
     const popup = (
-      <div className={cx(stylePopup, IS_TOUCHABLE_DEVICE && "mobile", this.state.isShown && "shown")}>
-        {[...listComponent].reverse()}
+      <div className={cx(!IS_TOUCHABLE_DEVICE ? stylePopup : stylePopupMobile, this.state.isShown && "shown")}>
+        {list.map((video, index) => {
+          const text = typeof video.name === "string" ? video.name : printf(lang.SourceN, index);
+
+          return (
+            <div
+              className={cx("item", currentVideoIndex === index && "selected")}
+              onClick={(e) => {
+                this.onPopupItemClick(e, index);
+              }}
+            >
+              {text}
+            </div>
+          );
+        })}
       </div>
     );
 
     return (
       <div
-        onMouseEnter={this.onMouseEnter}
-        onMouseLeave={this.onMouseLeave}
-        className={cx(styleToolBarText, styleText, IS_TOUCHABLE_DEVICE && "mobile")}
+        onMouseEnter={!IS_TOUCHABLE_DEVICE && this.onMouseEnter}
+        onMouseLeave={!IS_TOUCHABLE_DEVICE && this.onMouseLeave}
+        onClick={IS_TOUCHABLE_DEVICE && this.onTouchClick}
+        className={cx(styleToolBarTextContainer, !IS_TOUCHABLE_DEVICE && styleContainer)}
       >
-        {currentVideo ? currentText : printf(lang.UnknownSource)}
+        <div className={styleToolBarText}>{currentVideo ? currentText : printf(lang.UnknownSource)}</div>
         {popup}
       </div>
     );
@@ -95,13 +104,66 @@ class ToolBarVideoSelector extends Component<IProps, IState> {
       });
     }, 200);
   };
+
+  onPopupItemClick(e: Event, videoIndex: number) {
+    const { options, emitter, properties } = this.props;
+    const currentCache = properties.currentTime;
+    const playingCache = properties.playing;
+
+    e.stopPropagation();
+
+    emitter.emit<IInnerSetSourceData>(InnerEventType.InnerVideoSetSource, {
+      listIndex: properties.currentListIndex,
+      videoIndex,
+    });
+
+    emitter.once(NativeEvent.Loadedmetadata, () => {
+      if (!options.playFromStart) {
+        emitter.emit<number>(InnerEventType.InnerVideoSetCurrentTime, currentCache);
+      }
+
+      if (playingCache) {
+        emitter.emit(InnerEventType.InnerVideoPlay);
+      }
+    });
+
+    this.setState({
+      isShown: false,
+    });
+
+    emitter.emit(InnerEventType.InnerToolBarHide);
+  }
+
+  onTouchClick = () => {
+    this.setState({
+      isShown: true,
+    });
+
+    const documentListener = () => {
+      this.setState({
+        isShown: false,
+      });
+
+      document.removeEventListener("click", documentListener);
+    };
+
+    document.addEventListener("click", documentListener);
+  };
 }
 
-const styleText = css`
+const styleContainer = css`
   position: relative;
+`;
 
-  &.mobile {
-    position: static;
+const styleItem = css`
+  white-space: nowrap;
+  text-align: center;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  flex-shrink: 0;
+
+  &.selected {
+    background-color: ${colorPrimary};
   }
 `;
 
@@ -112,7 +174,11 @@ const stylePopup = css`
   background-color: rgba(0, 0, 0, 0.5);
   opacity: 0;
   transform: translateY(100%) translateX(-50%);
-  transition: transform 0s 0.4s, opacity 0.4s ease-out;
+  transition: none;
+  display: flex;
+  flex-direction: column-reverse;
+  max-height: calc((100% - 25px) * 20);
+  overflow: scroll;
 
   &.shown {
     opacity: 1;
@@ -121,24 +187,45 @@ const stylePopup = css`
   }
 
   .item {
-    white-space: nowrap;
     padding: 10px;
-    text-align: center;
+    max-width: 9em;
+    ${styleItem};
 
-    &.selected {
-      background-color: ${colorPrimary};
+    &:hover {
+      color: ${colorPrimary};
+
+      &.selected {
+        color: inherit;
+      }
     }
   }
+`;
 
-  &.mobile {
-    height: calc(97% - 25px);
-    display: flex;
-    flex-direction: column;
-    justify-content: space-around;
+const stylePopupMobile = css`
+  position: absolute;
+  left: auto;
+  right: 0;
+  bottom: 100%;
+  transform: translateX(100%);
+  display: flex;
+  flex-direction: column-reverse;
+  justify-content: center;
+  height: calc((100% - 25px) * 33.33 - 100%);
+  overflow: scroll;
+  opacity: 0;
+  transition: none;
+  background-color: rgba(0, 0, 0, 0.5);
 
-    .item {
-      padding: 10px;
-    }
+  &.shown {
+    opacity: 1;
+    transform: translateX(0);
+    transition: transform 0s, opacity 0.2s ease-out;
+  }
+
+  .item {
+    padding: 20px;
+    width: 6em;
+    ${styleItem};
   }
 `;
 

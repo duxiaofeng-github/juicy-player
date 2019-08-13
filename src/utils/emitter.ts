@@ -25,6 +25,16 @@ export class Emitter {
     }
   }
 
+  once<T>(event: PlayerEventType, listener: EventListener<T>) {
+    const listenerWrapper = (e) => {
+      listener(e);
+
+      this.off(event, listenerWrapper);
+    };
+
+    this.on(event, listenerWrapper);
+  }
+
   emit<T>(type: PlayerEventType, data?: T) {
     const listeners = this.events[type];
 

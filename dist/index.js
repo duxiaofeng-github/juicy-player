@@ -2455,10 +2455,11 @@ var __decorate = (undefined && undefined.__decorate) || function (decorators, ta
 
 
 function mapStateToProps(state, props) {
-    var plugins = state.plugins, emitter = state.emitter;
+    var plugins = state.plugins, emitter = state.emitter, properties = state.properties;
     return {
         plugins: plugins,
         emitter: emitter,
+        properties: properties,
     };
 }
 var actions = {
@@ -2501,9 +2502,9 @@ var Container = /** @class */ (function (_super) {
             var currentFullScreenElement = document[_this.fullscreenElementName];
             _this.props.setIsFullScreen(currentFullScreenElement === _this.el);
         };
-        _this.handleChangeFullScreen = function (e) {
+        _this.handleChangeFullScreen = function () {
             if (_this.enterFullScreen && _this.exitFullScreen) {
-                if (e.detail === true) {
+                if (!_this.props.properties.isFullScreen) {
                     _this.enterFullScreen();
                 }
                 else {
@@ -2514,10 +2515,10 @@ var Container = /** @class */ (function (_super) {
         return _this;
     }
     Container.prototype.componentWillMount = function () {
-        this.props.emitter.on(_utils_event__WEBPACK_IMPORTED_MODULE_7__["InnerEventType"].InnerChangeFullScreen, this.handleChangeFullScreen);
+        this.props.emitter.on(_utils_event__WEBPACK_IMPORTED_MODULE_7__["InnerEventType"].InnerToggleFullScreen, this.handleChangeFullScreen);
     };
     Container.prototype.componentWillUnmount = function () {
-        this.props.emitter.off(_utils_event__WEBPACK_IMPORTED_MODULE_7__["InnerEventType"].InnerChangeFullScreen, this.handleChangeFullScreen);
+        this.props.emitter.off(_utils_event__WEBPACK_IMPORTED_MODULE_7__["InnerEventType"].InnerToggleFullScreen, this.handleChangeFullScreen);
         document.removeEventListener(this.fullscreenchangeName, this.fullScreenChanged);
     };
     Container.prototype.render = function () {
@@ -2529,7 +2530,7 @@ var Container = /** @class */ (function (_super) {
     return Container;
 }(preact__WEBPACK_IMPORTED_MODULE_0__["Component"]));
 
-var styleContainer = Object(emotion__WEBPACK_IMPORTED_MODULE_1__["css"])(templateObject_1 || (templateObject_1 = __makeTemplateObject(["\n  position: absolute;\n  top: 0;\n  bottom: 0;\n  left: 0;\n  right: 0;\n  overflow: hidden;\n  background-color: #000;\n  font-family: \"PingFang SC\", Arial, \"Microsoft YaHei\", sans-serif;\n  font-size: ", ";\n  -webkit-font-smoothing: antialiased;\n  -moz-osx-font-smoothing: grayscale;\n  -webkit-overflow-scrolling: touch;\n  user-select: none;\n\n  * {\n    box-sizing: content-box;\n    margin: 0;\n  }\n"], ["\n  position: absolute;\n  top: 0;\n  bottom: 0;\n  left: 0;\n  right: 0;\n  overflow: hidden;\n  background-color: #000;\n  font-family: \"PingFang SC\", Arial, \"Microsoft YaHei\", sans-serif;\n  font-size: ", ";\n  -webkit-font-smoothing: antialiased;\n  -moz-osx-font-smoothing: grayscale;\n  -webkit-overflow-scrolling: touch;\n  user-select: none;\n\n  * {\n    box-sizing: content-box;\n    margin: 0;\n  }\n"])), _utils_style__WEBPACK_IMPORTED_MODULE_4__["fontSizeDefault"]);
+var styleContainer = Object(emotion__WEBPACK_IMPORTED_MODULE_1__["css"])(templateObject_1 || (templateObject_1 = __makeTemplateObject(["\n  position: absolute;\n  top: 0;\n  bottom: 0;\n  left: 0;\n  right: 0;\n  overflow: hidden;\n  background-color: #000;\n  font-family: \"PingFang SC\", Arial, \"Microsoft YaHei\", sans-serif;\n  font-size: ", ";\n  -webkit-font-smoothing: antialiased;\n  -moz-osx-font-smoothing: grayscale;\n  -webkit-overflow-scrolling: touch;\n  user-select: none;\n\n  * {\n    box-sizing: content-box;\n    margin: 0;\n    -webkit-tap-highlight-color: rgba(0, 0, 0, 0);\n  }\n"], ["\n  position: absolute;\n  top: 0;\n  bottom: 0;\n  left: 0;\n  right: 0;\n  overflow: hidden;\n  background-color: #000;\n  font-family: \"PingFang SC\", Arial, \"Microsoft YaHei\", sans-serif;\n  font-size: ", ";\n  -webkit-font-smoothing: antialiased;\n  -moz-osx-font-smoothing: grayscale;\n  -webkit-overflow-scrolling: touch;\n  user-select: none;\n\n  * {\n    box-sizing: content-box;\n    margin: 0;\n    -webkit-tap-highlight-color: rgba(0, 0, 0, 0);\n  }\n"])), _utils_style__WEBPACK_IMPORTED_MODULE_4__["fontSizeDefault"]);
 var templateObject_1;
 
 
@@ -2707,7 +2708,7 @@ var Controls = /** @class */ (function (_super) {
             emitter.emit(_utils_event__WEBPACK_IMPORTED_MODULE_5__["InnerEventType"].InnerVideoToggle);
         }
         else {
-            // TODO: fullscreen
+            emitter.emit(_utils_event__WEBPACK_IMPORTED_MODULE_5__["InnerEventType"].InnerToggleFullScreen);
         }
     };
     Controls.prototype.handleSingleClick = function () {
@@ -2798,13 +2799,7 @@ var ToolBarFullScreenButton = /** @class */ (function (_super) {
         var _this = _super !== null && _super.apply(this, arguments) || this;
         _this.pluginName = "ToolBarFullScreenButton";
         _this.toggle = function () {
-            var _a = _this.props, properties = _a.properties, emitter = _a.emitter;
-            if (properties.isFullScreen === false) {
-                emitter.emit(_utils_event__WEBPACK_IMPORTED_MODULE_6__["InnerEventType"].InnerChangeFullScreen, true);
-            }
-            else {
-                emitter.emit(_utils_event__WEBPACK_IMPORTED_MODULE_6__["InnerEventType"].InnerChangeFullScreen, false);
-            }
+            _this.props.emitter.emit(_utils_event__WEBPACK_IMPORTED_MODULE_6__["InnerEventType"].InnerToggleFullScreen);
         };
         return _this;
     }
@@ -3112,7 +3107,7 @@ var plugin = {
 };
 /* harmony default export */ __webpack_exports__["default"] = (plugin);
 var styleProgressBar = Object(emotion__WEBPACK_IMPORTED_MODULE_1__["css"])(templateObject_1 || (templateObject_1 = __makeTemplateObject(["\n  flex-grow: 1;\n"], ["\n  flex-grow: 1;\n"])));
-var styleProgressBarBackground = Object(emotion__WEBPACK_IMPORTED_MODULE_1__["css"])(templateObject_2 || (templateObject_2 = __makeTemplateObject(["\n  position: relative;\n  height: 100%;\n  background-color: rgba(255, 255, 255, 0.2);\n  cursor: pointer;\n  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);\n"], ["\n  position: relative;\n  height: 100%;\n  background-color: rgba(255, 255, 255, 0.2);\n  cursor: pointer;\n  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);\n"])));
+var styleProgressBarBackground = Object(emotion__WEBPACK_IMPORTED_MODULE_1__["css"])(templateObject_2 || (templateObject_2 = __makeTemplateObject(["\n  position: relative;\n  height: 100%;\n  background-color: rgba(255, 255, 255, 0.2);\n  cursor: pointer;\n"], ["\n  position: relative;\n  height: 100%;\n  background-color: rgba(255, 255, 255, 0.2);\n  cursor: pointer;\n"])));
 var styleProgressBarBuffered = Object(emotion__WEBPACK_IMPORTED_MODULE_1__["css"])(templateObject_3 || (templateObject_3 = __makeTemplateObject(["\n  position: absolute;\n  top: 0;\n  bottom: 0;\n  background-color: ", ";\n  pointer-events: none;\n"], ["\n  position: absolute;\n  top: 0;\n  bottom: 0;\n  background-color: ", ";\n  pointer-events: none;\n"])), _utils_style__WEBPACK_IMPORTED_MODULE_4__["colorPrimaryAlpha01"]);
 var styleProgressBarFill = Object(emotion__WEBPACK_IMPORTED_MODULE_1__["css"])(templateObject_4 || (templateObject_4 = __makeTemplateObject(["\n  position: absolute;\n  top: 0;\n  bottom: 0;\n  left: 0;\n  width: 0;\n  background-color: ", ";\n  border-right: solid 1px ", ";\n  pointer-events: none;\n"], ["\n  position: absolute;\n  top: 0;\n  bottom: 0;\n  left: 0;\n  width: 0;\n  background-color: ", ";\n  border-right: solid 1px ", ";\n  pointer-events: none;\n"])), _utils_style__WEBPACK_IMPORTED_MODULE_4__["colorPrimaryAlpha04"], _utils_style__WEBPACK_IMPORTED_MODULE_4__["colorPrimaryLightenAlpha06"]);
 var styleTime = Object(emotion__WEBPACK_IMPORTED_MODULE_1__["css"])(templateObject_5 || (templateObject_5 = __makeTemplateObject(["\n  position: absolute;\n  top: 50%;\n  transform: translateY(-50%);\n  color: ", ";\n"], ["\n  position: absolute;\n  top: 50%;\n  transform: translateY(-50%);\n  color: ", ";\n"])), _utils_style__WEBPACK_IMPORTED_MODULE_4__["colorDefaultAlpha05"]);
@@ -3243,6 +3238,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var emotion__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! emotion */ "./node_modules/emotion/dist/index.esm.js");
 /* harmony import */ var _utils_style__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../utils/style */ "./src/utils/style.ts");
 /* harmony import */ var _utils__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../utils */ "./src/utils/index.ts");
+/* harmony import */ var _utils_event__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../utils/event */ "./src/utils/event.ts");
 var __extends = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -3266,6 +3262,7 @@ var __decorate = (undefined && undefined.__decorate) || function (decorators, ta
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
+
 
 
 
@@ -3300,9 +3297,22 @@ var ToolBarVideoSelector = /** @class */ (function (_super) {
                 });
             }, 200);
         };
+        _this.onTouchClick = function () {
+            _this.setState({
+                isShown: true,
+            });
+            var documentListener = function () {
+                _this.setState({
+                    isShown: false,
+                });
+                document.removeEventListener("click", documentListener);
+            };
+            document.addEventListener("click", documentListener);
+        };
         return _this;
     }
     ToolBarVideoSelector.prototype.render = function () {
+        var _this = this;
         var _a = this.props, options = _a.options, lang = _a.lang, properties = _a.properties;
         var currentListIndex = properties.currentListIndex, currentVideoIndex = properties.currentVideoIndex;
         var list = options.playList[currentListIndex];
@@ -3314,34 +3324,59 @@ var ToolBarVideoSelector = /** @class */ (function (_super) {
         if (!currentVideo) {
             currentText = lang.UnknownSource;
         }
-        else if (typeof currentVideo.title === "string") {
-            currentText = currentVideo.title;
+        else if (typeof currentVideo.name === "string") {
+            currentText = currentVideo.name;
         }
         else {
             currentText = Object(_i18n__WEBPACK_IMPORTED_MODULE_2__["printf"])(lang.SourceN, currentVideoIndex);
         }
-        var listComponent = list.map(function (video, index) {
-            var text = typeof video.title === "string" ? video.title : Object(_i18n__WEBPACK_IMPORTED_MODULE_2__["printf"])(lang.SourceN, index);
-            return Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])("div", { className: Object(emotion__WEBPACK_IMPORTED_MODULE_3__["cx"])("item", currentVideoIndex === index && "selected") }, text);
-        });
-        var popup = (Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])("div", { className: Object(emotion__WEBPACK_IMPORTED_MODULE_3__["cx"])(stylePopup, _utils__WEBPACK_IMPORTED_MODULE_5__["IS_TOUCHABLE_DEVICE"] && "mobile", this.state.isShown && "shown") }, listComponent.slice().reverse()));
-        return (Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])("div", { onMouseEnter: this.onMouseEnter, onMouseLeave: this.onMouseLeave, className: Object(emotion__WEBPACK_IMPORTED_MODULE_3__["cx"])(_utils_style__WEBPACK_IMPORTED_MODULE_4__["styleToolBarText"], styleText, _utils__WEBPACK_IMPORTED_MODULE_5__["IS_TOUCHABLE_DEVICE"] && "mobile") },
-            currentVideo ? currentText : Object(_i18n__WEBPACK_IMPORTED_MODULE_2__["printf"])(lang.UnknownSource),
+        var popup = (Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])("div", { className: Object(emotion__WEBPACK_IMPORTED_MODULE_3__["cx"])(!_utils__WEBPACK_IMPORTED_MODULE_5__["IS_TOUCHABLE_DEVICE"] ? stylePopup : stylePopupMobile, this.state.isShown && "shown") }, list.map(function (video, index) {
+            var text = typeof video.name === "string" ? video.name : Object(_i18n__WEBPACK_IMPORTED_MODULE_2__["printf"])(lang.SourceN, index);
+            return (Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])("div", { className: Object(emotion__WEBPACK_IMPORTED_MODULE_3__["cx"])("item", currentVideoIndex === index && "selected"), onClick: function (e) {
+                    _this.onPopupItemClick(e, index);
+                } }, text));
+        })));
+        return (Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])("div", { onMouseEnter: !_utils__WEBPACK_IMPORTED_MODULE_5__["IS_TOUCHABLE_DEVICE"] && this.onMouseEnter, onMouseLeave: !_utils__WEBPACK_IMPORTED_MODULE_5__["IS_TOUCHABLE_DEVICE"] && this.onMouseLeave, onClick: _utils__WEBPACK_IMPORTED_MODULE_5__["IS_TOUCHABLE_DEVICE"] && this.onTouchClick, className: Object(emotion__WEBPACK_IMPORTED_MODULE_3__["cx"])(_utils_style__WEBPACK_IMPORTED_MODULE_4__["styleToolBarTextContainer"], !_utils__WEBPACK_IMPORTED_MODULE_5__["IS_TOUCHABLE_DEVICE"] && styleContainer) },
+            Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])("div", { className: _utils_style__WEBPACK_IMPORTED_MODULE_4__["styleToolBarText"] }, currentVideo ? currentText : Object(_i18n__WEBPACK_IMPORTED_MODULE_2__["printf"])(lang.UnknownSource)),
             popup));
+    };
+    ToolBarVideoSelector.prototype.onPopupItemClick = function (e, videoIndex) {
+        var _a = this.props, options = _a.options, emitter = _a.emitter, properties = _a.properties;
+        var currentCache = properties.currentTime;
+        var playingCache = properties.playing;
+        e.stopPropagation();
+        emitter.emit(_utils_event__WEBPACK_IMPORTED_MODULE_6__["InnerEventType"].InnerVideoSetSource, {
+            listIndex: properties.currentListIndex,
+            videoIndex: videoIndex,
+        });
+        emitter.once(_utils_event__WEBPACK_IMPORTED_MODULE_6__["NativeEvent"].Loadedmetadata, function () {
+            if (!options.playFromStart) {
+                emitter.emit(_utils_event__WEBPACK_IMPORTED_MODULE_6__["InnerEventType"].InnerVideoSetCurrentTime, currentCache);
+            }
+            if (playingCache) {
+                emitter.emit(_utils_event__WEBPACK_IMPORTED_MODULE_6__["InnerEventType"].InnerVideoPlay);
+            }
+        });
+        this.setState({
+            isShown: false,
+        });
+        emitter.emit(_utils_event__WEBPACK_IMPORTED_MODULE_6__["InnerEventType"].InnerToolBarHide);
     };
     ToolBarVideoSelector = __decorate([
         Object(unistore_preact__WEBPACK_IMPORTED_MODULE_1__["connect"])(mapStateToProps)
     ], ToolBarVideoSelector);
     return ToolBarVideoSelector;
 }(preact__WEBPACK_IMPORTED_MODULE_0__["Component"]));
-var styleText = Object(emotion__WEBPACK_IMPORTED_MODULE_3__["css"])(templateObject_1 || (templateObject_1 = __makeTemplateObject(["\n  position: relative;\n\n  &.mobile {\n    position: static;\n  }\n"], ["\n  position: relative;\n\n  &.mobile {\n    position: static;\n  }\n"])));
-var stylePopup = Object(emotion__WEBPACK_IMPORTED_MODULE_3__["css"])(templateObject_2 || (templateObject_2 = __makeTemplateObject(["\n  position: absolute;\n  left: 50%;\n  bottom: 100%;\n  background-color: rgba(0, 0, 0, 0.5);\n  opacity: 0;\n  transform: translateY(100%) translateX(-50%);\n  transition: transform 0s 0.4s, opacity 0.4s ease-out;\n\n  &.shown {\n    opacity: 1;\n    transform: translateY(0) translateX(-50%);\n    transition: transform 0.2s, opacity 0.4s ease-out;\n  }\n\n  .item {\n    white-space: nowrap;\n    padding: 10px;\n    text-align: center;\n\n    &.selected {\n      background-color: ", ";\n    }\n  }\n\n  &.mobile {\n    height: calc(97% - 25px);\n    display: flex;\n    flex-direction: column;\n    justify-content: space-around;\n\n    .item {\n      padding: 10px;\n    }\n  }\n"], ["\n  position: absolute;\n  left: 50%;\n  bottom: 100%;\n  background-color: rgba(0, 0, 0, 0.5);\n  opacity: 0;\n  transform: translateY(100%) translateX(-50%);\n  transition: transform 0s 0.4s, opacity 0.4s ease-out;\n\n  &.shown {\n    opacity: 1;\n    transform: translateY(0) translateX(-50%);\n    transition: transform 0.2s, opacity 0.4s ease-out;\n  }\n\n  .item {\n    white-space: nowrap;\n    padding: 10px;\n    text-align: center;\n\n    &.selected {\n      background-color: ", ";\n    }\n  }\n\n  &.mobile {\n    height: calc(97% - 25px);\n    display: flex;\n    flex-direction: column;\n    justify-content: space-around;\n\n    .item {\n      padding: 10px;\n    }\n  }\n"])), _utils_style__WEBPACK_IMPORTED_MODULE_4__["colorPrimary"]);
+var styleContainer = Object(emotion__WEBPACK_IMPORTED_MODULE_3__["css"])(templateObject_1 || (templateObject_1 = __makeTemplateObject(["\n  position: relative;\n"], ["\n  position: relative;\n"])));
+var styleItem = Object(emotion__WEBPACK_IMPORTED_MODULE_3__["css"])(templateObject_2 || (templateObject_2 = __makeTemplateObject(["\n  white-space: nowrap;\n  text-align: center;\n  text-overflow: ellipsis;\n  overflow: hidden;\n  flex-shrink: 0;\n\n  &.selected {\n    background-color: ", ";\n  }\n"], ["\n  white-space: nowrap;\n  text-align: center;\n  text-overflow: ellipsis;\n  overflow: hidden;\n  flex-shrink: 0;\n\n  &.selected {\n    background-color: ", ";\n  }\n"])), _utils_style__WEBPACK_IMPORTED_MODULE_4__["colorPrimary"]);
+var stylePopup = Object(emotion__WEBPACK_IMPORTED_MODULE_3__["css"])(templateObject_3 || (templateObject_3 = __makeTemplateObject(["\n  position: absolute;\n  left: 50%;\n  bottom: 100%;\n  background-color: rgba(0, 0, 0, 0.5);\n  opacity: 0;\n  transform: translateY(100%) translateX(-50%);\n  transition: none;\n  display: flex;\n  flex-direction: column-reverse;\n  max-height: calc((100% - 25px) * 20);\n  overflow: scroll;\n\n  &.shown {\n    opacity: 1;\n    transform: translateY(0) translateX(-50%);\n    transition: transform 0.2s, opacity 0.4s ease-out;\n  }\n\n  .item {\n    padding: 10px;\n    max-width: 9em;\n    ", ";\n\n    &:hover {\n      color: ", ";\n\n      &.selected {\n        color: inherit;\n      }\n    }\n  }\n"], ["\n  position: absolute;\n  left: 50%;\n  bottom: 100%;\n  background-color: rgba(0, 0, 0, 0.5);\n  opacity: 0;\n  transform: translateY(100%) translateX(-50%);\n  transition: none;\n  display: flex;\n  flex-direction: column-reverse;\n  max-height: calc((100% - 25px) * 20);\n  overflow: scroll;\n\n  &.shown {\n    opacity: 1;\n    transform: translateY(0) translateX(-50%);\n    transition: transform 0.2s, opacity 0.4s ease-out;\n  }\n\n  .item {\n    padding: 10px;\n    max-width: 9em;\n    ", ";\n\n    &:hover {\n      color: ", ";\n\n      &.selected {\n        color: inherit;\n      }\n    }\n  }\n"])), styleItem, _utils_style__WEBPACK_IMPORTED_MODULE_4__["colorPrimary"]);
+var stylePopupMobile = Object(emotion__WEBPACK_IMPORTED_MODULE_3__["css"])(templateObject_4 || (templateObject_4 = __makeTemplateObject(["\n  position: absolute;\n  left: auto;\n  right: 0;\n  bottom: 100%;\n  transform: translateX(100%);\n  display: flex;\n  flex-direction: column-reverse;\n  justify-content: center;\n  height: calc((100% - 25px) * 33.33 - 100%);\n  overflow: scroll;\n  opacity: 0;\n  transition: none;\n  background-color: rgba(0, 0, 0, 0.5);\n\n  &.shown {\n    opacity: 1;\n    transform: translateX(0);\n    transition: transform 0s, opacity 0.2s ease-out;\n  }\n\n  .item {\n    padding: 20px;\n    width: 6em;\n    ", ";\n  }\n"], ["\n  position: absolute;\n  left: auto;\n  right: 0;\n  bottom: 100%;\n  transform: translateX(100%);\n  display: flex;\n  flex-direction: column-reverse;\n  justify-content: center;\n  height: calc((100% - 25px) * 33.33 - 100%);\n  overflow: scroll;\n  opacity: 0;\n  transition: none;\n  background-color: rgba(0, 0, 0, 0.5);\n\n  &.shown {\n    opacity: 1;\n    transform: translateX(0);\n    transition: transform 0s, opacity 0.2s ease-out;\n  }\n\n  .item {\n    padding: 20px;\n    width: 6em;\n    ", ";\n  }\n"])), styleItem);
 var plugin = {
     entry: "ToolBar",
     component: ToolBarVideoSelector,
 };
 /* harmony default export */ __webpack_exports__["default"] = (plugin);
-var templateObject_1, templateObject_2;
+var templateObject_1, templateObject_2, templateObject_3, templateObject_4;
 
 
 /***/ }),
@@ -3548,10 +3583,10 @@ var plugin = {
     component: ToolBarVolumeButton,
 };
 /* harmony default export */ __webpack_exports__["default"] = (plugin);
-var styleVolumeBar = Object(emotion__WEBPACK_IMPORTED_MODULE_1__["css"])(templateObject_1 || (templateObject_1 = __makeTemplateObject(["\n  position: absolute;\n  width: 100%;\n  height: 300%;\n  left: 0;\n  right: 0;\n  bottom: 100%;\n  display: flex;\n  flex-direction: column;\n  background-color: rgba(0, 0, 0, 0.5);\n  padding-bottom: 8px;\n  opacity: 0;\n  transform: translateY(100%);\n  transition: transform 0s 0.4s, opacity 0.4s ease-out;\n\n  &.shown {\n    opacity: 1;\n    transform: translateY(0);\n    transition: transform 0.2s, opacity 0.4s ease-out;\n  }\n"], ["\n  position: absolute;\n  width: 100%;\n  height: 300%;\n  left: 0;\n  right: 0;\n  bottom: 100%;\n  display: flex;\n  flex-direction: column;\n  background-color: rgba(0, 0, 0, 0.5);\n  padding-bottom: 8px;\n  opacity: 0;\n  transform: translateY(100%);\n  transition: transform 0s 0.4s, opacity 0.4s ease-out;\n\n  &.shown {\n    opacity: 1;\n    transform: translateY(0);\n    transition: transform 0.2s, opacity 0.4s ease-out;\n  }\n"])));
+var styleVolumeBar = Object(emotion__WEBPACK_IMPORTED_MODULE_1__["css"])(templateObject_1 || (templateObject_1 = __makeTemplateObject(["\n  position: absolute;\n  width: 100%;\n  height: 300%;\n  left: 0;\n  right: 0;\n  bottom: 100%;\n  display: flex;\n  flex-direction: column;\n  background-color: rgba(0, 0, 0, 0.5);\n  padding-bottom: 8px;\n  opacity: 0;\n  transform: translateY(100%);\n  transition: transform 0s 0.4s, opacity 0.4s ease-in;\n\n  &.shown {\n    opacity: 1;\n    transform: translateY(0);\n    transition: transform 0.2s, opacity 0.4s ease-out;\n  }\n"], ["\n  position: absolute;\n  width: 100%;\n  height: 300%;\n  left: 0;\n  right: 0;\n  bottom: 100%;\n  display: flex;\n  flex-direction: column;\n  background-color: rgba(0, 0, 0, 0.5);\n  padding-bottom: 8px;\n  opacity: 0;\n  transform: translateY(100%);\n  transition: transform 0s 0.4s, opacity 0.4s ease-in;\n\n  &.shown {\n    opacity: 1;\n    transform: translateY(0);\n    transition: transform 0.2s, opacity 0.4s ease-out;\n  }\n"])));
 var styleVolumeBarText = Object(emotion__WEBPACK_IMPORTED_MODULE_1__["css"])(templateObject_2 || (templateObject_2 = __makeTemplateObject(["\n  color: ", ";\n  padding: 8px;\n  text-align: center;\n"], ["\n  color: ", ";\n  padding: 8px;\n  text-align: center;\n"])), _utils_style__WEBPACK_IMPORTED_MODULE_4__["colorDefault"]);
 var styleVolumeBarContent = Object(emotion__WEBPACK_IMPORTED_MODULE_1__["css"])(templateObject_3 || (templateObject_3 = __makeTemplateObject(["\n  flex-grow: 1;\n  position: relative;\n"], ["\n  flex-grow: 1;\n  position: relative;\n"])));
-var styleVolumeBarBackground = Object(emotion__WEBPACK_IMPORTED_MODULE_1__["css"])(templateObject_4 || (templateObject_4 = __makeTemplateObject(["\n  position: absolute;\n  left: 50%;\n  top: 0;\n  bottom: 0;\n  width: 8%;\n  max-width: 10px;\n  background-color: rgba(200, 200, 200, 0.5);\n  cursor: pointer;\n  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);\n  transform: translateX(-50%);\n"], ["\n  position: absolute;\n  left: 50%;\n  top: 0;\n  bottom: 0;\n  width: 8%;\n  max-width: 10px;\n  background-color: rgba(200, 200, 200, 0.5);\n  cursor: pointer;\n  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);\n  transform: translateX(-50%);\n"])));
+var styleVolumeBarBackground = Object(emotion__WEBPACK_IMPORTED_MODULE_1__["css"])(templateObject_4 || (templateObject_4 = __makeTemplateObject(["\n  position: absolute;\n  left: 50%;\n  top: 0;\n  bottom: 0;\n  width: 8%;\n  max-width: 10px;\n  background-color: rgba(200, 200, 200, 0.5);\n  cursor: pointer;\n  transform: translateX(-50%);\n"], ["\n  position: absolute;\n  left: 50%;\n  top: 0;\n  bottom: 0;\n  width: 8%;\n  max-width: 10px;\n  background-color: rgba(200, 200, 200, 0.5);\n  cursor: pointer;\n  transform: translateX(-50%);\n"])));
 var styleVolumeBarFill = Object(emotion__WEBPACK_IMPORTED_MODULE_1__["css"])(templateObject_5 || (templateObject_5 = __makeTemplateObject(["\n  position: absolute;\n  bottom: 0;\n  left: 0;\n  right: 0;\n  height: 0;\n  background-color: ", ";\n  pointer-events: none;\n"], ["\n  position: absolute;\n  bottom: 0;\n  left: 0;\n  right: 0;\n  height: 0;\n  background-color: ", ";\n  pointer-events: none;\n"])), _utils_style__WEBPACK_IMPORTED_MODULE_4__["colorPrimary"]);
 var styleVolumeBarCursor = Object(emotion__WEBPACK_IMPORTED_MODULE_1__["css"])(templateObject_6 || (templateObject_6 = __makeTemplateObject(["\n  height: 15px;\n  width: 15px;\n  border-radius: 50%;\n  background-color: rgb(255, 255, 255);\n  box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);\n  position: absolute;\n  bottom: 0;\n  left: 50%;\n  transform: translateX(-50%) translateY(50%);\n  cursor: pointer;\n"], ["\n  height: 15px;\n  width: 15px;\n  border-radius: 50%;\n  background-color: rgb(255, 255, 255);\n  box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);\n  position: absolute;\n  bottom: 0;\n  left: 50%;\n  transform: translateX(-50%) translateY(50%);\n  cursor: pointer;\n"])));
 var templateObject_1, templateObject_2, templateObject_3, templateObject_4, templateObject_5, templateObject_6;
@@ -3679,7 +3714,7 @@ var ToolBar = /** @class */ (function (_super) {
     };
     ToolBar.prototype.render = function () {
         var plugins = this.props.plugins;
-        return (Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])("div", { className: Object(emotion__WEBPACK_IMPORTED_MODULE_1__["cx"])(styleToolBar, this.state.isShown !== true && styleToolbarHidden), onMouseEnter: this.onMouseEnter, onMouseLeave: this.onMouseLeave, onClick: this.onClick }, Object(_utils_render__WEBPACK_IMPORTED_MODULE_3__["renderComponents"])(this.pluginName, plugins)));
+        return (Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])("div", { className: Object(emotion__WEBPACK_IMPORTED_MODULE_1__["cx"])(styleToolBar, this.state.isShown && "shown"), onMouseEnter: this.onMouseEnter, onMouseLeave: this.onMouseLeave, onClick: this.onClick }, Object(_utils_render__WEBPACK_IMPORTED_MODULE_3__["renderComponents"])(this.pluginName, plugins)));
     };
     ToolBar = __decorate([
         Object(unistore_preact__WEBPACK_IMPORTED_MODULE_2__["connect"])(mapStateToProps)
@@ -3691,9 +3726,8 @@ var plugin = {
     component: ToolBar,
 };
 /* harmony default export */ __webpack_exports__["default"] = (plugin);
-var styleToolBar = Object(emotion__WEBPACK_IMPORTED_MODULE_1__["css"])(templateObject_1 || (templateObject_1 = __makeTemplateObject(["\n  position: absolute;\n  bottom: 0;\n  left: 0;\n  right: 0;\n  height: calc(3% + 25px);\n  background-color: rgba(0, 0, 0, 0.5);\n  display: flex;\n  transition: transform 0.5s;\n  transform: translateY(0);\n"], ["\n  position: absolute;\n  bottom: 0;\n  left: 0;\n  right: 0;\n  height: calc(3% + 25px);\n  background-color: rgba(0, 0, 0, 0.5);\n  display: flex;\n  transition: transform 0.5s;\n  transform: translateY(0);\n"])));
-var styleToolbarHidden = Object(emotion__WEBPACK_IMPORTED_MODULE_1__["css"])(templateObject_2 || (templateObject_2 = __makeTemplateObject(["\n  transform: translateY(100%);\n"], ["\n  transform: translateY(100%);\n"])));
-var templateObject_1, templateObject_2;
+var styleToolBar = Object(emotion__WEBPACK_IMPORTED_MODULE_1__["css"])(templateObject_1 || (templateObject_1 = __makeTemplateObject(["\n  position: absolute;\n  bottom: 0;\n  left: 0;\n  right: 0;\n  height: calc(3% + 25px);\n  background-color: rgba(0, 0, 0, 0.5);\n  display: flex;\n  transition: transform 0.5s ease-in;\n  transform: translateY(100%);\n\n  &.shown {\n    transition: transform 0.5s ease-out;\n    transform: translateY(0);\n  }\n"], ["\n  position: absolute;\n  bottom: 0;\n  left: 0;\n  right: 0;\n  height: calc(3% + 25px);\n  background-color: rgba(0, 0, 0, 0.5);\n  display: flex;\n  transition: transform 0.5s ease-in;\n  transform: translateY(100%);\n\n  &.shown {\n    transition: transform 0.5s ease-out;\n    transform: translateY(0);\n  }\n"])));
+var templateObject_1;
 
 
 /***/ }),
@@ -3936,9 +3970,7 @@ var Player = /** @class */ (function (_super) {
         _this.pluginName = "HTMLPlayer";
         _this.createRef = function (el) {
             _this.el = el;
-            _this.setVolume();
-            _this.setFullScreenMethods();
-            _this.bindEvents(el);
+            _this.init();
         };
         _this.handleEvent = function (e) {
             var hasEvt = false;
@@ -3997,17 +4029,11 @@ var Player = /** @class */ (function (_super) {
                 _this.play();
             }
         };
-        _this.setNativeElementTime = function (e) {
-            if (_this.el) {
-                _this.el.currentTime = e.detail;
-                _this.props.setCurrentTime(e.detail);
-            }
+        _this.handleSettingNativeElementTime = function (e) {
+            _this.setNativeElementTime(e.detail);
         };
-        _this.setNativeElementVolume = function (e) {
-            if (_this.el) {
-                _this.el.volume = e.detail;
-                _this.props.setVolume(e.detail);
-            }
+        _this.handleSettingNativeElementVolume = function (e) {
+            _this.setNativeElementVolume(e.detail);
         };
         _this.handleSeeking = function () {
             _this.seeking = true;
@@ -4015,9 +4041,9 @@ var Player = /** @class */ (function (_super) {
         _this.handleSeeked = function () {
             _this.seeking = false;
         };
-        _this.handleChangeFullScreen = function (e) {
+        _this.handleChangeFullScreen = function () {
             if (_this.enterFullScreen && _this.exitFullScreen) {
-                if (e.detail === true) {
+                if (!_this.props.properties.isFullScreen) {
                     _this.enterFullScreen();
                 }
                 else {
@@ -4032,15 +4058,11 @@ var Player = /** @class */ (function (_super) {
         emitter.on(_utils_event__WEBPACK_IMPORTED_MODULE_4__["InnerEventType"].InnerVideoPlay, this.play);
         emitter.on(_utils_event__WEBPACK_IMPORTED_MODULE_4__["InnerEventType"].InnerVideoPause, this.pause);
         emitter.on(_utils_event__WEBPACK_IMPORTED_MODULE_4__["InnerEventType"].InnerVideoToggle, this.toggle);
-        emitter.on(_utils_event__WEBPACK_IMPORTED_MODULE_4__["InnerEventType"].InnerVideoSetCurrentTime, this.setNativeElementTime);
-        emitter.on(_utils_event__WEBPACK_IMPORTED_MODULE_4__["InnerEventType"].InnerVideoSetVolume, this.setNativeElementVolume);
+        emitter.on(_utils_event__WEBPACK_IMPORTED_MODULE_4__["InnerEventType"].InnerVideoSetCurrentTime, this.handleSettingNativeElementTime);
+        emitter.on(_utils_event__WEBPACK_IMPORTED_MODULE_4__["InnerEventType"].InnerVideoSetVolume, this.handleSettingNativeElementVolume);
         emitter.on(_utils_event__WEBPACK_IMPORTED_MODULE_4__["InnerEventType"].InnerSeeking, this.handleSeeking);
         emitter.on(_utils_event__WEBPACK_IMPORTED_MODULE_4__["InnerEventType"].InnerSeeked, this.handleSeeked);
-        emitter.on(_utils_event__WEBPACK_IMPORTED_MODULE_4__["InnerEventType"].InnerChangeFullScreen, this.handleChangeFullScreen);
-    };
-    Player.prototype.componentDidMount = function () {
-        var emitter = this.props.emitter;
-        emitter.emit(_utils_event__WEBPACK_IMPORTED_MODULE_4__["InnerEventType"].InnerProgressBarShow);
+        emitter.on(_utils_event__WEBPACK_IMPORTED_MODULE_4__["InnerEventType"].InnerToggleFullScreen, this.handleChangeFullScreen);
     };
     Player.prototype.componentWillUnmount = function () {
         if (this.el) {
@@ -4050,15 +4072,21 @@ var Player = /** @class */ (function (_super) {
         emitter.off(_utils_event__WEBPACK_IMPORTED_MODULE_4__["InnerEventType"].InnerVideoPlay, this.play);
         emitter.off(_utils_event__WEBPACK_IMPORTED_MODULE_4__["InnerEventType"].InnerVideoPause, this.pause);
         emitter.off(_utils_event__WEBPACK_IMPORTED_MODULE_4__["InnerEventType"].InnerVideoToggle, this.toggle);
-        emitter.off(_utils_event__WEBPACK_IMPORTED_MODULE_4__["InnerEventType"].InnerVideoSetCurrentTime, this.setNativeElementTime);
-        emitter.off(_utils_event__WEBPACK_IMPORTED_MODULE_4__["InnerEventType"].InnerVideoSetVolume, this.setNativeElementVolume);
+        emitter.off(_utils_event__WEBPACK_IMPORTED_MODULE_4__["InnerEventType"].InnerVideoSetCurrentTime, this.handleSettingNativeElementTime);
+        emitter.off(_utils_event__WEBPACK_IMPORTED_MODULE_4__["InnerEventType"].InnerVideoSetVolume, this.handleSettingNativeElementVolume);
         emitter.off(_utils_event__WEBPACK_IMPORTED_MODULE_4__["InnerEventType"].InnerSeeking, this.handleSeeking);
         emitter.off(_utils_event__WEBPACK_IMPORTED_MODULE_4__["InnerEventType"].InnerSeeked, this.handleSeeked);
-        emitter.off(_utils_event__WEBPACK_IMPORTED_MODULE_4__["InnerEventType"].InnerChangeFullScreen, this.handleChangeFullScreen);
+        emitter.off(_utils_event__WEBPACK_IMPORTED_MODULE_4__["InnerEventType"].InnerToggleFullScreen, this.handleChangeFullScreen);
     };
     Player.prototype.render = function () {
         var _a = this.props.options, playsinline = _a.playsinline, autoplay = _a.autoplay, preload = _a.preload, loop = _a.loop, muted = _a.muted;
         return (Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])("video", { className: styleVideo, ref: this.createRef, src: this.getSrc(), autoPlay: autoplay, preload: preload, loop: loop, muted: muted, "webkit-playsinline": playsinline, playsInline: playsinline }));
+    };
+    Player.prototype.init = function () {
+        this.setNativeElementVolume(this.props.properties.volume);
+        this.setFullScreenMethods();
+        this.props.setBuffered(null);
+        this.bindEvents(this.el);
     };
     Player.prototype.setFullScreenMethods = function () {
         var _this = this;
@@ -4110,6 +4138,18 @@ var Player = /** @class */ (function (_super) {
         var currentVideo = options.playList[properties.currentListIndex][properties.currentVideoIndex];
         return typeof currentVideo.src === "string" ? currentVideo.src : URL.createObjectURL(currentVideo.src);
     };
+    Player.prototype.setNativeElementTime = function (time) {
+        if (this.el) {
+            this.el.currentTime = time;
+            this.props.setCurrentTime(time);
+        }
+    };
+    Player.prototype.setNativeElementVolume = function (volume) {
+        if (this.el) {
+            this.el.volume = volume;
+            this.props.setVolume(volume);
+        }
+    };
     Player.prototype.setCurrentTime = function () {
         this.props.setCurrentTime(this.el.currentTime);
     };
@@ -4155,6 +4195,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var unistore_preact__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! unistore/preact */ "./node_modules/unistore/preact.js");
 /* harmony import */ var unistore_preact__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(unistore_preact__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var _utils_render__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../utils/render */ "./src/utils/render.tsx");
+/* harmony import */ var _utils_event__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../utils/event */ "./src/utils/event.ts");
 var __extends = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -4168,6 +4209,17 @@ var __extends = (undefined && undefined.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
+var __assign = (undefined && undefined.__assign) || function () {
+    __assign = Object.assign || function(t) {
+        for (var s, i = 1, n = arguments.length; i < n; i++) {
+            s = arguments[i];
+            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
+                t[p] = s[p];
+        }
+        return t;
+    };
+    return __assign.apply(this, arguments);
+};
 var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -4177,6 +4229,14 @@ var __decorate = (undefined && undefined.__decorate) || function (decorators, ta
 
 
 
+
+var actions = {
+    setSource: function (state, listIndex, videoIndex) {
+        return {
+            properties: __assign({}, state.properties, { currentListIndex: listIndex, currentVideoIndex: videoIndex }),
+        };
+    },
+};
 function mapStateToProps(state, props) {
     var options = state.options, properties = state.properties, emitter = state.emitter, plugins = state.plugins;
     return {
@@ -4191,10 +4251,17 @@ var Player = /** @class */ (function (_super) {
     function Player() {
         var _this = _super !== null && _super.apply(this, arguments) || this;
         _this.pluginName = "Player";
+        _this.handleSettingSource = function (e) {
+            var setSource = _this.props.setSource;
+            setSource(e.detail.listIndex, e.detail.videoIndex);
+        };
         return _this;
     }
     Player.prototype.componentWillMount = function () {
-        // TODO: init video state when sourceChange event received
+        this.props.emitter.on(_utils_event__WEBPACK_IMPORTED_MODULE_3__["InnerEventType"].InnerVideoSetSource, this.handleSettingSource);
+    };
+    Player.prototype.componentWillUnmount = function () {
+        this.props.emitter.off(_utils_event__WEBPACK_IMPORTED_MODULE_3__["InnerEventType"].InnerVideoSetSource, this.handleSettingSource);
     };
     Player.prototype.render = function () {
         return this.getPlayer();
@@ -4224,7 +4291,7 @@ var Player = /** @class */ (function (_super) {
         return null;
     };
     Player = __decorate([
-        Object(unistore_preact__WEBPACK_IMPORTED_MODULE_1__["connect"])(mapStateToProps)
+        Object(unistore_preact__WEBPACK_IMPORTED_MODULE_1__["connect"])(mapStateToProps, actions)
     ], Player);
     return Player;
 }(preact__WEBPACK_IMPORTED_MODULE_0__["Component"]));
@@ -4329,6 +4396,14 @@ var Emitter = /** @class */ (function () {
             }
         }
     };
+    Emitter.prototype.once = function (event, listener) {
+        var _this = this;
+        var listenerWrapper = function (e) {
+            listener(e);
+            _this.off(event, listenerWrapper);
+        };
+        this.on(event, listenerWrapper);
+    };
     Emitter.prototype.emit = function (type, data) {
         var listeners = this.events[type];
         if (listeners) {
@@ -4364,20 +4439,16 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "PlayerEvent", function() { return PlayerEvent; });
 var NativeEvent;
 (function (NativeEvent) {
-    NativeEvent["Ready"] = "ready";
     NativeEvent["Abort"] = "abort";
     NativeEvent["Canplay"] = "canplay";
     NativeEvent["Canplaythrough"] = "canplaythrough";
     NativeEvent["Durationchange"] = "durationchange";
     NativeEvent["Emptied"] = "emptied";
-    NativeEvent["Encrypted"] = "encrypted";
     NativeEvent["Ended"] = "ended";
-    NativeEvent["Interruptbegin"] = "interruptbegin";
-    NativeEvent["Interruptend"] = "interruptend";
+    NativeEvent["Error"] = "error";
     NativeEvent["Loadeddata"] = "loadeddata";
     NativeEvent["Loadedmetadata"] = "loadedmetadata";
     NativeEvent["Loadstart"] = "loadstart";
-    NativeEvent["Mozaudioavailable"] = "mozaudioavailable";
     NativeEvent["Pause"] = "pause";
     NativeEvent["Play"] = "play";
     NativeEvent["Playing"] = "playing";
@@ -4413,7 +4484,7 @@ var InnerEventType;
     InnerEventType["InnerToolBarShown"] = "inner.toolBarShown";
     InnerEventType["InnerSeeking"] = "inner.seeking";
     InnerEventType["InnerSeeked"] = "inner.seeked";
-    InnerEventType["InnerChangeFullScreen"] = "inner.changeFullScreen";
+    InnerEventType["InnerToggleFullScreen"] = "inner.toggleFullScreen";
 })(InnerEventType || (InnerEventType = {}));
 var PlayerEvent = /** @class */ (function () {
     function PlayerEvent(type, detail) {
@@ -4657,7 +4728,7 @@ function initState(options, plugins, lang) {
             currentTime: 0,
             duration: 0,
             buffered: null,
-            volume: 0,
+            volume: 1,
             isFullScreen: null,
         },
         emitter: new _emitter__WEBPACK_IMPORTED_MODULE_0__["Emitter"](),
@@ -4763,7 +4834,7 @@ var templateObject_1;
 /*!****************************!*\
   !*** ./src/utils/style.ts ***!
   \****************************/
-/*! exports provided: colorDefault, colorDefaultAlpha05, colorPrimary, colorPrimaryAlpha04, colorPrimaryAlpha01, colorPrimaryLightenAlpha06, fontSizeDefault, styleToolbarButtonIcon, styleToolBarText */
+/*! exports provided: colorDefault, colorDefaultAlpha05, colorPrimary, colorPrimaryAlpha04, colorPrimaryAlpha01, colorPrimaryLightenAlpha06, fontSizeDefault, styleToolbarButtonIcon, styleToolBarTextContainer, styleToolBarText */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -4776,6 +4847,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "colorPrimaryLightenAlpha06", function() { return colorPrimaryLightenAlpha06; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "fontSizeDefault", function() { return fontSizeDefault; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "styleToolbarButtonIcon", function() { return styleToolbarButtonIcon; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "styleToolBarTextContainer", function() { return styleToolBarTextContainer; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "styleToolBarText", function() { return styleToolBarText; });
 /* harmony import */ var emotion__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! emotion */ "./node_modules/emotion/dist/index.esm.js");
 /* harmony import */ var ___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! . */ "./src/utils/index.ts");
@@ -4795,8 +4867,9 @@ var fontSizeDefault = "14px";
 var styleActive = Object(emotion__WEBPACK_IMPORTED_MODULE_0__["css"])(templateObject_1 || (templateObject_1 = __makeTemplateObject(["\n  &:active {\n    color: ", ";\n\n    svg {\n      fill: ", ";\n    }\n  }\n"], ["\n  &:active {\n    color: ", ";\n\n    svg {\n      fill: ", ";\n    }\n  }\n"])), colorPrimary, colorPrimary);
 var styleHover = Object(emotion__WEBPACK_IMPORTED_MODULE_0__["css"])(templateObject_2 || (templateObject_2 = __makeTemplateObject(["\n  &:hover {\n    color: ", ";\n\n    svg {\n      fill: ", ";\n    }\n  }\n"], ["\n  &:hover {\n    color: ", ";\n\n    svg {\n      fill: ", ";\n    }\n  }\n"])), colorPrimary, colorPrimary);
 var styleToolbarButtonIcon = Object(emotion__WEBPACK_IMPORTED_MODULE_0__["css"])(templateObject_3 || (templateObject_3 = __makeTemplateObject(["\n  position: absolute;\n  top: 0;\n  left: 0;\n  right: 0;\n  bottom: 0;\n  cursor: pointer;\n\n  svg {\n    position: absolute;\n    fill: ", ";\n    transition: fill 0.5s;\n    left: 50%;\n    top: 50%;\n    width: 50%;\n    height: 50%;\n    transform: translateX(-50%) translateY(-50%);\n    pointer-events: none;\n  }\n\n  ", ";\n"], ["\n  position: absolute;\n  top: 0;\n  left: 0;\n  right: 0;\n  bottom: 0;\n  cursor: pointer;\n\n  svg {\n    position: absolute;\n    fill: ", ";\n    transition: fill 0.5s;\n    left: 50%;\n    top: 50%;\n    width: 50%;\n    height: 50%;\n    transform: translateX(-50%) translateY(-50%);\n    pointer-events: none;\n  }\n\n  ", ";\n"])), colorDefault, ___WEBPACK_IMPORTED_MODULE_1__["IS_TOUCHABLE_DEVICE"] ? styleActive : styleHover);
-var styleToolBarText = Object(emotion__WEBPACK_IMPORTED_MODULE_0__["css"])(templateObject_4 || (templateObject_4 = __makeTemplateObject(["\n  height: 100%;\n  padding: 0 calc(1% + 5px);\n  color: ", ";\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  cursor: pointer;\n"], ["\n  height: 100%;\n  padding: 0 calc(1% + 5px);\n  color: ", ";\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  cursor: pointer;\n"])), colorDefault);
-var templateObject_1, templateObject_2, templateObject_3, templateObject_4;
+var styleToolBarTextContainer = Object(emotion__WEBPACK_IMPORTED_MODULE_0__["css"])(templateObject_4 || (templateObject_4 = __makeTemplateObject(["\n  height: 100%;\n  padding: 0 calc(1% + 5px);\n  color: ", ";\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  cursor: pointer;\n"], ["\n  height: 100%;\n  padding: 0 calc(1% + 5px);\n  color: ", ";\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  cursor: pointer;\n"])), colorDefault);
+var styleToolBarText = Object(emotion__WEBPACK_IMPORTED_MODULE_0__["css"])(templateObject_5 || (templateObject_5 = __makeTemplateObject(["\n  max-width: 6em;\n  text-overflow: ellipsis;\n  white-space: nowrap;\n  overflow: hidden;\n"], ["\n  max-width: 6em;\n  text-overflow: ellipsis;\n  white-space: nowrap;\n  overflow: hidden;\n"])));
+var templateObject_1, templateObject_2, templateObject_3, templateObject_4, templateObject_5;
 
 
 /***/ })

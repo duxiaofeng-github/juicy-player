@@ -57,7 +57,7 @@ class Controls extends Component<IProps, IState> {
     if (IS_TOUCHABLE_DEVICE) {
       emitter.emit(InnerEventType.InnerVideoToggle);
     } else {
-      // TODO: fullscreen
+      emitter.emit(InnerEventType.InnerToggleFullScreen);
     }
   }
 

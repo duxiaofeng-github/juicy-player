@@ -52,7 +52,7 @@ export const styleToolbarButtonIcon = css`
   ${IS_TOUCHABLE_DEVICE ? styleActive : styleHover};
 `;
 
-export const styleToolBarText = css`
+export const styleToolBarTextContainer = css`
   height: 100%;
   padding: 0 calc(1% + 5px);
   color: ${colorDefault};
@@ -60,4 +60,11 @@ export const styleToolBarText = css`
   align-items: center;
   justify-content: center;
   cursor: pointer;
+`;
+
+export const styleToolBarText = css`
+  max-width: 6em;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
 `;

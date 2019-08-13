@@ -50,13 +50,7 @@ class ToolBarFullScreenButton extends Component<IProps, IState> {
   }
 
   toggle = () => {
-    const { properties, emitter } = this.props;
-
-    if (properties.isFullScreen === false) {
-      emitter.emit(InnerEventType.InnerChangeFullScreen, true);
-    } else {
-      emitter.emit(InnerEventType.InnerChangeFullScreen, false);
-    }
+    this.props.emitter.emit(InnerEventType.InnerToggleFullScreen);
   };
 }
 

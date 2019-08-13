@@ -1,18 +1,14 @@
 export enum NativeEvent {
-  Ready = "ready",
   Abort = "abort",
   Canplay = "canplay",
   Canplaythrough = "canplaythrough",
   Durationchange = "durationchange",
   Emptied = "emptied",
-  Encrypted = "encrypted",
   Ended = "ended",
-  Interruptbegin = "interruptbegin",
-  Interruptend = "interruptend",
+  Error = "error",
   Loadeddata = "loadeddata",
   Loadedmetadata = "loadedmetadata",
   Loadstart = "loadstart",
-  Mozaudioavailable = "mozaudioavailable",
   Pause = "pause",
   Play = "play",
   Playing = "playing",
@@ -48,7 +44,12 @@ export enum InnerEventType {
   InnerToolBarShown = "inner.toolBarShown",
   InnerSeeking = "inner.seeking",
   InnerSeeked = "inner.seeked",
-  InnerChangeFullScreen = "inner.changeFullScreen",
+  InnerToggleFullScreen = "inner.toggleFullScreen",
+}
+
+export interface IInnerSetSourceData {
+  listIndex: number;
+  videoIndex: number;
 }
 
 export type PlayerEventType = InnerEventType | CustomEventType | NativeEvent;

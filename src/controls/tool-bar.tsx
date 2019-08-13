@@ -61,7 +61,7 @@ class ToolBar extends Component<IProps, IState> {
 
     return (
       <div
-        className={cx(styleToolBar, this.state.isShown !== true && styleToolbarHidden)}
+        className={cx(styleToolBar, this.state.isShown && "shown")}
         onMouseEnter={this.onMouseEnter}
         onMouseLeave={this.onMouseLeave}
         onClick={this.onClick}
@@ -139,10 +139,11 @@ const styleToolBar = css`
   height: calc(3% + 25px);
   background-color: rgba(0, 0, 0, 0.5);
   display: flex;
-  transition: transform 0.5s;
-  transform: translateY(0);
-`;
-
-const styleToolbarHidden = css`
+  transition: transform 0.5s ease-in;
   transform: translateY(100%);
+
+  &.shown {
+    transition: transform 0.5s ease-out;
+    transform: translateY(0);
+  }
 `;

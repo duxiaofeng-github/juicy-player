@@ -3,15 +3,29 @@ import { connect } from "unistore/preact";
 import { IOptions, IPlayerStore, IProperties, IPlugins, IPlugin } from "../interface";
 import { Emitter } from "../utils/emitter";
 import { getPlugins } from "../utils/render";
+import { InnerEventType, PlayerEvent, IInnerSetSourceData } from "../utils/event";
 
 interface IProps {
   options?: IOptions;
   properties?: IProperties;
   emitter?: Emitter;
   plugins?: IPlugins;
+  setSource?: (listIndex: number, videoIndex: number) => void;
 }
 
 interface IState {}
+
+const actions = {
+  setSource: (state: IPlayerStore, listIndex: number, videoIndex: number): Partial<IPlayerStore> => {
+    return {
+      properties: {
+        ...state.properties,
+        currentListIndex: listIndex,
+        currentVideoIndex: videoIndex,
+      },
+    };
+  },
+};
 
 function mapStateToProps(state: IPlayerStore, props): IProps {
   const { options, properties, emitter, plugins } = state;
@@ -24,12 +38,19 @@ function mapStateToProps(state: IPlayerStore, props): IProps {
   };
 }
 
-@connect(mapStateToProps)
+@connect(
+  mapStateToProps,
+  actions
+)
 class Player extends Component<IProps, IState> {
   pluginName = "Player";
 
   componentWillMount() {
-    // TODO: init video state when sourceChange event received
+    this.props.emitter.on<IInnerSetSourceData>(InnerEventType.InnerVideoSetSource, this.handleSettingSource);
+  }
+
+  componentWillUnmount() {
+    this.props.emitter.off(InnerEventType.InnerVideoSetSource, this.handleSettingSource);
   }
 
   render() {
@@ -66,6 +87,12 @@ class Player extends Component<IProps, IState> {
 
     return null;
   }
+
+  handleSettingSource = (e: PlayerEvent<IInnerSetSourceData>) => {
+    const { setSource } = this.props;
+
+    setSource(e.detail.listIndex, e.detail.videoIndex);
+  };
 }
 
 const plugin: IPlugin = {

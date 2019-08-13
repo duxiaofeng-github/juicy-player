@@ -3,24 +3,26 @@ import { css } from "emotion";
 import { renderComponents } from "./utils/render";
 import { connect } from "unistore/preact";
 import { fontSizeDefault } from "./utils/style";
-import { IPlugins, IPlayerStore } from "./interface";
+import { IPlugins, IPlayerStore, IProperties } from "./interface";
 import { Emitter } from "./utils/emitter";
 import { fullScreenApiList } from "./utils";
 import { setIsFullScreen, ISetIsFullScreen } from "./utils/actions";
-import { InnerEventType, PlayerEvent } from "./utils/event";
+import { InnerEventType } from "./utils/event";
 
 interface IProps {
+  properties?: IProperties;
   plugins?: IPlugins;
   emitter?: Emitter;
   setIsFullScreen?: ISetIsFullScreen;
 }
 
 function mapStateToProps(state: IPlayerStore, props): IProps {
-  const { plugins, emitter } = state;
+  const { plugins, emitter, properties } = state;
 
   return {
     plugins,
     emitter,
+    properties,
   };
 }
 
@@ -41,11 +43,11 @@ export class Container extends Component<IProps> {
   exitFullScreen: () => void;
 
   componentWillMount() {
-    this.props.emitter.on<boolean>(InnerEventType.InnerChangeFullScreen, this.handleChangeFullScreen);
+    this.props.emitter.on(InnerEventType.InnerToggleFullScreen, this.handleChangeFullScreen);
   }
 
   componentWillUnmount() {
-    this.props.emitter.off(InnerEventType.InnerChangeFullScreen, this.handleChangeFullScreen);
+    this.props.emitter.off(InnerEventType.InnerToggleFullScreen, this.handleChangeFullScreen);
 
     document.removeEventListener(this.fullscreenchangeName, this.fullScreenChanged);
   }
@@ -93,9 +95,9 @@ export class Container extends Component<IProps> {
     );
   }
 
-  handleChangeFullScreen = (e: PlayerEvent<boolean>) => {
+  handleChangeFullScreen = () => {
     if (this.enterFullScreen && this.exitFullScreen) {
-      if (e.detail === true) {
+      if (!this.props.properties.isFullScreen) {
         this.enterFullScreen();
       } else {
         this.exitFullScreen();
@@ -122,5 +124,6 @@ const styleContainer = css`
   * {
     box-sizing: content-box;
     margin: 0;
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
   }
 `;

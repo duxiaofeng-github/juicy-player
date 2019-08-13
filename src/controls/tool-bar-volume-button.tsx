@@ -238,7 +238,7 @@ const styleVolumeBar = css`
   padding-bottom: 8px;
   opacity: 0;
   transform: translateY(100%);
-  transition: transform 0s 0.4s, opacity 0.4s ease-out;
+  transition: transform 0s 0.4s, opacity 0.4s ease-in;
 
   &.shown {
     opacity: 1;
@@ -267,7 +267,6 @@ const styleVolumeBarBackground = css`
   max-width: 10px;
   background-color: rgba(200, 200, 200, 0.5);
   cursor: pointer;
-  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
   transform: translateX(-50%);
 `;
 

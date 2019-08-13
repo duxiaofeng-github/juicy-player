@@ -41,7 +41,7 @@ export interface IControlsOption {
 
 export interface ISource {
   src: string | MediaSource;
-  title: string;
+  name: string;
   mimetype: string;
 }
 
@@ -62,4 +62,5 @@ export interface IOptions {
   poster?: string;
   controls?: boolean | IControlsOption;
   mode?: PlayerMode;
+  playFromStart?: boolean;
 }

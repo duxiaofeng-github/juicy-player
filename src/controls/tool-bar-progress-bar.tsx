@@ -222,7 +222,6 @@ const styleProgressBarBackground = css`
   height: 100%;
   background-color: rgba(255, 255, 255, 0.2);
   cursor: pointer;
-  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
 `;
 
 const styleProgressBarBuffered = css`

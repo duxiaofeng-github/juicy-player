@@ -1,6 +1,6 @@
 import { IPlayerStore } from "../interface";
 
-export type ISetPlayState = (playing: boolean) => Partial<IPlayerStore>;
+export type ISetPlayState = (playing: boolean) => void;
 
 export function setPlayState(state: IPlayerStore, playing: boolean): Partial<IPlayerStore> {
   return {
@@ -11,7 +11,7 @@ export function setPlayState(state: IPlayerStore, playing: boolean): Partial<IPl
   };
 }
 
-export type ISetCurrentTime = (time: number) => Partial<IPlayerStore>;
+export type ISetCurrentTime = (time: number) => void;
 
 export function setCurrentTime(state: IPlayerStore, currentTime: number): Partial<IPlayerStore> {
   return {
@@ -22,7 +22,7 @@ export function setCurrentTime(state: IPlayerStore, currentTime: number): Partia
   };
 }
 
-export type ISetVolume = (volume: number) => Partial<IPlayerStore>;
+export type ISetVolume = (volume: number) => void;
 
 export function setVolume(state: IPlayerStore, volume: number): Partial<IPlayerStore> {
   return {
@@ -33,7 +33,7 @@ export function setVolume(state: IPlayerStore, volume: number): Partial<IPlayerS
   };
 }
 
-export type ISetDuration = (duration: number) => Partial<IPlayerStore>;
+export type ISetDuration = (duration: number) => void;
 
 export function setDuration(state: IPlayerStore, duration: number): Partial<IPlayerStore> {
   return {

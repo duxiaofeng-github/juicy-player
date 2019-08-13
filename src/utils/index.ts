@@ -146,7 +146,7 @@ export function initState(options, plugins: IPlugins, lang: ILang): IPlayerStore
       currentTime: 0,
       duration: 0,
       buffered: null,
-      volume: 0,
+      volume: 1,
       isFullScreen: null,
     },
     emitter: new Emitter(),

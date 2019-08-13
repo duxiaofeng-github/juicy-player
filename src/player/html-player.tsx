@@ -66,17 +66,11 @@ class Player extends Component<IProps, IState> {
     emitter.on(InnerEventType.InnerVideoPlay, this.play);
     emitter.on(InnerEventType.InnerVideoPause, this.pause);
     emitter.on(InnerEventType.InnerVideoToggle, this.toggle);
-    emitter.on<number>(InnerEventType.InnerVideoSetCurrentTime, this.setNativeElementTime);
-    emitter.on<number>(InnerEventType.InnerVideoSetVolume, this.setNativeElementVolume);
+    emitter.on<number>(InnerEventType.InnerVideoSetCurrentTime, this.handleSettingNativeElementTime);
+    emitter.on<number>(InnerEventType.InnerVideoSetVolume, this.handleSettingNativeElementVolume);
     emitter.on(InnerEventType.InnerSeeking, this.handleSeeking);
     emitter.on(InnerEventType.InnerSeeked, this.handleSeeked);
-    emitter.on<boolean>(InnerEventType.InnerChangeFullScreen, this.handleChangeFullScreen);
-  }
-
-  componentDidMount() {
-    const { emitter } = this.props;
-
-    emitter.emit(InnerEventType.InnerProgressBarShow);
+    emitter.on(InnerEventType.InnerToggleFullScreen, this.handleChangeFullScreen);
   }
 
   componentWillUnmount() {
@@ -89,11 +83,11 @@ class Player extends Component<IProps, IState> {
     emitter.off(InnerEventType.InnerVideoPlay, this.play);
     emitter.off(InnerEventType.InnerVideoPause, this.pause);
     emitter.off(InnerEventType.InnerVideoToggle, this.toggle);
-    emitter.off(InnerEventType.InnerVideoSetCurrentTime, this.setNativeElementTime);
-    emitter.off(InnerEventType.InnerVideoSetVolume, this.setNativeElementVolume);
+    emitter.off(InnerEventType.InnerVideoSetCurrentTime, this.handleSettingNativeElementTime);
+    emitter.off(InnerEventType.InnerVideoSetVolume, this.handleSettingNativeElementVolume);
     emitter.off(InnerEventType.InnerSeeking, this.handleSeeking);
     emitter.off(InnerEventType.InnerSeeked, this.handleSeeked);
-    emitter.off(InnerEventType.InnerChangeFullScreen, this.handleChangeFullScreen);
+    emitter.off(InnerEventType.InnerToggleFullScreen, this.handleChangeFullScreen);
   }
 
   render() {
@@ -117,12 +111,18 @@ class Player extends Component<IProps, IState> {
   createRef = (el: HTMLVideoElement) => {
     this.el = el;
 
-    this.setVolume();
+    this.init();
+  };
+
+  init() {
+    this.setNativeElementVolume(this.props.properties.volume);
 
     this.setFullScreenMethods();
 
-    this.bindEvents(el);
-  };
+    this.props.setBuffered(null);
+
+    this.bindEvents(this.el);
+  }
 
   setFullScreenMethods() {
     if (IS_DOCUMENT_SUPPORT_FULLSCREEN) {
@@ -245,21 +245,29 @@ class Player extends Component<IProps, IState> {
     }
   };
 
-  setNativeElementTime = (e: PlayerEvent<number>) => {
-    if (this.el) {
-      this.el.currentTime = e.detail;
-
-      this.props.setCurrentTime(e.detail);
-    }
+  handleSettingNativeElementTime = (e: PlayerEvent<number>) => {
+    this.setNativeElementTime(e.detail);
   };
 
-  setNativeElementVolume = (e: PlayerEvent<number>) => {
+  setNativeElementTime(time: number) {
     if (this.el) {
-      this.el.volume = e.detail;
+      this.el.currentTime = time;
 
-      this.props.setVolume(e.detail);
+      this.props.setCurrentTime(time);
     }
+  }
+
+  handleSettingNativeElementVolume = (e: PlayerEvent<number>) => {
+    this.setNativeElementVolume(e.detail);
   };
+
+  setNativeElementVolume(volume: number) {
+    if (this.el) {
+      this.el.volume = volume;
+
+      this.props.setVolume(volume);
+    }
+  }
 
   setCurrentTime() {
     this.props.setCurrentTime(this.el.currentTime);
@@ -277,9 +285,9 @@ class Player extends Component<IProps, IState> {
     this.seeking = false;
   };
 
-  handleChangeFullScreen = (e: PlayerEvent<boolean>) => {
+  handleChangeFullScreen = () => {
     if (this.enterFullScreen && this.exitFullScreen) {
-      if (e.detail === true) {
+      if (!this.props.properties.isFullScreen) {
         this.enterFullScreen();
       } else {
         this.exitFullScreen();
