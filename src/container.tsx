@@ -3,13 +3,14 @@ import { css } from "emotion";
 import { renderComponents } from "./utils/render";
 import { connect } from "unistore/preact";
 import { fontSizeDefault } from "./utils/style";
-import { IPlugins, IPlayerStore, IProperties } from "./interface";
+import { IPlugins, IPlayerStore, IProperties, IOptions } from "./interface";
 import { Emitter } from "./utils/emitter";
 import { fullScreenApiList } from "./utils";
 import { setIsFullScreen, ISetIsFullScreen } from "./utils/actions";
 import { InnerEventType } from "./utils/event";
 
 interface IProps {
+  options?: IOptions;
   properties?: IProperties;
   plugins?: IPlugins;
   emitter?: Emitter;
@@ -17,9 +18,10 @@ interface IProps {
 }
 
 function mapStateToProps(state: IPlayerStore, props): IProps {
-  const { plugins, emitter, properties } = state;
+  const { options, plugins, emitter, properties } = state;
 
   return {
+    options,
     plugins,
     emitter,
     properties,
@@ -43,13 +45,16 @@ export class Container extends Component<IProps> {
   exitFullScreen: () => void;
 
   componentWillMount() {
-    this.props.emitter.on(InnerEventType.InnerToggleFullScreen, this.handleChangeFullScreen);
+    if (!this.props.options.controlFullScreen) {
+      this.props.emitter.on(InnerEventType.InnerToggleFullScreen, this.handleToggleFullScreen);
+    }
   }
 
   componentWillUnmount() {
-    this.props.emitter.off(InnerEventType.InnerToggleFullScreen, this.handleChangeFullScreen);
-
-    document.removeEventListener(this.fullscreenchangeName, this.fullScreenChanged);
+    if (this.props.options.controlFullScreen) {
+      this.props.emitter.off(InnerEventType.InnerToggleFullScreen, this.handleToggleFullScreen);
+      document.removeEventListener(this.fullscreenchangeName, this.fullScreenChanged);
+    }
   }
 
   setRef = (el: HTMLDivElement) => {
@@ -95,7 +100,7 @@ export class Container extends Component<IProps> {
     );
   }
 
-  handleChangeFullScreen = () => {
+  handleToggleFullScreen = () => {
     if (this.enterFullScreen && this.exitFullScreen) {
       if (!this.props.properties.isFullScreen) {
         this.enterFullScreen();

@@ -2455,8 +2455,9 @@ var __decorate = (undefined && undefined.__decorate) || function (decorators, ta
 
 
 function mapStateToProps(state, props) {
-    var plugins = state.plugins, emitter = state.emitter, properties = state.properties;
+    var options = state.options, plugins = state.plugins, emitter = state.emitter, properties = state.properties;
     return {
+        options: options,
         plugins: plugins,
         emitter: emitter,
         properties: properties,
@@ -2502,7 +2503,7 @@ var Container = /** @class */ (function (_super) {
             var currentFullScreenElement = document[_this.fullscreenElementName];
             _this.props.setIsFullScreen(currentFullScreenElement === _this.el);
         };
-        _this.handleChangeFullScreen = function () {
+        _this.handleToggleFullScreen = function () {
             if (_this.enterFullScreen && _this.exitFullScreen) {
                 if (!_this.props.properties.isFullScreen) {
                     _this.enterFullScreen();
@@ -2515,11 +2516,15 @@ var Container = /** @class */ (function (_super) {
         return _this;
     }
     Container.prototype.componentWillMount = function () {
-        this.props.emitter.on(_utils_event__WEBPACK_IMPORTED_MODULE_7__["InnerEventType"].InnerToggleFullScreen, this.handleChangeFullScreen);
+        if (!this.props.options.controlFullScreen) {
+            this.props.emitter.on(_utils_event__WEBPACK_IMPORTED_MODULE_7__["InnerEventType"].InnerToggleFullScreen, this.handleToggleFullScreen);
+        }
     };
     Container.prototype.componentWillUnmount = function () {
-        this.props.emitter.off(_utils_event__WEBPACK_IMPORTED_MODULE_7__["InnerEventType"].InnerToggleFullScreen, this.handleChangeFullScreen);
-        document.removeEventListener(this.fullscreenchangeName, this.fullScreenChanged);
+        if (this.props.options.controlFullScreen) {
+            this.props.emitter.off(_utils_event__WEBPACK_IMPORTED_MODULE_7__["InnerEventType"].InnerToggleFullScreen, this.handleToggleFullScreen);
+            document.removeEventListener(this.fullscreenchangeName, this.fullScreenChanged);
+        }
     };
     Container.prototype.render = function () {
         return (Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])("div", { className: styleContainer, ref: this.setRef }, Object(_utils_render__WEBPACK_IMPORTED_MODULE_2__["renderComponents"])(this.pluginName, this.props.plugins)));
