@@ -113,6 +113,8 @@ class MobileActions extends Component<IProps, IState> {
     this.touchStartTime = e.timeStamp;
 
     this.rectCache = this.el.getBoundingClientRect();
+
+    e.preventDefault();
   };
 
   onTouchMove = (e: TouchEvent) => {
@@ -124,6 +126,8 @@ class MobileActions extends Component<IProps, IState> {
 
     this.touchPrevX = touchStartX;
     this.touchPrevY = touchStartY;
+
+    e.preventDefault();
   };
 
   onTouchEnd = (e: TouchEvent) => {
@@ -133,6 +137,8 @@ class MobileActions extends Component<IProps, IState> {
     }
 
     this.setProcessType(ProcessType.None);
+
+    e.preventDefault();
   };
 
   processSwipe(x: number, y: number, timeStamp: number) {
@@ -278,7 +284,7 @@ class MobileActions extends Component<IProps, IState> {
       this.fastSwipeCount = 0;
       this.fastSwipeIncrease = null;
       clearTimeout(this.fastSwipeCountTimer);
-    }, 5000);
+    }, 3000);
 
     return this.fastSwipeCount;
   };
@@ -317,6 +323,7 @@ const styleTips = css`
   transform: translateX(-50%);
   background-color: rgba(0, 0, 0, 0.5);
   color: ${colorDefault};
+  white-space: nowrap;
   opacity: 0;
   transition: opacity 0.4s ease-in;
 

@@ -6,7 +6,7 @@ import { Emitter } from "../utils/emitter";
 import { ILang, printf } from "../i18n";
 import { cx, css } from "emotion";
 import { styleToolBarText, colorPrimary, styleToolBarTextContainer } from "../utils/style";
-import { IS_TOUCHABLE_DEVICE } from "../utils";
+import { IS_TOUCHABLE_DEVICE, IS_IOS } from "../utils";
 import { IInnerSetSourceData, InnerEventType, NativeEvent } from "../utils/event";
 
 interface IProps {
@@ -118,14 +118,25 @@ class ToolBarVideoSelector extends Component<IProps, IState> {
     });
 
     emitter.once(NativeEvent.Loadedmetadata, () => {
-      if (!options.playFromStart) {
-        emitter.emit<number>(InnerEventType.InnerVideoSetCurrentTime, currentCache);
+      if (!IS_IOS) {
+        if (!options.playFromStart) {
+          emitter.emit<number>(InnerEventType.InnerVideoSetCurrentTime, currentCache);
+        }
       }
 
       if (playingCache) {
         emitter.emit(InnerEventType.InnerVideoPlay);
       }
     });
+
+    // ios hack, ios only can set current time when video playing and after canplay event triggered
+    if (IS_IOS) {
+      emitter.once(NativeEvent.Canplay, () => {
+        if (!options.playFromStart) {
+          emitter.emit<number>(InnerEventType.InnerVideoSetCurrentTime, currentCache);
+        }
+      });
+    }
 
     this.setState({
       isShown: false,

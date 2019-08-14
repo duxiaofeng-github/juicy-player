@@ -2850,6 +2850,7 @@ var MobileActions = /** @class */ (function (_super) {
             _this.touchStartY = e.targetTouches[0].pageY;
             _this.touchStartTime = e.timeStamp;
             _this.rectCache = _this.el.getBoundingClientRect();
+            e.preventDefault();
         };
         _this.onTouchMove = function (e) {
             var touchStartX = e.targetTouches[0].pageX;
@@ -2858,6 +2859,7 @@ var MobileActions = /** @class */ (function (_super) {
             _this.processSwipe(touchStartX, touchStartY, touchStartTime);
             _this.touchPrevX = touchStartX;
             _this.touchPrevY = touchStartY;
+            e.preventDefault();
         };
         _this.onTouchEnd = function (e) {
             if (_this.needApplyCurrentTime) {
@@ -2865,6 +2867,7 @@ var MobileActions = /** @class */ (function (_super) {
                 _this.needApplyCurrentTime = false;
             }
             _this.setProcessType(ProcessType.None);
+            e.preventDefault();
         };
         _this.getFastSwipeCount = function (isIncrease) {
             if (_this.fastSwipeIncrease !== isIncrease) {
@@ -2877,7 +2880,7 @@ var MobileActions = /** @class */ (function (_super) {
                 _this.fastSwipeCount = 0;
                 _this.fastSwipeIncrease = null;
                 clearTimeout(_this.fastSwipeCountTimer);
-            }, 5000);
+            }, 3000);
             return _this.fastSwipeCount;
         };
         _this.state = {
@@ -3034,7 +3037,7 @@ var MobileActions = /** @class */ (function (_super) {
     return MobileActions;
 }(preact__WEBPACK_IMPORTED_MODULE_0__["Component"]));
 var styleContainer = Object(emotion__WEBPACK_IMPORTED_MODULE_3__["css"])(templateObject_1 || (templateObject_1 = __makeTemplateObject(["\n  position: absolute;\n  left: 0;\n  right: 0;\n  top: 0;\n  bottom: 0;\n"], ["\n  position: absolute;\n  left: 0;\n  right: 0;\n  top: 0;\n  bottom: 0;\n"])));
-var styleTips = Object(emotion__WEBPACK_IMPORTED_MODULE_3__["css"])(templateObject_2 || (templateObject_2 = __makeTemplateObject(["\n  position: absolute;\n  pointer-events: none;\n  left: 50%;\n  top: 10%;\n  padding: 20px;\n  border-radius: 3px;\n  transform: translateX(-50%);\n  background-color: rgba(0, 0, 0, 0.5);\n  color: ", ";\n  opacity: 0;\n  transition: opacity 0.4s ease-in;\n\n  &.shown {\n    opacity: 1;\n    transition: opacity 0.4s ease-out;\n  }\n"], ["\n  position: absolute;\n  pointer-events: none;\n  left: 50%;\n  top: 10%;\n  padding: 20px;\n  border-radius: 3px;\n  transform: translateX(-50%);\n  background-color: rgba(0, 0, 0, 0.5);\n  color: ", ";\n  opacity: 0;\n  transition: opacity 0.4s ease-in;\n\n  &.shown {\n    opacity: 1;\n    transition: opacity 0.4s ease-out;\n  }\n"])), _utils_style__WEBPACK_IMPORTED_MODULE_6__["colorDefault"]);
+var styleTips = Object(emotion__WEBPACK_IMPORTED_MODULE_3__["css"])(templateObject_2 || (templateObject_2 = __makeTemplateObject(["\n  position: absolute;\n  pointer-events: none;\n  left: 50%;\n  top: 10%;\n  padding: 20px;\n  border-radius: 3px;\n  transform: translateX(-50%);\n  background-color: rgba(0, 0, 0, 0.5);\n  color: ", ";\n  white-space: nowrap;\n  opacity: 0;\n  transition: opacity 0.4s ease-in;\n\n  &.shown {\n    opacity: 1;\n    transition: opacity 0.4s ease-out;\n  }\n"], ["\n  position: absolute;\n  pointer-events: none;\n  left: 50%;\n  top: 10%;\n  padding: 20px;\n  border-radius: 3px;\n  transform: translateX(-50%);\n  background-color: rgba(0, 0, 0, 0.5);\n  color: ", ";\n  white-space: nowrap;\n  opacity: 0;\n  transition: opacity 0.4s ease-in;\n\n  &.shown {\n    opacity: 1;\n    transition: opacity 0.4s ease-out;\n  }\n"])), _utils_style__WEBPACK_IMPORTED_MODULE_6__["colorDefault"]);
 var brightnessActions = {
     setBrightness: function (state, brightness) {
         return {
@@ -3713,13 +3716,23 @@ var ToolBarVideoSelector = /** @class */ (function (_super) {
             videoIndex: videoIndex,
         });
         emitter.once(_utils_event__WEBPACK_IMPORTED_MODULE_6__["NativeEvent"].Loadedmetadata, function () {
-            if (!options.playFromStart) {
-                emitter.emit(_utils_event__WEBPACK_IMPORTED_MODULE_6__["InnerEventType"].InnerVideoSetCurrentTime, currentCache);
+            if (!_utils__WEBPACK_IMPORTED_MODULE_5__["IS_IOS"]) {
+                if (!options.playFromStart) {
+                    emitter.emit(_utils_event__WEBPACK_IMPORTED_MODULE_6__["InnerEventType"].InnerVideoSetCurrentTime, currentCache);
+                }
             }
             if (playingCache) {
                 emitter.emit(_utils_event__WEBPACK_IMPORTED_MODULE_6__["InnerEventType"].InnerVideoPlay);
             }
         });
+        // ios hack, ios only can set current time when video playing and after canplay event triggered
+        if (_utils__WEBPACK_IMPORTED_MODULE_5__["IS_IOS"]) {
+            emitter.once(_utils_event__WEBPACK_IMPORTED_MODULE_6__["NativeEvent"].Canplay, function () {
+                if (!options.playFromStart) {
+                    emitter.emit(_utils_event__WEBPACK_IMPORTED_MODULE_6__["InnerEventType"].InnerVideoSetCurrentTime, currentCache);
+                }
+            });
+        }
         this.setState({
             isShown: false,
         });
@@ -4439,8 +4452,8 @@ var Player = /** @class */ (function (_super) {
         }
     };
     Player.prototype.render = function () {
-        var _a = this.props.options, playsinline = _a.playsinline, autoplay = _a.autoplay, preload = _a.preload, loop = _a.loop, muted = _a.muted;
-        return (Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])("video", { className: styleVideo, ref: this.createRef, src: this.getSrc(), autoPlay: autoplay, preload: preload, loop: loop, muted: muted, "webkit-playsinline": playsinline, playsInline: playsinline }));
+        var _a = this.props.options, playsinline = _a.playsinline, autoplay = _a.autoplay, _b = _a.preload, preload = _b === void 0 ? "metadata" : _b, loop = _a.loop, muted = _a.muted;
+        return (Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])("video", { className: styleVideo, ref: this.createRef, src: this.getSrc(), autoPlay: autoplay, preload: preload, loop: loop, muted: muted, "webkit-playsinline": playsinline, playsInline: playsinline, controls: false }));
     };
     Player.prototype.init = function () {
         this.setNativeElementVolume(this.props.properties.volume);
@@ -5014,13 +5027,14 @@ var templateObject_1;
 /*!****************************!*\
   !*** ./src/utils/index.ts ***!
   \****************************/
-/*! exports provided: fullScreenApiList, canPlayTypeByFlash, IS_DOCUMENT_SUPPORT_FULLSCREEN, IS_TOUCHABLE_DEVICE, initOptions, initState, parsePercent, secondToMMSS, getVolumeFromLocalData, saveVolumnToLocalData, getBrightnessFromLocalData, saveBrightnessToLocalData */
+/*! exports provided: fullScreenApiList, canPlayTypeByFlash, IS_IOS, IS_DOCUMENT_SUPPORT_FULLSCREEN, IS_TOUCHABLE_DEVICE, initOptions, initState, parsePercent, secondToMMSS, getVolumeFromLocalData, saveVolumnToLocalData, getBrightnessFromLocalData, saveBrightnessToLocalData */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "fullScreenApiList", function() { return fullScreenApiList; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "canPlayTypeByFlash", function() { return canPlayTypeByFlash; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "IS_IOS", function() { return IS_IOS; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "IS_DOCUMENT_SUPPORT_FULLSCREEN", function() { return IS_DOCUMENT_SUPPORT_FULLSCREEN; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "IS_TOUCHABLE_DEVICE", function() { return IS_TOUCHABLE_DEVICE; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "initOptions", function() { return initOptions; });
@@ -5106,6 +5120,7 @@ function canPlayTypeByFlash(type) {
 }
 // export const IS_SUPPORT_MSE = "MediaSource" in window;
 // export const IS_SUPPORT_FLASH = flashVersion()[0] >= "10";
+var IS_IOS = /iPhone|iPad/i.test(navigator.userAgent);
 var IS_DOCUMENT_SUPPORT_FULLSCREEN = (function () {
     var isEnabled = false;
     for (var _i = 0, fullScreenApiList_1 = fullScreenApiList; _i < fullScreenApiList_1.length; _i++) {

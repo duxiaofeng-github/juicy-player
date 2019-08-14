@@ -33,6 +33,7 @@ const player = new JuicyPlayer({
   playList: [[srcSD, srcMD, srcHD]],
   // autoplay: true,
   playsinline: true,
+  // preload: "metadata",
   // controlFullScreen: true,
   // controlVolume: true,
   // controlBrightness: true,

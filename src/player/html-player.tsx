@@ -103,7 +103,7 @@ class Player extends Component<IProps, IState> {
   }
 
   render() {
-    const { playsinline, autoplay, preload, loop, muted } = this.props.options;
+    const { playsinline, autoplay, preload = "metadata", loop, muted } = this.props.options;
 
     return (
       <video
@@ -116,6 +116,7 @@ class Player extends Component<IProps, IState> {
         muted={muted}
         webkit-playsinline={playsinline}
         playsInline={playsinline}
+        controls={false}
       />
     );
   }

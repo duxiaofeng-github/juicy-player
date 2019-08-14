@@ -57,7 +57,7 @@ export interface IOptions {
   playList: ISource[][];
 
   autoplay?: boolean;
-  preload?: string;
+  preload?: "none" | "metadata" | "auto";
   loop?: boolean;
   playsinline?: boolean;
   muted?: boolean;

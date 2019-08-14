@@ -14,6 +14,9 @@ module.exports = {
   resolve: {
     extensions: [".js"],
   },
+  devServer: {
+    host: "0.0.0.0",
+  },
   plugins: [
     new HtmlWebpackPlugin({
       filename: "index.html",

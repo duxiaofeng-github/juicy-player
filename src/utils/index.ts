@@ -82,6 +82,7 @@ export function canPlayTypeByFlash(type: string) {
 
 // export const IS_SUPPORT_MSE = "MediaSource" in window;
 // export const IS_SUPPORT_FLASH = flashVersion()[0] >= "10";
+export const IS_IOS = /iPhone|iPad/i.test(navigator.userAgent);
 export const IS_DOCUMENT_SUPPORT_FULLSCREEN = (() => {
   let isEnabled = false;
 
