@@ -17,8 +17,8 @@ import {
 } from "../utils/actions";
 import { css } from "emotion";
 import { Emitter } from "../utils/emitter";
-import { InnerEventType, NativeEvent, PlayerEvent } from "../utils/event";
-import { IS_DOCUMENT_SUPPORT_FULLSCREEN, fullScreenApiList, saveVolumnToLocalData } from "../utils";
+import { InnerEventType, NativeEvent, PlayerEvent, CustomEventType, ICustomSourceChangeData } from "../utils/event";
+import { IS_DOCUMENT_SUPPORT_FULLSCREEN, fullScreenApiList, saveVolumnToLocalData, IS_IOS } from "../utils";
 
 interface IProps {
   options?: IOptions;
@@ -102,6 +102,25 @@ class Player extends Component<IProps, IState> {
     }
   }
 
+  componentDidUpdate(prevProps: IProps) {
+    const { properties, emitter, options } = this.props;
+    const { currentListIndex, currentVideoIndex } = properties;
+    const prevProperties = prevProps.properties;
+
+    if (prevProperties.currentListIndex != currentListIndex || prevProperties.currentVideoIndex != currentVideoIndex) {
+      this.syncCurrentTimeToElement();
+
+      emitter.emit<ICustomSourceChangeData>(CustomEventType.SourceChange, {
+        from: prevProps.options.playList[prevProperties.currentListIndex][prevProperties.currentVideoIndex],
+        fromListIndex: prevProperties.currentListIndex,
+        fromVideoIndex: prevProperties.currentListIndex,
+        to: options.playList[currentListIndex][currentVideoIndex],
+        toListIndex: currentListIndex,
+        toVideoIndex: currentVideoIndex,
+      });
+    }
+  }
+
   render() {
     const { playsinline, autoplay, preload = "metadata", loop, muted } = this.props.options;
 
@@ -128,7 +147,9 @@ class Player extends Component<IProps, IState> {
   };
 
   init() {
-    this.setNativeElementVolume(this.props.properties.volume);
+    this.syncVolumeToElement();
+
+    this.syncCurrentTimeToElement();
 
     this.setFullScreenMethods();
 
@@ -283,6 +304,23 @@ class Player extends Component<IProps, IState> {
       }
 
       this.props.setVolume(volume);
+    }
+  }
+
+  syncVolumeToElement() {
+    this.setNativeElementVolume(this.props.properties.volume);
+  }
+
+  syncCurrentTimeToElement() {
+    const { emitter } = this.props;
+
+    // ios hack, ios only can set current time when video playing and after canplay event triggered
+    if (IS_IOS) {
+      emitter.once(NativeEvent.Canplay, () => {
+        this.setNativeElementTime(this.props.properties.currentTime);
+      });
+    } else {
+      this.setNativeElementTime(this.props.properties.currentTime);
     }
   }
 

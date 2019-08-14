@@ -8,12 +8,14 @@ import { cx, css } from "emotion";
 import { styleToolBarText, colorPrimary, styleToolBarTextContainer } from "../utils/style";
 import { IS_TOUCHABLE_DEVICE, IS_IOS } from "../utils";
 import { IInnerSetSourceData, InnerEventType, NativeEvent } from "../utils/event";
+import { ISetCurrentTime, setCurrentTime } from "../utils/actions";
 
 interface IProps {
   options?: IOptions;
   lang?: ILang;
   properties?: IProperties;
   emitter?: Emitter;
+  setCurrentTime?: ISetCurrentTime;
 }
 
 interface IState {
@@ -31,7 +33,14 @@ function mapStateToProps(state: IPlayerStore, props): IProps {
   };
 }
 
-@connect(mapStateToProps)
+const actions = {
+  setCurrentTime,
+};
+
+@connect(
+  mapStateToProps,
+  actions
+)
 class ToolBarVideoSelector extends Component<IProps, IState> {
   pluginName = "ToolBarVideoSelector";
   timer;
@@ -106,11 +115,12 @@ class ToolBarVideoSelector extends Component<IProps, IState> {
   };
 
   onPopupItemClick(e: Event, videoIndex: number) {
-    const { options, emitter, properties } = this.props;
-    const currentCache = properties.currentTime;
+    const { options, emitter, properties, setCurrentTime } = this.props;
     const playingCache = properties.playing;
 
-    e.stopPropagation();
+    if (options.playFromStart) {
+      setCurrentTime(0);
+    }
 
     emitter.emit<IInnerSetSourceData>(InnerEventType.InnerVideoSetSource, {
       listIndex: properties.currentListIndex,
@@ -118,31 +128,18 @@ class ToolBarVideoSelector extends Component<IProps, IState> {
     });
 
     emitter.once(NativeEvent.Loadedmetadata, () => {
-      if (!IS_IOS) {
-        if (!options.playFromStart) {
-          emitter.emit<number>(InnerEventType.InnerVideoSetCurrentTime, currentCache);
-        }
-      }
-
       if (playingCache) {
         emitter.emit(InnerEventType.InnerVideoPlay);
       }
     });
-
-    // ios hack, ios only can set current time when video playing and after canplay event triggered
-    if (IS_IOS) {
-      emitter.once(NativeEvent.Canplay, () => {
-        if (!options.playFromStart) {
-          emitter.emit<number>(InnerEventType.InnerVideoSetCurrentTime, currentCache);
-        }
-      });
-    }
 
     this.setState({
       isShown: false,
     });
 
     emitter.emit(InnerEventType.InnerToolBarHide);
+
+    e.stopPropagation();
   }
 
   onTouchClick = () => {

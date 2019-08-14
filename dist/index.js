@@ -2850,7 +2850,6 @@ var MobileActions = /** @class */ (function (_super) {
             _this.touchStartY = e.targetTouches[0].pageY;
             _this.touchStartTime = e.timeStamp;
             _this.rectCache = _this.el.getBoundingClientRect();
-            e.preventDefault();
         };
         _this.onTouchMove = function (e) {
             var touchStartX = e.targetTouches[0].pageX;
@@ -2867,7 +2866,6 @@ var MobileActions = /** @class */ (function (_super) {
                 _this.needApplyCurrentTime = false;
             }
             _this.setProcessType(ProcessType.None);
-            e.preventDefault();
         };
         _this.getFastSwipeCount = function (isIncrease) {
             if (_this.fastSwipeIncrease !== isIncrease) {
@@ -3605,6 +3603,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _utils_style__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../utils/style */ "./src/utils/style.ts");
 /* harmony import */ var _utils__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../utils */ "./src/utils/index.ts");
 /* harmony import */ var _utils_event__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../utils/event */ "./src/utils/event.ts");
+/* harmony import */ var _utils_actions__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../utils/actions */ "./src/utils/actions.ts");
 var __extends = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -3635,6 +3634,7 @@ var __decorate = (undefined && undefined.__decorate) || function (decorators, ta
 
 
 
+
 function mapStateToProps(state, props) {
     var properties = state.properties, emitter = state.emitter, options = state.options, lang = state.lang;
     return {
@@ -3644,6 +3644,9 @@ function mapStateToProps(state, props) {
         lang: lang,
     };
 }
+var actions = {
+    setCurrentTime: _utils_actions__WEBPACK_IMPORTED_MODULE_7__["setCurrentTime"],
+};
 var ToolBarVideoSelector = /** @class */ (function (_super) {
     __extends(ToolBarVideoSelector, _super);
     function ToolBarVideoSelector() {
@@ -3707,39 +3710,28 @@ var ToolBarVideoSelector = /** @class */ (function (_super) {
             popup));
     };
     ToolBarVideoSelector.prototype.onPopupItemClick = function (e, videoIndex) {
-        var _a = this.props, options = _a.options, emitter = _a.emitter, properties = _a.properties;
-        var currentCache = properties.currentTime;
+        var _a = this.props, options = _a.options, emitter = _a.emitter, properties = _a.properties, setCurrentTime = _a.setCurrentTime;
         var playingCache = properties.playing;
-        e.stopPropagation();
+        if (options.playFromStart) {
+            setCurrentTime(0);
+        }
         emitter.emit(_utils_event__WEBPACK_IMPORTED_MODULE_6__["InnerEventType"].InnerVideoSetSource, {
             listIndex: properties.currentListIndex,
             videoIndex: videoIndex,
         });
         emitter.once(_utils_event__WEBPACK_IMPORTED_MODULE_6__["NativeEvent"].Loadedmetadata, function () {
-            if (!_utils__WEBPACK_IMPORTED_MODULE_5__["IS_IOS"]) {
-                if (!options.playFromStart) {
-                    emitter.emit(_utils_event__WEBPACK_IMPORTED_MODULE_6__["InnerEventType"].InnerVideoSetCurrentTime, currentCache);
-                }
-            }
             if (playingCache) {
                 emitter.emit(_utils_event__WEBPACK_IMPORTED_MODULE_6__["InnerEventType"].InnerVideoPlay);
             }
         });
-        // ios hack, ios only can set current time when video playing and after canplay event triggered
-        if (_utils__WEBPACK_IMPORTED_MODULE_5__["IS_IOS"]) {
-            emitter.once(_utils_event__WEBPACK_IMPORTED_MODULE_6__["NativeEvent"].Canplay, function () {
-                if (!options.playFromStart) {
-                    emitter.emit(_utils_event__WEBPACK_IMPORTED_MODULE_6__["InnerEventType"].InnerVideoSetCurrentTime, currentCache);
-                }
-            });
-        }
         this.setState({
             isShown: false,
         });
         emitter.emit(_utils_event__WEBPACK_IMPORTED_MODULE_6__["InnerEventType"].InnerToolBarHide);
+        e.stopPropagation();
     };
     ToolBarVideoSelector = __decorate([
-        Object(unistore_preact__WEBPACK_IMPORTED_MODULE_1__["connect"])(mapStateToProps)
+        Object(unistore_preact__WEBPACK_IMPORTED_MODULE_1__["connect"])(mapStateToProps, actions)
     ], ToolBarVideoSelector);
     return ToolBarVideoSelector;
 }(preact__WEBPACK_IMPORTED_MODULE_0__["Component"]));
@@ -4451,12 +4443,29 @@ var Player = /** @class */ (function (_super) {
             emitter.off(_utils_event__WEBPACK_IMPORTED_MODULE_4__["InnerEventType"].InnerToggleFullScreen, this.handleFullScreen);
         }
     };
+    Player.prototype.componentDidUpdate = function (prevProps) {
+        var _a = this.props, properties = _a.properties, emitter = _a.emitter, options = _a.options;
+        var currentListIndex = properties.currentListIndex, currentVideoIndex = properties.currentVideoIndex;
+        var prevProperties = prevProps.properties;
+        if (prevProperties.currentListIndex != currentListIndex || prevProperties.currentVideoIndex != currentVideoIndex) {
+            this.syncCurrentTimeToElement();
+            emitter.emit(_utils_event__WEBPACK_IMPORTED_MODULE_4__["CustomEventType"].SourceChange, {
+                from: prevProps.options.playList[prevProperties.currentListIndex][prevProperties.currentVideoIndex],
+                fromListIndex: prevProperties.currentListIndex,
+                fromVideoIndex: prevProperties.currentListIndex,
+                to: options.playList[currentListIndex][currentVideoIndex],
+                toListIndex: currentListIndex,
+                toVideoIndex: currentVideoIndex,
+            });
+        }
+    };
     Player.prototype.render = function () {
         var _a = this.props.options, playsinline = _a.playsinline, autoplay = _a.autoplay, _b = _a.preload, preload = _b === void 0 ? "metadata" : _b, loop = _a.loop, muted = _a.muted;
         return (Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])("video", { className: styleVideo, ref: this.createRef, src: this.getSrc(), autoPlay: autoplay, preload: preload, loop: loop, muted: muted, "webkit-playsinline": playsinline, playsInline: playsinline, controls: false }));
     };
     Player.prototype.init = function () {
-        this.setNativeElementVolume(this.props.properties.volume);
+        this.syncVolumeToElement();
+        this.syncCurrentTimeToElement();
         this.setFullScreenMethods();
         this.props.setBuffered(null);
         this.bindEvents(this.el);
@@ -4524,6 +4533,22 @@ var Player = /** @class */ (function (_super) {
                 Object(_utils__WEBPACK_IMPORTED_MODULE_5__["saveVolumnToLocalData"])(volume);
             }
             this.props.setVolume(volume);
+        }
+    };
+    Player.prototype.syncVolumeToElement = function () {
+        this.setNativeElementVolume(this.props.properties.volume);
+    };
+    Player.prototype.syncCurrentTimeToElement = function () {
+        var _this = this;
+        var emitter = this.props.emitter;
+        // ios hack, ios only can set current time when video playing and after canplay event triggered
+        if (_utils__WEBPACK_IMPORTED_MODULE_5__["IS_IOS"]) {
+            emitter.once(_utils_event__WEBPACK_IMPORTED_MODULE_4__["NativeEvent"].Canplay, function () {
+                _this.setNativeElementTime(_this.props.properties.currentTime);
+            });
+        }
+        else {
+            this.setNativeElementTime(this.props.properties.currentTime);
         }
     };
     Player.prototype.setCurrentTime = function () {
@@ -4908,8 +4933,8 @@ var NativeEvent;
 })(NativeEvent || (NativeEvent = {}));
 var CustomEventType;
 (function (CustomEventType) {
-    CustomEventType["RetryPlay"] = "retryplay";
-    CustomEventType["Error"] = "error";
+    CustomEventType["RetryPlay"] = "custom.retryplay";
+    CustomEventType["SourceChange"] = "custom.sourceChange";
 })(CustomEventType || (CustomEventType = {}));
 var InnerEventType;
 (function (InnerEventType) {

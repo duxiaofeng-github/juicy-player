@@ -1,3 +1,5 @@
+import { ISource } from "../interface";
+
 export enum NativeEvent {
   Abort = "abort",
   Canplay = "canplay",
@@ -24,8 +26,8 @@ export enum NativeEvent {
 }
 
 export enum CustomEventType {
-  RetryPlay = "retryplay",
-  Error = "error",
+  RetryPlay = "custom.retryplay",
+  SourceChange = "custom.sourceChange",
 }
 
 export enum InnerEventType {
@@ -51,6 +53,15 @@ export enum InnerEventType {
 export interface IInnerSetSourceData {
   listIndex: number;
   videoIndex: number;
+}
+
+export interface ICustomSourceChangeData {
+  from: ISource;
+  fromListIndex: number;
+  fromVideoIndex: number;
+  to: ISource;
+  toListIndex: number;
+  toVideoIndex: number;
 }
 
 export type PlayerEventType = InnerEventType | CustomEventType | NativeEvent;

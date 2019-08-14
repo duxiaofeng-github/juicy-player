@@ -113,8 +113,6 @@ class MobileActions extends Component<IProps, IState> {
     this.touchStartTime = e.timeStamp;
 
     this.rectCache = this.el.getBoundingClientRect();
-
-    e.preventDefault();
   };
 
   onTouchMove = (e: TouchEvent) => {
@@ -137,8 +135,6 @@ class MobileActions extends Component<IProps, IState> {
     }
 
     this.setProcessType(ProcessType.None);
-
-    e.preventDefault();
   };
 
   processSwipe(x: number, y: number, timeStamp: number) {
