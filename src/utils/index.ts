@@ -1,4 +1,4 @@
-import { IPlayerStore, IPlugins } from "../interface";
+import { IPlayerStore, IPlugins, IOptions } from "../interface";
 import { Emitter } from "./emitter";
 import { ILang } from "../i18n";
 
@@ -136,7 +136,13 @@ export function initOptions(opt) {
   if (!opt) throw new Error("option cannot be empty");
 }
 
-export function initState(options, plugins: IPlugins, lang: ILang): IPlayerStore {
+export function initState(options: IOptions, emitter: Emitter, plugins: IPlugins, lang: ILang): IPlayerStore {
+  const volumeFromLocalData = getVolumeFromLocalData();
+  const volume = volumeFromLocalData != null && !options.controlVolume ? volumeFromLocalData : 1;
+
+  const brightnessFromLocalData = getBrightnessFromLocalData();
+  const brightness = brightnessFromLocalData != null && !options.controlBrightness ? brightnessFromLocalData : 1;
+
   return {
     options,
     properties: {
@@ -146,23 +152,24 @@ export function initState(options, plugins: IPlugins, lang: ILang): IPlayerStore
       currentTime: 0,
       duration: 0,
       buffered: null,
-      volume: 1,
+      volume,
+      brightness,
       isFullScreen: null,
     },
-    emitter: new Emitter(),
+    emitter,
     plugins,
     lang,
   };
 }
 
-export function parsePercent(percent: number): number {
+export function parsePercent(percent: number, decimal = 0): string {
   if (percent > 100) percent = 100;
   if (percent < 0) percent = 0;
 
-  return percent;
+  return percent.toFixed(decimal);
 }
 
-export const secondToMMSS = (seconds: number) => {
+export function secondToMMSS(seconds: number) {
   if (!seconds) return "00:00";
   const date = new Date(null);
   date.setSeconds(seconds); // specify value for SECONDS here
@@ -170,4 +177,40 @@ export const secondToMMSS = (seconds: number) => {
     .toISOString()
     .substr(11, 8)
     .replace(/^00:(.+:.+)$/, "$1");
-};
+}
+
+function getNumberFromLocalData(key: string) {
+  let value;
+
+  try {
+    value = parseFloat(localStorage.getItem(key));
+  } catch {}
+
+  if (value != null && !isNaN(value)) {
+    return value;
+  }
+}
+
+const volumeKey = "juicy.volume";
+
+export function getVolumeFromLocalData() {
+  return getNumberFromLocalData(volumeKey);
+}
+
+export function saveVolumnToLocalData(volume: number) {
+  try {
+    localStorage.setItem(volumeKey, `${volume}`);
+  } catch {}
+}
+
+const brightnessKey = "juicy.brightness";
+
+export function getBrightnessFromLocalData() {
+  return getNumberFromLocalData(brightnessKey);
+}
+
+export function saveBrightnessToLocalData(brightness: number) {
+  try {
+    localStorage.setItem(brightnessKey, `${brightness}`);
+  } catch {}
+}

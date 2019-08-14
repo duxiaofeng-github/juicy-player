@@ -34,6 +34,7 @@ export enum InnerEventType {
   InnerVideoToggle = "inner.videoToggle",
   InnerVideoSetSource = "inner.videoSetSource",
   InnerVideoSetCurrentTime = "inner.videoSetCurrentTime",
+  InnerVideoSetBrightness = "inner.videoSetBrightness",
   InnerVideoSetVolume = "inner.videoSetVolume",
   InnerProgressBarHide = "inner.progressBarHide", // need remove
   InnerProgressBarShow = "inner.progressBarShow", // need remove

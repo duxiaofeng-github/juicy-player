@@ -3,7 +3,7 @@ import { css, cx } from "emotion";
 
 import { IPlayerStore, IProperties, IPlugin } from "../interface";
 import { connect } from "unistore/preact";
-import { parsePercent, IS_TOUCHABLE_DEVICE } from "../utils";
+import { parsePercent } from "../utils";
 import { colorPrimary, styleToolbarButtonIcon, colorDefault } from "../utils/style";
 import { Emitter } from "../utils/emitter";
 import { InnerEventType } from "../utils/event";
@@ -22,8 +22,6 @@ interface IProps {
 interface IState {
   isShown?: boolean;
 }
-
-const volumeKey = "juicy.volume";
 
 const actions = {
   setVolume,
@@ -53,21 +51,6 @@ class ToolBarVolumeButton extends Component<IProps, IState> {
 
   componentDidMount() {
     this.volumeCache = this.props.properties.volume;
-
-    this.setVolumeByLocalData();
-  }
-
-  setVolumeByLocalData() {
-    let volume;
-
-    try {
-      volume = parseFloat(localStorage.getItem(volumeKey));
-    } catch {}
-
-    if (volume != null && !isNaN(volume)) {
-      this.volumeCache = volume;
-      this.props.emitter.emit<number>(InnerEventType.InnerVideoSetVolume, volume);
-    }
   }
 
   setSliderRef = (el: HTMLDivElement) => (this.sliderEl = el);
@@ -102,7 +85,7 @@ class ToolBarVolumeButton extends Component<IProps, IState> {
       </div>
     );
 
-    return !IS_TOUCHABLE_DEVICE ? getToolBarButtonTemplate(svg) : null;
+    return getToolBarButtonTemplate(svg);
   }
 
   getCursorBottom() {
@@ -180,15 +163,7 @@ class ToolBarVolumeButton extends Component<IProps, IState> {
       this.volumeCache = properties.volume;
     }
 
-    this.saveVolumnToLocalData(properties.volume);
-
     emitter.emit<number>(InnerEventType.InnerVideoSetVolume, properties.volume);
-  }
-
-  saveVolumnToLocalData(volume: number) {
-    try {
-      localStorage.setItem(volumeKey, `${volume}`);
-    } catch {}
   }
 
   toggle = () => {
@@ -204,15 +179,11 @@ class ToolBarVolumeButton extends Component<IProps, IState> {
 
     this.volumeCache = properties.volume;
 
-    this.saveVolumnToLocalData(0);
-
     emitter.emit<number>(InnerEventType.InnerVideoSetVolume, 0);
   }
 
   unmuted() {
     const volume = this.volumeCache !== 0 ? this.volumeCache : 0.5;
-
-    this.saveVolumnToLocalData(volume);
 
     this.props.emitter.emit<number>(InnerEventType.InnerVideoSetVolume, volume);
   }
@@ -220,6 +191,7 @@ class ToolBarVolumeButton extends Component<IProps, IState> {
 
 const plugin: IPlugin = {
   entry: "ToolBar",
+  index: 0,
   component: ToolBarVolumeButton,
 };
 

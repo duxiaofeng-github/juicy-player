@@ -231,6 +231,7 @@ const stylePopupMobile = css`
 
 const plugin: IPlugin = {
   entry: "ToolBar",
+  index: 0,
   component: ToolBarVideoSelector,
 };
 

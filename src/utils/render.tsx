@@ -21,13 +21,13 @@ export function renderComponents(entry: string, plugins: IPlugins) {
   });
 }
 
-function getPluginByEntry(entry: string, plugin: IPluginInfo) {
+function getPluginByEntry(entry: string, plugin: IPluginInfo): IPluginInfo {
   if (entry === plugin.entry) {
     return plugin;
   }
 }
 
-export function getPlugins(entry: string, plugins: IPlugins) {
+export function getPlugins(entry: string, plugins: IPlugins): IPluginInfo[] {
   const components = [];
 
   for (let pluginArray of plugins) {
@@ -48,7 +48,9 @@ export function getPlugins(entry: string, plugins: IPlugins) {
     }
   }
 
-  return components;
+  return components.sort((a: IPluginInfo, b: IPluginInfo) => {
+    return a.index - b.index;
+  });
 }
 
 const styleButtonContainer = css`

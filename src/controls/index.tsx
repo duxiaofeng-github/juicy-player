@@ -84,6 +84,7 @@ class Controls extends Component<IProps, IState> {
 
 const plugin: IPlugin = {
   entry: "Container",
+  index: 2,
   component: Controls,
 };
 

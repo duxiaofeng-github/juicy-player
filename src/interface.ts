@@ -9,6 +9,7 @@ export interface IProperties {
   currentTime: number;
   buffered: TimeRanges;
   volume: number;
+  brightness: number;
   isFullScreen: boolean;
 }
 
@@ -18,6 +19,7 @@ export type IPlugin = IPluginInfo | IPluginInfo[];
 
 export interface IPluginInfo {
   entry: string;
+  index: number;
   component: any;
 }
 
@@ -63,4 +65,7 @@ export interface IOptions {
   controls?: boolean | IControlsOption;
   mode?: PlayerMode;
   playFromStart?: boolean;
+  controlBrightness?: boolean;
+  controlVolume?: boolean;
+  controlFullScreen?: boolean;
 }

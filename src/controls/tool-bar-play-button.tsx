@@ -9,7 +9,6 @@ import { styleToolbarButtonIcon } from "../utils/style";
 import { getToolBarButtonTemplate } from "../utils/render";
 import { Emitter } from "../utils/emitter";
 import { InnerEventType } from "../utils/event";
-import { IS_TOUCHABLE_DEVICE } from "../utils";
 
 interface IProps {
   properties?: IProperties;
@@ -40,7 +39,7 @@ class ToolBarPlayButton extends Component<IProps, IState> {
       />
     );
 
-    return !IS_TOUCHABLE_DEVICE ? getToolBarButtonTemplate(svg) : null;
+    return getToolBarButtonTemplate(svg);
   }
 
   toggle = () => {
@@ -62,6 +61,7 @@ class ToolBarPlayButton extends Component<IProps, IState> {
 
 const plugin: IPlugin = {
   entry: "ToolBar",
+  index: 0,
   component: ToolBarPlayButton,
 };
 

@@ -126,6 +126,7 @@ class ToolBar extends Component<IProps, IState> {
 
 const plugin: IPlugin = {
   entry: "Controls",
+  index: 1,
   component: ToolBar,
 };
 

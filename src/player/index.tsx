@@ -97,6 +97,7 @@ class Player extends Component<IProps, IState> {
 
 const plugin: IPlugin = {
   entry: "Container",
+  index: 0,
   component: Player,
 };
 

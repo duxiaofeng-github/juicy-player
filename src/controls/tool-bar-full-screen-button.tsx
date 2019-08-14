@@ -56,6 +56,7 @@ class ToolBarFullScreenButton extends Component<IProps, IState> {
 
 const plugin: IPlugin = {
   entry: "ToolBar",
+  index: 0,
   component: ToolBarFullScreenButton,
 };
 

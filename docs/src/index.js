@@ -33,5 +33,7 @@ const player = new JuicyPlayer({
   playList: [[srcSD, srcMD, srcHD]],
   // autoplay: true,
   playsinline: true,
+  // controlVolume: true,
+  // controlBrightness: true,
   // muted: true,
 });
