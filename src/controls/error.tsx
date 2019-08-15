@@ -52,12 +52,20 @@ class Error extends Component<IProps, IState> {
       </a>
     );
 
+    const networkError = printf(lang.NetworkError, retryComponent);
+
     switch (properties.error.code) {
       case MediaError.MEDIA_ERR_SRC_NOT_SUPPORTED:
-        return lang.SourceNotSupproted;
+        let msg: ComponentChild = lang.SourceNotSupproted;
+
+        // ios hack, when ios offline, its error will be MediaError.MEDIA_ERR_SRC_NOT_SUPPORTED
+        if (properties.networkState === NetworkState.NETWORK_NO_SOURCE) {
+          msg = networkError;
+        }
+        return msg;
       case MediaError.MEDIA_ERR_ABORTED:
       case MediaError.MEDIA_ERR_NETWORK:
-        return printf(lang.NetworkError, retryComponent);
+        return msg;
       case MediaError.MEDIA_ERR_DECODE:
         return lang.DecodeError;
       default:
