@@ -5066,7 +5066,6 @@ var HTMLPlayer = /** @class */ (function (_super) {
     };
     HTMLPlayer.prototype.init = function () {
         this.setNativeElementVolume(this.props.properties.volume);
-        console.log("inited", this.props.properties.currentTime, this.el.error);
         this.setNativeElementTime(this.props.properties.currentTime);
         this.setFullScreenMethods();
         this.props.setBuffered(this.el.buffered);
@@ -5143,23 +5142,8 @@ var HTMLPlayer = /** @class */ (function (_super) {
         return typeof currentVideo.src === "string" ? currentVideo.src : URL.createObjectURL(currentVideo.src);
     };
     HTMLPlayer.prototype.setNativeElementTime = function (time) {
-        var _this = this;
         if (this.el) {
             this.el.currentTime = time;
-            // ios hack, ios only can set current time when video playing and after canplay event triggered
-            if (_utils__WEBPACK_IMPORTED_MODULE_5__["IS_IOS"]) {
-                setTimeout(function () {
-                    if (_this.el.currentTime === 0 && time !== 0) {
-                        console.log("retry", _this.el.currentTime, time);
-                        _this.props.emitter.once(_utils_event__WEBPACK_IMPORTED_MODULE_4__["NativeEvent"].Canplay, function () {
-                            if (_this.el) {
-                                console.log("Canplay", _this.el.currentTime, time);
-                                _this.el.currentTime = time;
-                            }
-                        });
-                    }
-                });
-            }
         }
     };
     HTMLPlayer.prototype.setNativeElementVolume = function (volume) {
