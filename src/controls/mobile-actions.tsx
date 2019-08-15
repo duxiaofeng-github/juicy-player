@@ -7,7 +7,7 @@ import { InnerEventType, PlayerEvent } from "../utils/event";
 import { css, cx } from "emotion";
 import { setCurrentTime, ISetCurrentTime } from "../utils/actions";
 import { saveBrightnessToLocalData, secondToMMSS, parsePercent } from "../utils";
-import { colorDefault } from "../utils/style";
+import { colorDefault, styleAbsFull } from "../utils/style";
 import { ILang, printf } from "../i18n";
 
 interface IProps {
@@ -42,10 +42,6 @@ function mapStateToProps(state: IPlayerStore, props): IProps {
   };
 }
 
-@connect(
-  mapStateToProps,
-  actions
-)
 class MobileActions extends Component<IProps, IState> {
   pluginName = "MobileActions";
   el: HTMLDivElement;
@@ -78,7 +74,7 @@ class MobileActions extends Component<IProps, IState> {
   render() {
     return (
       <div
-        className={styleContainer}
+        className={styleAbsFull}
         onTouchStart={this.onTouchStart}
         onTouchMove={this.onTouchMove}
         onTouchEnd={this.onTouchEnd}
@@ -301,13 +297,10 @@ class MobileActions extends Component<IProps, IState> {
   }
 }
 
-const styleContainer = css`
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: 0;
-  bottom: 0;
-`;
+const mobileActionsComponent = connect(
+  mapStateToProps,
+  actions
+)(MobileActions);
 
 const styleTips = css`
   position: absolute;
@@ -359,10 +352,6 @@ function mapStateToBrightnessProps(state: IPlayerStore, props): IBrightnessProps
   };
 }
 
-@connect(
-  mapStateToBrightnessProps,
-  brightnessActions
-)
 class Brightness extends Component<IBrightnessProps, IBrightnessState> {
   pluginName = "Brightness";
 
@@ -381,7 +370,7 @@ class Brightness extends Component<IBrightnessProps, IBrightnessState> {
   render() {
     const alpha = (1 - this.props.properties.brightness) * 0.5;
 
-    return <div className={styleBrightness} style={{ backgroundColor: `rgba(0,0,0,${alpha})` }} />;
+    return <div className={styleAbsFull} style={{ backgroundColor: `rgba(0,0,0,${alpha})` }} />;
   }
 
   handleBrightness = (e: PlayerEvent<number>) => {
@@ -393,25 +382,20 @@ class Brightness extends Component<IBrightnessProps, IBrightnessState> {
   };
 }
 
-const styleBrightness = css`
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: 0;
-  bottom: 0;
-`;
+const brightnessComponent = connect(
+  mapStateToBrightnessProps,
+  brightnessActions
+)(Brightness);
 
-const plugin: IPlugin = [
+export const mobileActionsPlugin: IPlugin = [
   {
     entry: "Controls",
-    index: 0,
-    component: MobileActions,
+    index: 1,
+    component: mobileActionsComponent,
   },
   {
     entry: "Container",
     index: 1,
-    component: Brightness,
+    component: brightnessComponent,
   },
 ];
-
-export default plugin;

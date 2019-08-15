@@ -26,28 +26,28 @@ export enum NativeEvent {
 }
 
 export enum CustomEventType {
-  RetryPlay = "custom.retryplay",
-  SourceChange = "custom.sourceChange",
+  RetryPlaying = "c.retryPlaying",
+  SourceChange = "c.sourceChange",
 }
 
 export enum InnerEventType {
-  InnerVideoPlay = "inner.videoPlay",
-  InnerVideoPause = "inner.videoPause",
-  InnerVideoToggle = "inner.videoToggle",
-  InnerVideoSetSource = "inner.videoSetSource",
-  InnerVideoSetCurrentTime = "inner.videoSetCurrentTime",
-  InnerVideoSetBrightness = "inner.videoSetBrightness",
-  InnerVideoSetVolume = "inner.videoSetVolume",
-  InnerProgressBarHide = "inner.progressBarHide", // need remove
-  InnerProgressBarShow = "inner.progressBarShow", // need remove
-  InnerToolBarHide = "inner.toolBarHide", // need remove
-  InnerToolBarShow = "inner.toolBarShow", // need remove
-  InnerToolBarToggle = "inner.toolBarToggle", // need remove
-  InnerToolBarHidden = "inner.toolBarHidden",
-  InnerToolBarShown = "inner.toolBarShown",
-  InnerSeeking = "inner.seeking",
-  InnerSeeked = "inner.seeked",
-  InnerToggleFullScreen = "inner.toggleFullScreen",
+  InnerVideoPlay = "i.videoPlay",
+  InnerVideoPause = "i.videoPause",
+  InnerVideoToggle = "i.videoToggle",
+  InnerVideoSetSource = "i.videoSetSource",
+  InnerVideoSetCurrentTime = "i.videoSetCurrentTime",
+  InnerVideoSetBrightness = "i.videoSetBrightness",
+  InnerVideoSetVolume = "i.videoSetVolume",
+  InnerProgressBarHide = "i.progressBarHide", // need remove
+  InnerProgressBarShow = "i.progressBarShow", // need remove
+  InnerToolBarHide = "i.toolBarHide", // need remove
+  InnerToolBarShow = "i.toolBarShow", // need remove
+  InnerToolBarToggle = "i.toolBarToggle", // need remove
+  InnerToolBarHidden = "i.toolBarHidden",
+  InnerToolBarShown = "i.toolBarShown",
+  InnerSeeking = "i.seeking",
+  InnerSeeked = "i.seeked",
+  InnerToggleFullScreen = "i.toggleFullScreen",
 }
 
 export interface IInnerSetSourceData {

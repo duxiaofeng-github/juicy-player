@@ -7,7 +7,15 @@ export const colorPrimary = "rgb(22, 137, 255)";
 export const colorPrimaryAlpha04 = "rgba(22, 137, 255, 0.4)";
 export const colorPrimaryAlpha01 = "rgba(22, 137, 255, 0.1)";
 export const colorPrimaryLightenAlpha06 = "rgba(122, 189, 255, 0.6)";
-export const fontSizeDefault = "14px";
+export const fontSizeDefault = "1rem";
+
+export const styleAbsFull = css`
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+`;
 
 const styleActive = css`
   &:active {
@@ -30,11 +38,7 @@ const styleHover = css`
 `;
 
 export const styleToolbarButtonIcon = css`
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
+  ${styleAbsFull};
   cursor: pointer;
 
   svg {
@@ -67,4 +71,20 @@ export const styleToolBarText = css`
   text-overflow: ellipsis;
   white-space: nowrap;
   overflow: hidden;
+`;
+
+export const styleSvg = css`
+  svg {
+    ${styleAbsFull};
+  }
+`;
+
+export const styleLink = css`
+  color: ${colorPrimary};
+  text-decoration: none;
+  cursor: pointer;
+
+  &:hover {
+    text-decoration: underline;
+  }
 `;

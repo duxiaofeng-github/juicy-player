@@ -3,7 +3,16 @@ import { connect } from "unistore/preact";
 import { IOptions, IPlayerStore, IProperties, IPlugins, IPlugin } from "../interface";
 import { Emitter } from "../utils/emitter";
 import { getPlugins } from "../utils/render";
-import { InnerEventType, PlayerEvent, IInnerSetSourceData } from "../utils/event";
+import {
+  InnerEventType,
+  PlayerEvent,
+  IInnerSetSourceData,
+  NativeEvent,
+  ICustomSourceChangeData,
+  CustomEventType,
+} from "../utils/event";
+import { ISetVideoError, setVideoError } from "../utils/actions";
+import { MediaError } from "../utils";
 
 interface IProps {
   options?: IOptions;
@@ -11,9 +20,12 @@ interface IProps {
   emitter?: Emitter;
   plugins?: IPlugins;
   setSource?: (listIndex: number, videoIndex: number) => void;
+  setVideoError?: ISetVideoError;
 }
 
-interface IState {}
+interface IState {
+  resetTime: number;
+}
 
 const actions = {
   setSource: (state: IPlayerStore, listIndex: number, videoIndex: number): Partial<IPlayerStore> => {
@@ -25,6 +37,7 @@ const actions = {
       },
     };
   },
+  setVideoError,
 };
 
 function mapStateToProps(state: IPlayerStore, props): IProps {
@@ -38,67 +51,154 @@ function mapStateToProps(state: IPlayerStore, props): IProps {
   };
 }
 
-@connect(
-  mapStateToProps,
-  actions
-)
 class Player extends Component<IProps, IState> {
   pluginName = "Player";
 
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      resetTime: 0,
+    };
+  }
+
+  componentDidMount() {
+    const { properties } = this.props;
+
+    this.checkCanPlay(properties.currentListIndex, properties.currentVideoIndex);
+  }
+
   componentWillMount() {
-    this.props.emitter.on<IInnerSetSourceData>(InnerEventType.InnerVideoSetSource, this.handleSettingSource);
+    const { emitter } = this.props;
+
+    emitter.on<IInnerSetSourceData>(InnerEventType.InnerVideoSetSource, this.handleSettingSource);
+    emitter.on(CustomEventType.RetryPlaying, this.handleRetryPlaying);
   }
 
   componentWillUnmount() {
-    this.props.emitter.off(InnerEventType.InnerVideoSetSource, this.handleSettingSource);
+    const { emitter } = this.props;
+
+    emitter.off(InnerEventType.InnerVideoSetSource, this.handleSettingSource);
+    emitter.off(CustomEventType.RetryPlaying, this.handleRetryPlaying);
+  }
+
+  componentDidUpdate(prevProps: IProps) {
+    const { properties, emitter, options } = this.props;
+    const { currentListIndex, currentVideoIndex } = properties;
+    const prevProperties = prevProps.properties;
+
+    if (prevProperties.currentListIndex != currentListIndex || prevProperties.currentVideoIndex != currentVideoIndex) {
+      emitter.emit<ICustomSourceChangeData>(CustomEventType.SourceChange, {
+        from: prevProps.options.playList[prevProperties.currentListIndex][prevProperties.currentVideoIndex],
+        fromListIndex: prevProperties.currentListIndex,
+        fromVideoIndex: prevProperties.currentListIndex,
+        to: options.playList[currentListIndex][currentVideoIndex],
+        toListIndex: currentListIndex,
+        toVideoIndex: currentVideoIndex,
+      });
+    }
   }
 
   render() {
     return this.getPlayer();
   }
 
-  getPlayer() {
-    const { options, properties } = this.props;
+  getSource(listIndex: number, videoIndex: number) {
+    const { options } = this.props;
     const playList = options.playList;
 
     if (!playList) {
       return null;
     }
 
-    const currentList = playList[properties.currentListIndex];
+    const currentList = playList[listIndex];
     if (!currentList) {
       return null;
     }
 
-    const currentVideo = currentList[properties.currentVideoIndex];
+    const currentVideo = currentList[videoIndex];
     if (!currentVideo) {
+      return null;
+    }
+
+    return currentVideo;
+  }
+
+  canPlay(listIndex: number, videoIndex: number) {
+    const src = this.getSource(listIndex, videoIndex);
+
+    if (src == null) {
+      return false;
+    }
+
+    const playerPlugins = getPlugins(this.pluginName, this.props.plugins);
+
+    for (let player of playerPlugins) {
+      if (player.component && player.component.canPlay(src)) {
+        return true;
+      }
+    }
+
+    return false;
+  }
+
+  getPlayer() {
+    const { properties } = this.props;
+    const src = this.getSource(properties.currentListIndex, properties.currentVideoIndex);
+
+    if (src == null) {
       return null;
     }
 
     const playerPlugins = getPlugins(this.pluginName, this.props.plugins);
 
     for (let player of playerPlugins) {
-      if (player.component && player.component.canPlay(currentVideo)) {
-        return <player.component />;
+      if (player.component && player.component.canPlay(src)) {
+        return <player.component key={this.state.resetTime} />;
       }
     }
-
-    console.error(`can not play video: `, currentVideo);
 
     return null;
   }
 
+  checkCanPlay(listIndex: number, videoIndex: number) {
+    if (this.canPlay(listIndex, videoIndex)) {
+      return;
+    }
+
+    const { emitter, setVideoError } = this.props;
+    const err = new MediaError(MediaError.MEDIA_ERR_SRC_NOT_SUPPORTED);
+
+    emitter.emit<MediaError>(NativeEvent.Error, err);
+
+    setVideoError(err);
+
+    console.error(`can not play video: `, this.getSource(listIndex, videoIndex));
+  }
+
   handleSettingSource = (e: PlayerEvent<IInnerSetSourceData>) => {
     const { setSource } = this.props;
+    const { listIndex, videoIndex } = e.detail;
 
     setSource(e.detail.listIndex, e.detail.videoIndex);
+
+    this.checkCanPlay(listIndex, videoIndex);
+  };
+
+  handleRetryPlaying = () => {
+    this.setState({
+      resetTime: this.state.resetTime + 1,
+    });
   };
 }
 
-const plugin: IPlugin = {
+const component = connect(
+  mapStateToProps,
+  actions
+)(Player);
+
+export const playerPlugin: IPlugin = {
   entry: "Container",
   index: 0,
-  component: Player,
+  component,
 };
-
-export default plugin;

@@ -37,10 +37,6 @@ function mapStateToProps(state: IPlayerStore, props): IProps {
   };
 }
 
-@connect(
-  mapStateToProps,
-  actions
-)
 class ToolBarProgressBar extends Component<IProps, IState> {
   pluginName = "ToolBarProgressBar";
   sliderEl: HTMLDivElement;
@@ -206,13 +202,16 @@ class ToolBarProgressBar extends Component<IProps, IState> {
   }
 }
 
-const plugin: IPlugin = {
+const component = connect(
+  mapStateToProps,
+  actions
+)(ToolBarProgressBar);
+
+export const toolBarProgressBarPlugin: IPlugin = {
   entry: "ToolBar",
   index: 0,
-  component: ToolBarProgressBar,
+  component,
 };
-
-export default plugin;
 
 const styleProgressBar = css`
   flex-grow: 1;

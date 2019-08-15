@@ -2,6 +2,35 @@ import { IPlayerStore, IPlugins, IOptions } from "../interface";
 import { Emitter } from "./emitter";
 import { ILang } from "../i18n";
 
+export enum ReadyState {
+  HAVE_NOTHING = 0,
+  HAVE_METADATA,
+  HAVE_CURRENT_DATA,
+  HAVE_FUTURE_DATA,
+  HAVE_ENOUGH_DATA,
+}
+
+export enum NetworkState {
+  NETWORK_EMPTY = 0,
+  NETWORK_IDLE,
+  NETWORK_LOADING,
+  NETWORK_NO_SOURCE,
+}
+
+export class MediaError {
+  readonly code: number;
+  readonly message: string;
+  static readonly MEDIA_ERR_ABORTED = 1;
+  static readonly MEDIA_ERR_NETWORK = 2;
+  static readonly MEDIA_ERR_DECODE = 3;
+  static readonly MEDIA_ERR_SRC_NOT_SUPPORTED = 4;
+
+  constructor(code: number, message?: string) {
+    this.code = code;
+    this.message = message;
+  }
+}
+
 const canPlayFormat = {
   "video/flv": "FLV",
   "video/x-flv": "FLV",
@@ -156,6 +185,9 @@ export function initState(options: IOptions, emitter: Emitter, plugins: IPlugins
       volume,
       brightness,
       isFullScreen: null,
+      networkState: NetworkState.NETWORK_EMPTY,
+      readyState: ReadyState.HAVE_NOTHING,
+      error: null,
     },
     emitter,
     plugins,

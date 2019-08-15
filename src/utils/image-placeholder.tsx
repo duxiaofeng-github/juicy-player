@@ -21,8 +21,7 @@ function mapStateToProps(state: IPlayerStore, props): IProps {
   };
 }
 
-@connect(mapStateToProps)
-export class ImagePlaceHolder extends Component<IProps, IState> {
+class ImagePlaceHolderComp extends Component<IProps, IState> {
   componentWillMount() {
     window.addEventListener("resize", this.toggle);
   }
@@ -45,6 +44,8 @@ export class ImagePlaceHolder extends Component<IProps, IState> {
     });
   };
 }
+
+export const ImagePlaceHolder = connect(mapStateToProps)(ImagePlaceHolderComp);
 
 const styleButtonPlaceholder = css`
   height: 100%;

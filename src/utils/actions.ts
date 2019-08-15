@@ -1,4 +1,5 @@
 import { IPlayerStore } from "../interface";
+import { NetworkState, ReadyState, MediaError } from ".";
 
 export type ISetPlayState = (playing: boolean) => void;
 
@@ -62,6 +63,36 @@ export function setIsFullScreen(state: IPlayerStore, isFullScreen: boolean): Par
     properties: {
       ...state.properties,
       isFullScreen,
+    },
+  };
+}
+
+export interface ISetVideoStateData {
+  networkState?: NetworkState;
+  readyState?: ReadyState;
+}
+
+export type ISetVideoState = (videoState: ISetVideoStateData) => Partial<IPlayerStore>;
+
+export function setVideoState(state: IPlayerStore, videoState: ISetVideoStateData): Partial<IPlayerStore> {
+  const { networkState, readyState } = videoState;
+
+  return {
+    properties: {
+      ...state.properties,
+      networkState,
+      readyState,
+    },
+  };
+}
+
+export type ISetVideoError = (err: MediaError) => Partial<IPlayerStore>;
+
+export function setVideoError(state: IPlayerStore, err: MediaError): Partial<IPlayerStore> {
+  return {
+    properties: {
+      ...state.properties,
+      error: err,
     },
   };
 }

@@ -26,7 +26,6 @@ function mapStateToProps(state: IPlayerStore, props): IProps {
   };
 }
 
-@connect(mapStateToProps)
 class ToolBarFullScreenButton extends Component<IProps, IState> {
   pluginName = "ToolBarFullScreenButton";
 
@@ -54,10 +53,10 @@ class ToolBarFullScreenButton extends Component<IProps, IState> {
   };
 }
 
-const plugin: IPlugin = {
+const component = connect(mapStateToProps)(ToolBarFullScreenButton);
+
+export const toolBarFullScreenButtonPlugin: IPlugin = {
   entry: "ToolBar",
   index: 0,
-  component: ToolBarFullScreenButton,
+  component,
 };
-
-export default plugin;

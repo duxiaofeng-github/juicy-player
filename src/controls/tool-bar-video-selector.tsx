@@ -1,4 +1,4 @@
-import { h, Component } from "preact";
+import { h, Component, ComponentChild } from "preact";
 
 import { IPlayerStore, IProperties, IOptions, IPlugin } from "../interface";
 import { connect } from "unistore/preact";
@@ -6,8 +6,8 @@ import { Emitter } from "../utils/emitter";
 import { ILang, printf } from "../i18n";
 import { cx, css } from "emotion";
 import { styleToolBarText, colorPrimary, styleToolBarTextContainer } from "../utils/style";
-import { IS_TOUCHABLE_DEVICE, IS_IOS } from "../utils";
-import { IInnerSetSourceData, InnerEventType, NativeEvent } from "../utils/event";
+import { IS_TOUCHABLE_DEVICE } from "../utils";
+import { IInnerSetSourceData, InnerEventType, NativeEvent, CustomEventType } from "../utils/event";
 import { ISetCurrentTime, setCurrentTime } from "../utils/actions";
 
 interface IProps {
@@ -37,10 +37,6 @@ const actions = {
   setCurrentTime,
 };
 
-@connect(
-  mapStateToProps,
-  actions
-)
 class ToolBarVideoSelector extends Component<IProps, IState> {
   pluginName = "ToolBarVideoSelector";
   timer;
@@ -55,7 +51,7 @@ class ToolBarVideoSelector extends Component<IProps, IState> {
     }
 
     const currentVideo = list && list[currentVideoIndex];
-    let currentText: string;
+    let currentText: ComponentChild;
     if (!currentVideo) {
       currentText = lang.UnknownSource;
     } else if (typeof currentVideo.name === "string") {
@@ -115,12 +111,8 @@ class ToolBarVideoSelector extends Component<IProps, IState> {
   };
 
   onPopupItemClick(e: Event, videoIndex: number) {
-    const { options, emitter, properties, setCurrentTime } = this.props;
+    const { emitter, properties } = this.props;
     const playingCache = properties.playing;
-
-    if (options.playFromStart) {
-      setCurrentTime(0);
-    }
 
     emitter.emit<IInnerSetSourceData>(InnerEventType.InnerVideoSetSource, {
       listIndex: properties.currentListIndex,
@@ -237,10 +229,13 @@ const stylePopupMobile = css`
   }
 `;
 
-const plugin: IPlugin = {
+const component = connect(
+  mapStateToProps,
+  actions
+)(ToolBarVideoSelector);
+
+export const toolBarVideoSelectorPlugin: IPlugin = {
   entry: "ToolBar",
   index: 0,
-  component: ToolBarVideoSelector,
+  component,
 };
-
-export default plugin;

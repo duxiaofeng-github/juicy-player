@@ -7,6 +7,7 @@ import { renderComponents } from "../utils/render";
 import { IS_TOUCHABLE_DEVICE } from "../utils";
 import { Emitter } from "../utils/emitter";
 import { InnerEventType } from "../utils/event";
+import { styleAbsFull } from "../utils/style";
 
 interface IProps {
   options?: IOptions;
@@ -26,14 +27,13 @@ function mapStateToProps(state: IPlayerStore, props): IProps {
   };
 }
 
-@connect(mapStateToProps)
 class Controls extends Component<IProps, IState> {
   pluginName = "Controls";
   timer;
 
   render() {
     return (
-      <div className={styleControls} onClick={this.onClick} onMouseMove={!IS_TOUCHABLE_DEVICE && this.onMouseMove}>
+      <div className={styleAbsFull} onClick={this.onClick} onMouseMove={!IS_TOUCHABLE_DEVICE && this.onMouseMove}>
         {renderComponents(this.pluginName, this.props.plugins)}
       </div>
     );
@@ -82,18 +82,10 @@ class Controls extends Component<IProps, IState> {
   };
 }
 
-const plugin: IPlugin = {
+const component = connect(mapStateToProps)(Controls);
+
+export const controlsPlugin: IPlugin = {
   entry: "Container",
   index: 2,
-  component: Controls,
+  component,
 };
-
-export default plugin;
-
-const styleControls = css`
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
-`;

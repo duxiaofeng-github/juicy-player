@@ -36,10 +36,6 @@ function mapStateToProps(state: IPlayerStore, props): IProps {
   };
 }
 
-@connect(
-  mapStateToProps,
-  actions
-)
 class ToolBarVolumeButton extends Component<IProps, IState> {
   pluginName = "ToolBarVolumeButton";
   sliderEl: HTMLDivElement;
@@ -189,13 +185,16 @@ class ToolBarVolumeButton extends Component<IProps, IState> {
   }
 }
 
-const plugin: IPlugin = {
+const component = connect(
+  mapStateToProps,
+  actions
+)(ToolBarVolumeButton);
+
+export const toolBarVolumeButtonPlugin: IPlugin = {
   entry: "ToolBar",
   index: 0,
-  component: ToolBarVolumeButton,
+  component,
 };
-
-export default plugin;
 
 const styleVolumeBar = css`
   position: absolute;

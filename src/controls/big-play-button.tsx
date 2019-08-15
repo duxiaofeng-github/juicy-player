@@ -7,6 +7,7 @@ import { connect } from "unistore/preact";
 import { Emitter } from "../utils/emitter";
 import { InnerEventType } from "../utils/event";
 import { ImagePlaceHolder } from "../utils/image-placeholder";
+import { styleSvg } from "../utils/style";
 
 interface IProps {
   options?: IOptions;
@@ -26,15 +27,16 @@ function mapStateToProps(state: IPlayerStore, props): IProps {
   };
 }
 
-@connect(mapStateToProps)
 class BigPlayButton extends Component<IProps, IState> {
   pluginName = "BigPlayButton";
 
   render() {
-    return !this.props.properties.playing ? (
+    const { playing } = this.props.properties;
+
+    return !playing ? (
       <div className={stylePlayButton} onClick={this.play}>
         <ImagePlaceHolder />
-        <div className={stylePlayButtonIcon} dangerouslySetInnerHTML={{ __html: (bigPlayIcon as any) as string }} />
+        <div className={styleSvg} dangerouslySetInnerHTML={{ __html: (bigPlayIcon as any) as string }} />
       </div>
     ) : null;
   }
@@ -45,14 +47,6 @@ class BigPlayButton extends Component<IProps, IState> {
     e.stopPropagation();
   };
 }
-
-const plugin: IPlugin = {
-  entry: "Controls",
-  index: 1,
-  component: BigPlayButton,
-};
-
-export default plugin;
 
 const stylePlayButton = css`
   position: absolute;
@@ -69,12 +63,10 @@ const stylePlayButton = css`
   }
 `;
 
-const stylePlayButtonIcon = css`
-  svg {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-  }
-`;
+const component = connect(mapStateToProps)(BigPlayButton);
+
+export const bigPlayButtonPlugin: IPlugin = {
+  entry: "Controls",
+  index: 2,
+  component,
+};

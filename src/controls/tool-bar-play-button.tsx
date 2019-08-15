@@ -26,7 +26,6 @@ function mapStateToProps(state: IPlayerStore, props): IProps {
   };
 }
 
-@connect(mapStateToProps)
 class ToolBarPlayButton extends Component<IProps, IState> {
   pluginName = "ToolBarPlayButton";
 
@@ -59,10 +58,10 @@ class ToolBarPlayButton extends Component<IProps, IState> {
   }
 }
 
-const plugin: IPlugin = {
+const component = connect(mapStateToProps)(ToolBarPlayButton);
+
+export const toolBarPlayButtonPlugin: IPlugin = {
   entry: "ToolBar",
   index: 0,
-  component: ToolBarPlayButton,
+  component,
 };
-
-export default plugin;

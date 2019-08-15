@@ -1,5 +1,6 @@
 import { Emitter } from "./utils/emitter";
 import { ILang } from "./i18n";
+import { NetworkState, ReadyState, MediaError } from "./utils";
 
 export interface IProperties {
   playing: boolean;
@@ -11,6 +12,9 @@ export interface IProperties {
   volume: number;
   brightness: number;
   isFullScreen: boolean;
+  networkState: NetworkState;
+  readyState: ReadyState;
+  error: MediaError;
 }
 
 export type IPlugins = IPlugin[];

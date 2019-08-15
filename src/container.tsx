@@ -2,7 +2,7 @@ import { h, Component } from "preact";
 import { css } from "emotion";
 import { renderComponents } from "./utils/render";
 import { connect } from "unistore/preact";
-import { fontSizeDefault } from "./utils/style";
+import { fontSizeDefault, styleAbsFull } from "./utils/style";
 import { IPlugins, IPlayerStore, IProperties, IOptions } from "./interface";
 import { Emitter } from "./utils/emitter";
 import { fullScreenApiList } from "./utils";
@@ -32,11 +32,7 @@ const actions = {
   setIsFullScreen,
 };
 
-@connect(
-  mapStateToProps,
-  actions
-)
-export class Container extends Component<IProps> {
+class ContainerComponent extends Component<IProps> {
   pluginName = "Container";
   el: HTMLDivElement;
   fullscreenchangeName: string;
@@ -111,12 +107,14 @@ export class Container extends Component<IProps> {
   };
 }
 
+export const Container = connect(
+  mapStateToProps,
+  actions
+)(ContainerComponent);
+
 const styleContainer = css`
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
+  ${styleAbsFull};
+
   overflow: hidden;
   background-color: #000;
   font-family: "PingFang SC", Arial, "Microsoft YaHei", sans-serif;

@@ -14,10 +14,14 @@ import {
   setVolume,
   setIsFullScreen,
   ISetIsFullScreen,
+  ISetVideoState,
+  setVideoState,
+  ISetVideoError,
+  setVideoError,
 } from "../utils/actions";
 import { css } from "emotion";
 import { Emitter } from "../utils/emitter";
-import { InnerEventType, NativeEvent, PlayerEvent, CustomEventType, ICustomSourceChangeData } from "../utils/event";
+import { InnerEventType, NativeEvent, PlayerEvent } from "../utils/event";
 import { IS_DOCUMENT_SUPPORT_FULLSCREEN, fullScreenApiList, saveVolumnToLocalData, IS_IOS } from "../utils";
 
 interface IProps {
@@ -29,6 +33,8 @@ interface IProps {
   setVolume?: ISetVolume;
   setBuffered?: ISetBuffered;
   setIsFullScreen?: ISetIsFullScreen;
+  setVideoState?: ISetVideoState;
+  setVideoError?: ISetVideoError;
   emitter: Emitter;
 }
 
@@ -41,6 +47,8 @@ const actions = {
   setVolume,
   setBuffered,
   setIsFullScreen,
+  setVideoState,
+  setVideoError,
 };
 
 function mapStateToProps(state: IPlayerStore, props): IProps {
@@ -53,10 +61,11 @@ function mapStateToProps(state: IPlayerStore, props): IProps {
   };
 }
 
-class Player extends Component<IProps, IState> {
+class HTMLPlayer extends Component<IProps, IState> {
   pluginName = "HTMLPlayer";
   private el: HTMLVideoElement;
   seeking: boolean;
+  timer;
   enterFullScreen: () => void;
   exitFullScreen: () => void;
 
@@ -68,7 +77,7 @@ class Player extends Component<IProps, IState> {
     emitter.on(InnerEventType.InnerVideoToggle, this.toggle);
     emitter.on(InnerEventType.InnerSeeking, this.handleSeeking);
     emitter.on(InnerEventType.InnerSeeked, this.handleSeeked);
-    emitter.on<number>(InnerEventType.InnerVideoSetCurrentTime, this.handleNativeElementTime);
+    emitter.on<number>(InnerEventType.InnerVideoSetCurrentTime, this.handleSetCurrentTime);
 
     if (!this.props.options.controlVolume) {
       emitter.on<number>(InnerEventType.InnerVideoSetVolume, this.handleNativeElementVolume);
@@ -89,7 +98,7 @@ class Player extends Component<IProps, IState> {
     emitter.off(InnerEventType.InnerVideoPlay, this.play);
     emitter.off(InnerEventType.InnerVideoPause, this.pause);
     emitter.off(InnerEventType.InnerVideoToggle, this.toggle);
-    emitter.off(InnerEventType.InnerVideoSetCurrentTime, this.handleNativeElementTime);
+    emitter.off(InnerEventType.InnerVideoSetCurrentTime, this.handleSetCurrentTime);
     emitter.off(InnerEventType.InnerSeeking, this.handleSeeking);
     emitter.off(InnerEventType.InnerSeeked, this.handleSeeked);
 
@@ -100,25 +109,30 @@ class Player extends Component<IProps, IState> {
     if (!this.props.options.controlFullScreen) {
       emitter.off(InnerEventType.InnerToggleFullScreen, this.handleFullScreen);
     }
+
+    clearInterval(this.timer);
   }
 
-  componentDidUpdate(prevProps: IProps) {
-    const { properties, emitter, options } = this.props;
-    const { currentListIndex, currentVideoIndex } = properties;
-    const prevProperties = prevProps.properties;
+  componentDidMount() {
+    this.init();
+  }
 
-    if (prevProperties.currentListIndex != currentListIndex || prevProperties.currentVideoIndex != currentVideoIndex) {
-      this.syncCurrentTimeToElement();
+  init() {
+    this.setNativeElementVolume(this.props.properties.volume);
 
-      emitter.emit<ICustomSourceChangeData>(CustomEventType.SourceChange, {
-        from: prevProps.options.playList[prevProperties.currentListIndex][prevProperties.currentVideoIndex],
-        fromListIndex: prevProperties.currentListIndex,
-        fromVideoIndex: prevProperties.currentListIndex,
-        to: options.playList[currentListIndex][currentVideoIndex],
-        toListIndex: currentListIndex,
-        toVideoIndex: currentVideoIndex,
-      });
-    }
+    console.log("inited", this.props.properties.currentTime, this.el.error);
+
+    this.setNativeElementTime(this.props.properties.currentTime);
+
+    this.setFullScreenMethods();
+
+    this.props.setBuffered(this.el.buffered);
+
+    this.props.setVideoError(this.el.error);
+
+    this.bindEvents(this.el);
+
+    this.setTimer();
   }
 
   render() {
@@ -140,22 +154,23 @@ class Player extends Component<IProps, IState> {
     );
   }
 
-  createRef = (el: HTMLVideoElement) => {
-    this.el = el;
+  createRef = (el: HTMLVideoElement) => (this.el = el);
 
-    this.init();
-  };
+  setTimer() {
+    clearInterval(this.timer);
 
-  init() {
-    this.syncVolumeToElement();
+    this.timer = setInterval(() => {
+      const { properties, setVideoState, setVideoError } = this.props;
+      const { networkState, readyState, error } = this.el;
 
-    this.syncCurrentTimeToElement();
+      if (networkState !== properties.networkState || readyState !== properties.readyState) {
+        setVideoState({ networkState, readyState });
+      }
 
-    this.setFullScreenMethods();
-
-    this.props.setBuffered(null);
-
-    this.bindEvents(this.el);
+      if (properties.error !== error) {
+        setVideoError(error);
+      }
+    }, 500);
   }
 
   setFullScreenMethods() {
@@ -216,11 +231,11 @@ class Player extends Component<IProps, IState> {
         break;
       case NativeEvent.Timeupdate:
         if (!this.seeking) {
-          this.setCurrentTime();
+          this.syncCurrentTimeToState();
         }
         break;
       case NativeEvent.Volumechange:
-        this.setVolume();
+        this.syncVolumeToState();
         break;
       case NativeEvent.Canplay:
       case NativeEvent.Progress:
@@ -279,7 +294,7 @@ class Player extends Component<IProps, IState> {
     }
   };
 
-  handleNativeElementTime = (e: PlayerEvent<number>) => {
+  handleSetCurrentTime = (e: PlayerEvent<number>) => {
     this.setNativeElementTime(e.detail);
   };
 
@@ -287,7 +302,21 @@ class Player extends Component<IProps, IState> {
     if (this.el) {
       this.el.currentTime = time;
 
-      this.props.setCurrentTime(time);
+      // ios hack, ios only can set current time when video playing and after canplay event triggered
+      if (IS_IOS) {
+        setTimeout(() => {
+          if (this.el.currentTime === 0 && time !== 0) {
+            console.log("retry", this.el.currentTime, time);
+            this.props.emitter.once(NativeEvent.Canplay, () => {
+              if (this.el) {
+                console.log("Canplay", this.el.currentTime, time);
+
+                this.el.currentTime = time;
+              }
+            });
+          }
+        });
+      }
     }
   }
 
@@ -302,33 +331,14 @@ class Player extends Component<IProps, IState> {
       if (!this.props.options.controlVolume) {
         saveVolumnToLocalData(volume);
       }
-
-      this.props.setVolume(volume);
     }
   }
 
-  syncVolumeToElement() {
-    this.setNativeElementVolume(this.props.properties.volume);
-  }
-
-  syncCurrentTimeToElement() {
-    const { emitter } = this.props;
-
-    // ios hack, ios only can set current time when video playing and after canplay event triggered
-    if (IS_IOS) {
-      emitter.once(NativeEvent.Canplay, () => {
-        this.setNativeElementTime(this.props.properties.currentTime);
-      });
-    } else {
-      this.setNativeElementTime(this.props.properties.currentTime);
-    }
-  }
-
-  setCurrentTime() {
+  syncCurrentTimeToState() {
     this.props.setCurrentTime(this.el.currentTime);
   }
 
-  setVolume() {
+  syncVolumeToState() {
     this.props.setVolume(this.el.volume);
   }
 
@@ -351,12 +361,12 @@ class Player extends Component<IProps, IState> {
   };
 }
 
-const HTMLPlayer = connect(
+const component = connect(
   mapStateToProps,
   actions
-)(Player);
+)(HTMLPlayer);
 
-HTMLPlayer.__proto__.canPlay = (source: ISource) => {
+component.__proto__.canPlay = (source: ISource) => {
   if (typeof source.src === "string") {
     if (document.createElement("video").canPlayType(source.mimetype)) {
       return true;
@@ -368,13 +378,11 @@ HTMLPlayer.__proto__.canPlay = (source: ISource) => {
   return false;
 };
 
-const plugin: IPlugin = {
+export const htmlPlayerPlugin: IPlugin = {
   entry: "Player",
   index: 0,
-  component: HTMLPlayer,
+  component,
 };
-
-export default plugin;
 
 const styleVideo = css`
   position: absolute;

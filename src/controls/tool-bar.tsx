@@ -27,7 +27,6 @@ function mapStateToProps(state: IPlayerStore, props): IProps {
   };
 }
 
-@connect(mapStateToProps)
 class ToolBar extends Component<IProps, IState> {
   pluginName = "ToolBar";
   timer;
@@ -124,13 +123,13 @@ class ToolBar extends Component<IProps, IState> {
   };
 }
 
-const plugin: IPlugin = {
-  entry: "Controls",
-  index: 1,
-  component: ToolBar,
-};
+const component = connect(mapStateToProps)(ToolBar);
 
-export default plugin;
+export const toolBarPlugin: IPlugin = {
+  entry: "Controls",
+  index: 4,
+  component,
+};
 
 const styleToolBar = css`
   position: absolute;
