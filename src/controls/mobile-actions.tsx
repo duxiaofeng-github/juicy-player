@@ -51,7 +51,7 @@ class MobileActions extends Component<IProps, IState> {
   touchPrevX = 0;
   touchPrevY = 0;
   touchStartY = 0;
-  slowSwipeTimeStep = 0.1;
+  slowSwipeTimeStep = 0.2;
   fastSwipeTimeStep = 10;
   volumeStep = 0.01;
   brightnessStep = 0.01;

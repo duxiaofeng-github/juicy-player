@@ -73,7 +73,9 @@ class Error extends Component<IProps, IState> {
     }
   }
 
-  onClick = () => {
+  onClick = (e: Event) => {
+    e.stopPropagation();
+
     this.props.emitter.emit(CustomEventType.RetryPlaying);
   };
 }

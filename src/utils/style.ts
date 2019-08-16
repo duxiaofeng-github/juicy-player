@@ -82,9 +82,4 @@ export const styleSvg = css`
 export const styleLink = css`
   color: ${colorPrimary};
   text-decoration: none;
-  cursor: pointer;
-
-  &:hover {
-    text-decoration: underline;
-  }
 `;

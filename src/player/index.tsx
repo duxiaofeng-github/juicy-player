@@ -144,7 +144,8 @@ class Player extends Component<IProps, IState> {
 
   getPlayer() {
     const { properties } = this.props;
-    const src = this.getSource(properties.currentListIndex, properties.currentVideoIndex);
+    const { currentListIndex, currentVideoIndex } = properties;
+    const src = this.getSource(currentListIndex, currentVideoIndex);
 
     if (src == null) {
       return null;
@@ -154,7 +155,7 @@ class Player extends Component<IProps, IState> {
 
     for (let player of playerPlugins) {
       if (player.component && player.component.canPlay(src)) {
-        return <player.component key={this.state.resetTime} />;
+        return <player.component key={`${this.state.resetTime}-${currentListIndex}-${currentVideoIndex}`} />;
       }
     }
 

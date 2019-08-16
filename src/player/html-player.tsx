@@ -299,6 +299,20 @@ class HTMLPlayer extends Component<IProps, IState> {
   setNativeElementTime(time: number) {
     if (this.el) {
       this.el.currentTime = time;
+
+      // ios hack, ios only can set current time when video playing and after canplay event triggered
+      if (IS_IOS) {
+        setTimeout(() => {
+          if (this.el.currentTime === 0 && time !== 0) {
+            const emitter = this.props.emitter;
+            emitter.once(NativeEvent.Canplay, () => {
+              if (this.el) {
+                this.el.currentTime = time;
+              }
+            });
+          }
+        });
+      }
     }
   }
 

@@ -90,7 +90,14 @@ class ContainerComponent extends Component<IProps> {
 
   render() {
     return (
-      <div className={styleContainer} ref={this.setRef}>
+      <div
+        className={styleContainer}
+        onTouchMove={(e: Event) => {
+          // prevent mobile browser bounce
+          e.preventDefault();
+        }}
+        ref={this.setRef}
+      >
         {renderComponents(this.pluginName, this.props.plugins)}
       </div>
     );

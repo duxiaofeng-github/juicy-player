@@ -3000,7 +3000,10 @@ var ContainerComponent = /** @class */ (function (_super) {
         }
     };
     ContainerComponent.prototype.render = function () {
-        return (Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])("div", { className: styleContainer, ref: this.setRef }, Object(_utils_render__WEBPACK_IMPORTED_MODULE_2__["renderComponents"])(this.pluginName, this.props.plugins)));
+        return (Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])("div", { className: styleContainer, onTouchMove: function (e) {
+                // prevent mobile browser bounce
+                e.preventDefault();
+            }, ref: this.setRef }, Object(_utils_render__WEBPACK_IMPORTED_MODULE_2__["renderComponents"])(this.pluginName, this.props.plugins)));
     };
     return ContainerComponent;
 }(preact__WEBPACK_IMPORTED_MODULE_0__["Component"]));
@@ -3155,7 +3158,8 @@ var Error = /** @class */ (function (_super) {
     function Error() {
         var _this = _super !== null && _super.apply(this, arguments) || this;
         _this.pluginName = "Error";
-        _this.onClick = function () {
+        _this.onClick = function (e) {
+            e.stopPropagation();
             _this.props.emitter.emit(_utils_event__WEBPACK_IMPORTED_MODULE_8__["CustomEventType"].RetryPlaying);
         };
         return _this;
@@ -3170,12 +3174,18 @@ var Error = /** @class */ (function (_super) {
     Error.prototype.getMessage = function () {
         var _a = this.props, properties = _a.properties, lang = _a.lang;
         var retryComponent = (Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])("a", { className: _utils_style__WEBPACK_IMPORTED_MODULE_4__["styleLink"], onClick: this.onClick }, lang.RetryPlaying));
+        var networkError = Object(_i18n__WEBPACK_IMPORTED_MODULE_3__["printf"])(lang.NetworkError, retryComponent);
         switch (properties.error.code) {
             case _utils__WEBPACK_IMPORTED_MODULE_7__["MediaError"].MEDIA_ERR_SRC_NOT_SUPPORTED:
-                return lang.SourceNotSupproted;
+                var msg = lang.SourceNotSupproted;
+                // ios hack, when ios offline, its error will be MediaError.MEDIA_ERR_SRC_NOT_SUPPORTED
+                if (properties.networkState === _utils__WEBPACK_IMPORTED_MODULE_7__["NetworkState"].NETWORK_NO_SOURCE) {
+                    msg = networkError;
+                }
+                return msg;
             case _utils__WEBPACK_IMPORTED_MODULE_7__["MediaError"].MEDIA_ERR_ABORTED:
             case _utils__WEBPACK_IMPORTED_MODULE_7__["MediaError"].MEDIA_ERR_NETWORK:
-                return Object(_i18n__WEBPACK_IMPORTED_MODULE_3__["printf"])(lang.NetworkError, retryComponent);
+                return msg;
             case _utils__WEBPACK_IMPORTED_MODULE_7__["MediaError"].MEDIA_ERR_DECODE:
                 return lang.DecodeError;
             default:
@@ -3512,7 +3522,7 @@ var MobileActions = /** @class */ (function (_super) {
         _this.touchPrevX = 0;
         _this.touchPrevY = 0;
         _this.touchStartY = 0;
-        _this.slowSwipeTimeStep = 0.1;
+        _this.slowSwipeTimeStep = 0.2;
         _this.fastSwipeTimeStep = 10;
         _this.volumeStep = 0.01;
         _this.brightnessStep = 0.01;
@@ -5142,8 +5152,22 @@ var HTMLPlayer = /** @class */ (function (_super) {
         return typeof currentVideo.src === "string" ? currentVideo.src : URL.createObjectURL(currentVideo.src);
     };
     HTMLPlayer.prototype.setNativeElementTime = function (time) {
+        var _this = this;
         if (this.el) {
             this.el.currentTime = time;
+            // ios hack, ios only can set current time when video playing and after canplay event triggered
+            if (_utils__WEBPACK_IMPORTED_MODULE_5__["IS_IOS"]) {
+                setTimeout(function () {
+                    if (_this.el.currentTime === 0 && time !== 0) {
+                        var emitter = _this.props.emitter;
+                        emitter.once(_utils_event__WEBPACK_IMPORTED_MODULE_4__["NativeEvent"].Canplay, function () {
+                            if (_this.el) {
+                                _this.el.currentTime = time;
+                            }
+                        });
+                    }
+                });
+            }
         }
     };
     HTMLPlayer.prototype.setNativeElementVolume = function (volume) {
@@ -5335,7 +5359,8 @@ var Player = /** @class */ (function (_super) {
     };
     Player.prototype.getPlayer = function () {
         var properties = this.props.properties;
-        var src = this.getSource(properties.currentListIndex, properties.currentVideoIndex);
+        var currentListIndex = properties.currentListIndex, currentVideoIndex = properties.currentVideoIndex;
+        var src = this.getSource(currentListIndex, currentVideoIndex);
         if (src == null) {
             return null;
         }
@@ -5343,7 +5368,7 @@ var Player = /** @class */ (function (_super) {
         for (var _i = 0, playerPlugins_2 = playerPlugins; _i < playerPlugins_2.length; _i++) {
             var player = playerPlugins_2[_i];
             if (player.component && player.component.canPlay(src)) {
-                return Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])(player.component, { key: this.state.resetTime });
+                return Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])(player.component, { key: this.state.resetTime + "-" + currentListIndex + "-" + currentVideoIndex });
             }
         }
         return null;
@@ -6093,7 +6118,7 @@ var styleToolbarButtonIcon = Object(emotion__WEBPACK_IMPORTED_MODULE_0__["css"])
 var styleToolBarTextContainer = Object(emotion__WEBPACK_IMPORTED_MODULE_0__["css"])(templateObject_5 || (templateObject_5 = __makeTemplateObject(["\n  height: 100%;\n  padding: 0 calc(1% + 5px);\n  color: ", ";\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  cursor: pointer;\n"], ["\n  height: 100%;\n  padding: 0 calc(1% + 5px);\n  color: ", ";\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  cursor: pointer;\n"])), colorDefault);
 var styleToolBarText = Object(emotion__WEBPACK_IMPORTED_MODULE_0__["css"])(templateObject_6 || (templateObject_6 = __makeTemplateObject(["\n  max-width: 6em;\n  text-overflow: ellipsis;\n  white-space: nowrap;\n  overflow: hidden;\n"], ["\n  max-width: 6em;\n  text-overflow: ellipsis;\n  white-space: nowrap;\n  overflow: hidden;\n"])));
 var styleSvg = Object(emotion__WEBPACK_IMPORTED_MODULE_0__["css"])(templateObject_7 || (templateObject_7 = __makeTemplateObject(["\n  svg {\n    ", ";\n  }\n"], ["\n  svg {\n    ", ";\n  }\n"])), styleAbsFull);
-var styleLink = Object(emotion__WEBPACK_IMPORTED_MODULE_0__["css"])(templateObject_8 || (templateObject_8 = __makeTemplateObject(["\n  color: ", ";\n  text-decoration: none;\n  cursor: pointer;\n\n  &:hover {\n    text-decoration: underline;\n  }\n"], ["\n  color: ", ";\n  text-decoration: none;\n  cursor: pointer;\n\n  &:hover {\n    text-decoration: underline;\n  }\n"])), colorPrimary);
+var styleLink = Object(emotion__WEBPACK_IMPORTED_MODULE_0__["css"])(templateObject_8 || (templateObject_8 = __makeTemplateObject(["\n  color: ", ";\n  text-decoration: none;\n"], ["\n  color: ", ";\n  text-decoration: none;\n"])), colorPrimary);
 var templateObject_1, templateObject_2, templateObject_3, templateObject_4, templateObject_5, templateObject_6, templateObject_7, templateObject_8;
 
 
