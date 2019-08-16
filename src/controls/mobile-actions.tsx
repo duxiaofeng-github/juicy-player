@@ -6,7 +6,7 @@ import { Emitter } from "../utils/emitter";
 import { InnerEventType, PlayerEvent } from "../utils/event";
 import { css, cx } from "emotion";
 import { setCurrentTime, ISetCurrentTime } from "../utils/actions";
-import { saveBrightnessToLocalData, secondToMMSS, parsePercent } from "../utils";
+import { saveBrightnessToLocalData, secondToMMSS, parsePercent, IS_IOS } from "../utils";
 import { colorDefault, styleAbsFull } from "../utils/style";
 import { ILang, printf } from "../i18n";
 
@@ -120,8 +120,6 @@ class MobileActions extends Component<IProps, IState> {
 
     this.touchPrevX = touchStartX;
     this.touchPrevY = touchStartY;
-
-    e.preventDefault();
   };
 
   onTouchEnd = (e: TouchEvent) => {
@@ -147,6 +145,11 @@ class MobileActions extends Component<IProps, IState> {
         this.processBrightness(isVerticalIncrease);
         this.setProcessType(ProcessType.Brightness);
       } else {
+        // ios hack, ios DO NOT allow programmer change its volume
+        if (IS_IOS) {
+          return;
+        }
+
         this.processVolume(isVerticalIncrease);
         this.setProcessType(ProcessType.Volume);
       }

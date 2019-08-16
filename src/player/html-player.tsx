@@ -318,15 +318,13 @@ class HTMLPlayer extends Component<IProps, IState> {
 
   handleNativeElementVolume = (e: PlayerEvent<number>) => {
     this.setNativeElementVolume(e.detail);
+
+    saveVolumnToLocalData(e.detail);
   };
 
   setNativeElementVolume(volume: number) {
     if (this.el) {
       this.el.volume = volume;
-
-      if (!this.props.options.controlVolume) {
-        saveVolumnToLocalData(volume);
-      }
     }
   }
 
