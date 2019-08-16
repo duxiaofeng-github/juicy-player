@@ -65,7 +65,7 @@ class Error extends Component<IProps, IState> {
         return msg;
       case MediaError.MEDIA_ERR_ABORTED:
       case MediaError.MEDIA_ERR_NETWORK:
-        return msg;
+        return networkError;
       case MediaError.MEDIA_ERR_DECODE:
         return lang.DecodeError;
       default:
